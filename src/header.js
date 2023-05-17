@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import { faBars } from '@fortawesome/free-solid-svg-icons'
 import './App.css';
 
 function header() {
@@ -11,8 +12,9 @@ function header() {
         <div className="header">
             <header className="w-full top-0">
             <div className="flex justify-between items-stretch bg-gray-100 text-md">
-                <div className="flex jusitfy-evenly gap-4 pl-3 font-bold">
-                    <img src={navlogo} className="object-fill h-12" alt="logo"/>
+                <div className="flex jusitfy-evenly gap-4 pl-3 font-bold lg:visible md:visible invisible">
+                    <div className="flex items-center m-0 visible md:invisible md:pl-0 pl-2"><FontAwesomeIcon icon={faBars} style={{color: "#000000",}} /></div>
+                    <img src={navlogo} className="object-fill h-12 visible md:-ml-10 -ml-2" alt="logo"/>
                     <div className="flex items-center m-0">Menu</div>
                     <div className="flex items-center m-0">Store</div>
                     <div className="flex items-center m-0">About</div>
