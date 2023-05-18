@@ -15,9 +15,9 @@ function header() {
                 <div className="flex jusitfy-evenly gap-4 pl-3 font-bold lg:visible md:visible invisible">
                     <div className="flex items-center m-0 visible md:invisible md:pl-0 pl-2"><FontAwesomeIcon icon={faBars} style={{color: "#000000",}} /></div>
                     <img src={navlogo} className="object-fill h-12 visible md:-ml-10 -ml-2" alt="logo"/>
-                    <div className="flex items-center m-0">Menu</div>
-                    <div className="flex items-center m-0">Store</div>
-                    <div className="flex items-center m-0">About</div>
+                    <CustomLink href="/" >Menu</CustomLink>
+                    <CustomLink href="/Store">Store</CustomLink>
+                    <CustomLink href="/About">About</CustomLink>
                 </div>
                 <div className="flex jusitfy-evenly gap-4 pr-7">
                     <div className="relative">
@@ -32,6 +32,12 @@ function header() {
         </div>
         
       );
+}
+
+function CustomLink({href, children}) {
+    return (
+        <a href={href} className="flex items-center m-0">{children}</a>
+    );
 }
 
 export default header;

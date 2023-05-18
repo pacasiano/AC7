@@ -12,7 +12,7 @@ for(i=1; i<=10; i++){
 function ItemSlider() {
     return (
         <div className="itemSlider">
-                <div className="flex justify-start p-5 pl-4 gap-6 align-middle overflow-scroll whitespace-nowrap scrollbar-hide">
+                <div className="flex justify-start p-5 pl-4 lg:gap-3.5 md:gap-2.5 gap-7 align-middle overflow-scroll whitespace-nowrap scrollbar-hide">
                     {Items}
             </div>
         </div>
