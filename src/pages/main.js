@@ -10,7 +10,7 @@ function main() {
         <div className="main">
             <body className=""> {/* h-screen */}
             <div className="relative top-0">
-                <img src={bodypic} className="object-fill h-15"/>
+                <img src={bodypic} className="object-fill h-15" alt="HomeBodyPic"/>
                 <div className="absolute flex flex-col justify-start items-start text-left bottom-1/3 ml-16 lg:w-80 sm:w-60 w-52">
                     <div className="text-xs">Welcome AC7 Dazzle White</div>
                     <div className="lg:text-5xl sm:text-3xl text-xl font-bold">Beauty is our Passion, and yours too.</div>
