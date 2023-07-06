@@ -1,7 +1,8 @@
 import React from "react";
 import '../App.css';
 
-function about() {
+
+function About() {
 
     return (
         <h1>about</h1>
@@ -9,4 +10,4 @@ function about() {
 
 }
 
-export default about;
+export default About;

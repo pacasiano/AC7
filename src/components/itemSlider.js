@@ -1,6 +1,6 @@
 import React from "react";
 import Item from "./item";
-import './App.css';
+import '../App.css';
 
 let i;
 let Items = [];

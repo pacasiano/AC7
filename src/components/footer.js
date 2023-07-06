@@ -1,17 +1,17 @@
 import React from "react";
-import './App.css';
+import '../App.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPhone } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { faFacebook } from '@fortawesome/free-brands-svg-icons';
 
-function footer() {
+function Footer() {
 
     return (
   
         <div className="footer">
             <footer className="w-full bottom-0">
-                <div className="flex justify-between items-stretch bg-gray-100 h-24 text-md">
+                <div className="flex justify-between items-stretch bg-gray-100 h-36 text-md">
                     <div className="flex justify-start gap-2 lg:pl-8 pl-2 font-bold ">
                         <div className="flex items-center m-0 md:text-2xl text-md ">Find us at</div>
                         <div className="flex items-center m-0 md:text-5xl text-4xl "><FontAwesomeIcon icon={faFacebook} style={{color: "#000000",}} /></div>
@@ -34,4 +34,4 @@ function footer() {
       );
 }
 
-export default footer;
+export default Footer;
