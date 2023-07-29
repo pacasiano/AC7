@@ -20,15 +20,18 @@ function App() {
       <Header />
         <div className="h-12"></div>
         <Routes>
-          <Route index element = {<Main />} />
-          <Route path = "/home" element = {<Main />} />
-          <Route path = "/store" element = {<Store />} />
-          <Route path = "/about" element = {<About />} />
-          <Route path = "/cart" element = {<Cart />} />
-          <Route path = "/orders" element = {<Orders />} />
-          <Route path = "/store/product" element = {<Product />} />
-          <Route path = "/sign-up" element = {<Signup />} />
-          <Route path = "/login" element = {<Login />} />
+          {/* Default Route */}
+          <Route element={<Main />} />
+
+          <Route path="/" element={<Main />} />
+          <Route path="/home" element={<Main />} />
+          <Route path="/store" element={<Store />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/store/product" element={<Product />} />
+          <Route path="/sign-up" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       <Footer />
     </div>
