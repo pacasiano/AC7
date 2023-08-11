@@ -23,13 +23,13 @@ function Product() {
     }
 
   return (
-    <div className="product">
+    <div className="product w-full">
       <section className="text-gray-700 body-font overflow-hidden bg-white">
-        <div className="container px-5 py-24 mx-auto">
-          <div className="lg:w-4/5 mx-auto flex flex-wrap">
+        <div className="container py-40 mx-auto">
+          <div className="flex flex-row justify-center">
             <img
               alt="ecommerce"
-              className="lg:w-1/2 w-full object-cover object-center rounded "
+              className="lg:w-3rem w-2rem object-cover object-center rounded-xl "
               src={Item1}
             />
             <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
@@ -50,11 +50,11 @@ function Product() {
                     ${total}
                 </span>
                 <span className="flex flex-row gap-5">
-                <button onClick={decrementQuantity} className="flex justify-center m-0 mt-1 p-1 w-1/3 align-middle text-sm hover:font-extrabold">-</button>
+                <button onClick={decrementQuantity} className="flex justify-center m-0 mt-1 p-1 w-1/3 align-middle text-md hover:font-extrabold">-</button>
                 <div className="inline-block align-middle p-1 w-1/3 text-xl font-semibold">{quantity}</div>
-                <button onClick={incrementQuantity} className="flex justify-center m-0 mt-1 p-1 w-1/3 align-middle text-sm hover:font-extrabold">+</button>
+                <button onClick={incrementQuantity} className="flex justify-center m-0 mt-1 p-1 w-1/3 align-middle text-md hover:font-extrabold">+</button>
                 </span>
-                <button className="flex text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded">
+                <button className="flex text-white bg-black border-0 py-2 px-6 focus:outline-none hover:scale-105 rounded">
                   Add to Cart
                 </button>
               </div>

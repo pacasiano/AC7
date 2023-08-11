@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Item1 from "../imgs/Item1.png";
+import { Link } from "react-router-dom";
 import "../App.css";
 
 function Item() {
@@ -27,9 +28,9 @@ function Item() {
     <div className="item shadow-md rounded-md">
       
       <div className="flex flex-col justify-center items-center gap-1 w-auto">
-        <a href="/store/product">
+        <Link to="/product">
         <img className="object-cover h-15 px-3 pt-3 rounded-md" src={Item1} alt="Item1" />
-        </a>
+        </Link>
         <div className="flex flex-col px-2 justify-start gap-2 lg:w-52 w-40">
           <div className="flex flex-col pl-3">
             <div className="flex justify-start m-0 text-xl font-extrabold">{name}</div>
