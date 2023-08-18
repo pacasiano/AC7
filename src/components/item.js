@@ -13,7 +13,7 @@ function Item() {
       
       <div className="flex flex-col justify-center items-center gap-1 w-auto">
         <Link to="/product">
-        <img className="object-cover h-15 px-3 pt-3 rounded-md" src={Item1} alt="Item1" />
+        <img className="object-cover h-15 px-3 pt-3 rounded-md aspect-auto" src={Item1} alt="Item1" />
         </Link>
         <div className="flex flex-col px-2 justify-start gap-2 lg:w-52 w-40">
           <div className="flex flex-col pl-3">

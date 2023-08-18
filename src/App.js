@@ -10,6 +10,7 @@ import Login from "./pages/login";
 import Orders from "./pages/orders";
 import Header from "./components/header";
 import Footer from "./components/footer";
+import Checkout from "./pages/checkout";
 
 import './App.css';
 
@@ -32,6 +33,7 @@ function App() {
           <Route path="/product" element={<Product />} />
           <Route path="/sign-up" element={<Signup />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/checkout" element={<Checkout />} />
         </Routes>
       <Footer />
     </div>
