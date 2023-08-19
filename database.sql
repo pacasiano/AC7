@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS account (
     username VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     -- store pw as hash value that can't be decrypted
-    account_type ENUM('employee', 'customer'),
+    account_type ENUM('employee', 'customer') NOT NULL,
     PRIMARY KEY (account_id)
 );
 
@@ -54,5 +54,37 @@ CREATE TABLE IF NOT EXISTS employee (
     contact_info VARCHAR(15) NOT NULL,
     PRIMARY KEY (employee_id),
     FOREIGN KEY (account_id) REFERENCES account(account_id)
+);
+
+-- this is the order table, but 'order' is a reserved keyword
+CREATE TABLE IF NOT EXISTS purchase (
+    purchase_id INT AUTO_INCREMENT,
+    account_id INT NOT NULL,
+    address_id INT NOT NULL,
+    order_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    order_status ENUM('in progress', 'complete'),
+    PRIMARY KEY (purchase_id),
+    FOREIGN KEY (account_id) REFERENCES account(account_id),
+    FOREIGN KEY (address_id) REFERENCES address(address_id)
+);
+
+CREATE TABLE IF NOT EXISTS payment (
+    payment_id INT AUTO_INCREMENT,
+    purchase_id INT NOT NULL,
+    account_id INT NOT NULL,
+    mode_of_payment ENUM('cod', 'gcash') NOT NULL,
+    payment_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    payment_status ENUM('complete', 'incomplete'), -- we allow utang right?
+    PRIMARY KEY (payment_id),
+    FOREIGN KEY (purchase_id) REFERENCES purchase(purchase_id),
+    FOREIGN KEY (account_id) REFERENCES account(account_id)
+);
+
+-- new table, not in diagram
+CREATE TABLE IF NOT EXISTS gcash_payment (
+    reference_num CHAR(13) NOT NULL,
+    payment_id INT NOT NULL,
+    FOREIGN KEY (payment_id) REFERENCES payment(payment_id)
+    -- not sure if a primary key is necessary
 );
 
