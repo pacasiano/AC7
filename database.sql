@@ -1,11 +1,23 @@
 -- add indices later
 
+DROP DATABASE IF EXISTS ac7_database;
+
 CREATE DATABASE IF NOT EXISTS ac7_database;
 
 USE ac7_database;
 
+-- consider using OAuth (sign in with google) to decrease data in our db
+CREATE TABLE IF NOT EXISTS account (
+    account_id INT AUTO_INCREMENT,
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    -- store pw as hash value that can't be decrypted
+    account_type ENUM('employee', 'customer'),
+    PRIMARY KEY (account_id)
+);
+
 CREATE TABLE IF NOT EXISTS customer (
-    customer_id INT UNSIGNED AUTO_INCREMENT,
+    customer_id INT AUTO_INCREMENT,
     account_id INT NOT NULL,
     first_name VARCHAR(255) NOT NULL,
     middle_name VARCHAR(255) NOT NULL,
@@ -42,15 +54,5 @@ CREATE TABLE IF NOT EXISTS employee (
     contact_info VARCHAR(15) NOT NULL,
     PRIMARY KEY (employee_id),
     FOREIGN KEY (account_id) REFERENCES account(account_id)
-);
-
--- consider using OAuth (sign in with google) to decrease data in our db
-CREATE TABLE IF NOT EXISTS account (
-    account_id INT AUTO_INCREMENT,
-    username VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    -- store pw as hash value that can't be decrypted
-    account_type ENUM('employee', 'customer'),
-    PRIMARY KEY (account_id)
 );
 
