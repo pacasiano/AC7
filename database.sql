@@ -2,6 +2,8 @@
 
 CREATE DATABASE IF NOT EXISTS ac7_database;
 
+USE ac7_database;
+
 CREATE TABLE IF NOT EXISTS customer (
     customer_id INT UNSIGNED AUTO_INCREMENT,
     account_id INT NOT NULL,
