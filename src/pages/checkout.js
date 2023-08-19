@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../App.css";
+import CODLogo from "../imgs/CODLogo.png";
+import gcashLogo from "../imgs/gcashLogo.png";
 
 function Checkout() {
 
@@ -100,7 +102,10 @@ function Checkout() {
             <div className="flex justify-start text-md font-semibold pt-5">
               We Accept
             </div>
-            <div className="flex justify-start">cod and gcash img</div>
+            <div className="flex justify-start">
+              <img src={CODLogo} alt="CODIcon" />
+              <img src={gcashLogo} alt="GCASHIcon" />
+            </div>
           </div>
         </div>
       </div>

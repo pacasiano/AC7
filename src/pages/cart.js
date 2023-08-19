@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Item1 from "../imgs/Item1.png";
 import "../App.css";
 import { Link } from "react-router-dom";
+import CODLogo from "../imgs/CODLogo.png";
+import gcashLogo from "../imgs/gcashLogo.png";
 
 function Cart() {
   return (
@@ -42,7 +44,10 @@ function Cart() {
             <div className="flex justify-start text-md font-semibold pt-5">
               We Accept
             </div>
-            <div className="flex justify-start">cod and gcash img</div>
+            <div className="flex justify-start">
+              <img src={CODLogo} alt="CODIcon" />
+              <img src={gcashLogo} alt="GCASHIcon" />
+            </div>
           </div>
         </div>
       </div>
