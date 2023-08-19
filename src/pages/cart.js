@@ -12,10 +12,7 @@ function Cart() {
             <div className="flex flex-row justify-start pb-4 text-xl font-semibold">
               Item Summary
             </div>
-            <div className="flex flex-row justify-evenly lg:-mx-20 -mx-5">
-              <div className="">
-                <input type="checkbox" /> All
-              </div>
+            <div className="flex flex-row justify-start xl:gap-24 lg:gap-16 md:gap-28 sm:gap-20 gap-12 pl-20 ">
               <div className="text-md ">Item</div>
               <div className="text-md ">Price</div>
               <div className="text-md ">Quantity</div>
@@ -75,9 +72,8 @@ function CartItem() {
   return (
     <div className="flex flex-col w-full">
       <div className="bg-gray-100 p-5">
-        <div className="flex flex-row justify-evenly gap-5">
+        <div className="flex flex-row justify-start gap-8 ">
           <div className="flex items-center">
-            <input type="checkbox" />
           </div>
           <div className="lg:w-36 md:w-32 w-28 flex-shrink-0">
             <img
@@ -116,7 +112,7 @@ function CartItem() {
                   +
                 </button>
               </div>
-              <div className="flex flex-col justify-center lg:w-16 w-12 lg:text-md text-sm font-semibold ">
+              <div className="flex flex-col justify-center pl-8 lg:w-16 w-12 lg:text-md text-sm font-semibold ">
                 ${total}
               </div>
             </div>
