@@ -7,10 +7,13 @@ import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import UserDropdown from "./userDropdown";
 import MenuDropdown from "./menuDropdown";
+import { menuDropdown } from "./menuDropdown";
+import { userDropdown } from "./userDropdown";
 import Search from "./searchbar";
 import '../App.css';
 
 function Header() {
+
     return (
         <div className="header">
             <header className="w-full fixed top-0 z-50 shadow-sm">
@@ -29,11 +32,14 @@ function Header() {
                     </div>
                     <CustomLink to="/cart" className="flex items-center text-xl m-0"><FontAwesomeIcon icon={faCartShopping} style={{color: "#000000",}} /></CustomLink>
                     <button onClick={userDropdown} className="flex cursor-pointer items-center text-xl transition ease-out duration-500 hover:bg-gray-300 my-2 px-2 rounded-md"><FontAwesomeIcon icon={faUser} style={{color: "#000000",}} /></button>
-                    <UserDropdown/>
+                    <UserDropdown
+                    />
                 </div>
             </div>
             </header>
-            <MenuDropdown/>
+            <MenuDropdown
+
+            />
         </div>
         
       );
@@ -43,32 +49,6 @@ function CustomLink({to, children, className}) {
     return (
         <Link to={to} className={className+" transition ease-out duration-500 hover:bg-gray-300 my-2 px-2 rounded-md"}>{children}</Link>
     );
-}
-
-function userDropdown() {
-
-    var element = document.getElementById("userDropdown");
-    if (element.classList.contains("translate-x-[60%]")) {
-        element.classList.remove("translate-x-[60%]");
-        element.classList.add("translate-x-[26rem]");
-    }
-    else
-    {
-        element.classList.remove("translate-x-[26rem]");
-        element.classList.add("translate-x-[60%]");
-    }
-}
-
-function menuDropdown() {
-
-    var element = document.getElementById("menuButton");
-    if (element.classList.contains("-translate-y-12")) {
-        element.classList.remove("-translate-y-12");
-    }
-    else
-    {
-        element.classList.add("-translate-y-12");
-    }
 }
 
 export default Header;

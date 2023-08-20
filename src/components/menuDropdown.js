@@ -28,4 +28,16 @@ function CustomLink({to, children, className}) {
     );
 }
 
+export function menuDropdown() {
+
+    var element = document.getElementById("menuButton");
+    if (element.classList.contains("-translate-y-12")) {
+        element.classList.remove("-translate-y-12");
+    }
+    else
+    {
+        element.classList.add("-translate-y-12");
+    }
+}
+
 export default MenuDropdown;
