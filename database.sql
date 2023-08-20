@@ -1,4 +1,5 @@
 -- add indices later
+-- prolly change the ENUM values. Most of them are just temporary values
 
 DROP DATABASE IF EXISTS ac7_database;
 
@@ -8,7 +9,7 @@ USE ac7_database;
 
 -- consider using OAuth (sign in with google) to decrease data in our db
 CREATE TABLE IF NOT EXISTS account (
-    account_id INT AUTO_INCREMENT,
+    account_id BIGINT UNSIGNED AUTO_INCREMENT,
     username VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     -- store pw as hash value that can't be decrypted
@@ -17,8 +18,8 @@ CREATE TABLE IF NOT EXISTS account (
 );
 
 CREATE TABLE IF NOT EXISTS customer (
-    customer_id INT AUTO_INCREMENT,
-    account_id INT NOT NULL,
+    customer_id BIGINT UNSIGNED AUTO_INCREMENT,
+    account_id BIGINT UNSIGNED NOT NULL,
     first_name VARCHAR(255) NOT NULL,
     middle_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
@@ -30,8 +31,8 @@ CREATE TABLE IF NOT EXISTS customer (
 );
 
 CREATE TABLE IF NOT EXISTS address (
-    address_id INT AUTO_INCREMENT,
-    customer_id INT NOT NULL,
+    address_id BIGINT UNSIGNED AUTO_INCREMENT,
+    customer_id BIGINT UNSIGNED NOT NULL,
     city VARCHAR(255) NOT NULL,
     zip_code CHAR(4) NOT NULL,
     baranggay VARCHAR(255) NOT NULL,
@@ -44,8 +45,8 @@ CREATE TABLE IF NOT EXISTS address (
 );
 
 CREATE TABLE IF NOT EXISTS employee (
-    employee_id INT AUTO_INCREMENT,
-    account_id INT NOT NULL,
+    employee_id BIGINT UNSIGNED AUTO_INCREMENT,
+    account_id BIGINT UNSIGNED NOT NULL,
     first_name VARCHAR(255) NOT NULL,
     middle_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
@@ -57,20 +58,20 @@ CREATE TABLE IF NOT EXISTS employee (
 );
 
 CREATE TABLE IF NOT EXISTS product (
-    product_id INT AUTO_INCREMENT,
+    product_id BIGINT UNSIGNED AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     description VARCHAR(255) NOT NULL,
     price DECIMAL(10,2) NOT NULL,
     category VARCHAR(255) NOT NULL,
-    threshold INT NOT NULL,
-    quantity INT NOT NULL,
+    threshold INT UNSIGNED NOT NULL,
+    quantity INT UNSIGNED NOT NULL,
     PRIMARY KEY (product_id)
 );
 
 -- stores the price history of a product
 -- query using the date and product_id (latest, etc.)
 CREATE TABLE IF NOT EXISTS price (
-    product_id INT NOT NULL,
+    product_id BIGINT UNSIGNED NOT NULL,
     price DECIMAL(10, 2),
     date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (product_id) REFERENCES product(product_id)
@@ -83,9 +84,9 @@ It has a status, either "current" (the one displayed in the shopping cart page) 
 which means that we can store purchase_id to the purchase_item table 
 (not purchase_item_id stored in purchase table)*/
 CREATE TABLE IF NOT EXISTS purchase (
-    purchase_id INT AUTO_INCREMENT,
-    account_id INT NOT NULL,
-    address_id INT NOT NULL,
+    purchase_id BIGINT UNSIGNED AUTO_INCREMENT,
+    account_id BIGINT UNSIGNED NOT NULL,
+    address_id BIGINT UNSIGNED NOT NULL,
     order_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     order_status ENUM('in progress', 'complete'),
     PRIMARY KEY (purchase_id),
@@ -95,11 +96,11 @@ CREATE TABLE IF NOT EXISTS purchase (
 
 -- this is the order_item table from the diagram
 CREATE TABLE IF NOT EXISTS purchase_item (
-    purchase_item_id INT AUTO_INCREMENT,
-    purchase_id INT NOT NULL,
-    account_id INT NOT NULL,
-    product_id INT NOT NULL,
-    quantity INT NOT NULL,
+    purchase_item_id BIGINT UNSIGNED AUTO_INCREMENT,
+    purchase_id BIGINT UNSIGNED NOT NULL,
+    account_id BIGINT UNSIGNED NOT NULL,
+    product_id BIGINT UNSIGNED NOT NULL,
+    quantity INT UNSIGNED NOT NULL,
     price DECIMAL(10,2) NOT NULL,
     PRIMARY KEY (purchase_item_id),
     FOREIGN KEY (purchase_id) REFERENCES purchase(purchase_id),
@@ -108,9 +109,9 @@ CREATE TABLE IF NOT EXISTS purchase_item (
 );
 
 CREATE TABLE IF NOT EXISTS payment (
-    payment_id INT AUTO_INCREMENT,
-    purchase_id INT NOT NULL,
-    account_id INT NOT NULL,
+    payment_id BIGINT UNSIGNED AUTO_INCREMENT,
+    purchase_id BIGINT UNSIGNED NOT NULL,
+    account_id BIGINT UNSIGNED NOT NULL,
     mode_of_payment ENUM('cod', 'gcash') NOT NULL,
     payment_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     payment_status ENUM('complete', 'incomplete'), -- we allow utang right?
@@ -122,7 +123,7 @@ CREATE TABLE IF NOT EXISTS payment (
 -- new table, not in diagram
 CREATE TABLE IF NOT EXISTS gcash_payment (
     reference_num CHAR(13) NOT NULL,
-    payment_id INT NOT NULL,
+    payment_id BIGINT UNSIGNED NOT NULL,
     FOREIGN KEY (payment_id) REFERENCES payment(payment_id)
     -- not sure if a primary key is necessary
 );
@@ -130,9 +131,9 @@ CREATE TABLE IF NOT EXISTS gcash_payment (
 CREATE TABLE IF NOT EXISTS shipment (
     -- once a shipment it made, it must be recorded so we get sent_date
     -- everytime the shipment_status changes, received_date also changes until shipment_status is complete
-    shipment_id INT AUTO_INCREMENT,
-    purchase_id INT NOT NULL,
-    address_id INT NOT NULL,
+    shipment_id BIGINT UNSIGNED AUTO_INCREMENT,
+    purchase_id BIGINT UNSIGNED NOT NULL,
+    address_id BIGINT UNSIGNED NOT NULL,
     tracking_number VARCHAR(255) NOT NULL,
     courier VARCHAR(255) NOT NULL,
     sent_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -144,8 +145,8 @@ CREATE TABLE IF NOT EXISTS shipment (
 );
 
 CREATE TABLE IF NOT EXISTS supplier (
-    supplier_id INT NOT NULL,
-    address_id INT NOT NULL,
+    supplier_id BIGINT UNSIGNED NOT NULL,
+    address_id BIGINT UNSIGNED NOT NULL,
     name VARCHAR(255) NOT NULL,
     contact_info VARCHAR(15) NOT NULL,
     PRIMARY KEY (supplier_id),
@@ -156,14 +157,14 @@ CREATE TABLE IF NOT EXISTS supplier (
 CREATE TABLE IF NOT EXISTS inventory_in (
     -- not sure if this needs a PK. A composite key composed of supplier_id and product_id wouldn't be unique
     -- However, both FKs are already used as indices when querying so PK prolly not needed
-    supplier_id INT NOT NULL,
-    product_id INT NOT NULL,
+    supplier_id BIGINT UNSIGNED NOT NULL,
+    product_id BIGINT UNSIGNED NOT NULL,
     payment_date TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,
     -- when payment_status is updated, the payment_date will also update
     payment_type ENUM('cash', 'gcash'),
     payment_status ENUM('paid', 'not paid'),
     payment DECIMAL(10,2) NOT NULL,
-    quantity INT NOT NULL,
+    quantity INT UNSIGNED NOT NULL,
     date_ordered TIMESTAMP NOT NULL, -- when/how do we record this? when we order, we don't create an entry for inventory in yet
     date_delivered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (supplier_id) REFERENCES supplier(supplier_id),
