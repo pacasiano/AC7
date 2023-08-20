@@ -118,3 +118,19 @@ CREATE TABLE IF NOT EXISTS gcash_payment (
     -- not sure if a primary key is necessary
 );
 
+CREATE TABLE IF NOT EXISTS shipment (
+    -- once a shipment it made, it must be recorded so we get sent_date
+    -- everytime the shipment_status changes, received_date also changes until shipment_status is complete
+    shipment_id INT AUTO_INCREMENT,
+    purchase_id INT NOT NULL,
+    address_id INT NOT NULL,
+    tracking_number VARCHAR(255) NOT NULL,
+    courier VARCHAR(255) NOT NULL,
+    sent_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    received_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    shipment_status ENUM('in progress', 'complete'),
+    PRIMARY KEY (shipment_id),
+    FOREIGN KEY (purchase_id) REFERENCES purchase(purchase_id),
+    FOREIGN KEY (address_id) REFERENCES address(address_id)
+);
+
