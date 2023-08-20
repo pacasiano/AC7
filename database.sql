@@ -143,3 +143,29 @@ CREATE TABLE IF NOT EXISTS shipment (
     FOREIGN KEY (address_id) REFERENCES address(address_id)
 );
 
+CREATE TABLE IF NOT EXISTS supplier (
+    supplier_id INT NOT NULL,
+    address_id INT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    contact_info VARCHAR(15) NOT NULL,
+    PRIMARY KEY (supplier_id),
+    FOREIGN KEY (address_id) REFERENCES address(address_id)
+);
+
+-- a new entry is made in this table for every product that is in a delivery supply
+CREATE TABLE IF NOT EXISTS inventory_in (
+    -- not sure if this needs a PK. A composite key composed of supplier_id and product_id wouldn't be unique
+    -- However, both FKs are already used as indices when querying so PK prolly not needed
+    supplier_id INT NOT NULL,
+    product_id INT NOT NULL,
+    payment_date TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+    -- when payment_status is updated, the payment_date will also update
+    payment_type ENUM('cash', 'gcash'),
+    payment_status ENUM('paid', 'not paid'),
+    payment DECIMAL(10,2) NOT NULL,
+    quantity INT NOT NULL,
+    date_ordered TIMESTAMP NOT NULL, -- when/how do we record this? when we order, we don't create an entry for inventory in yet
+    date_delivered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (supplier_id) REFERENCES supplier(supplier_id),
+    FOREIGN KEY (product_id) REFERENCES product(product_id)
+);
