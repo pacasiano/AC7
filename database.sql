@@ -56,7 +56,23 @@ CREATE TABLE IF NOT EXISTS employee (
     FOREIGN KEY (account_id) REFERENCES account(account_id)
 );
 
+CREATE TABLE IF NOT EXISTS product (
+    product_id INT AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    category VARCHAR(255) NOT NULL,
+    threshold INT NOT NULL,
+    quantity INT NOT NULL,
+    PRIMARY KEY (product_id)
+);
+
 -- this is the order table, but 'order' is a reserved keyword
+/* A new purchase entry (row) is immediately made for each account. 
+It has a status, either "current" (the one displayed in the shopping cart page) or "past"
+(a purchase made before). We do this so that a purchase can have many purchase items, 
+which means that we can store purchase_id to the purchase_item table 
+(not purchase_item_id stored in purchase table)*/
 CREATE TABLE IF NOT EXISTS purchase (
     purchase_id INT AUTO_INCREMENT,
     account_id INT NOT NULL,
@@ -66,6 +82,20 @@ CREATE TABLE IF NOT EXISTS purchase (
     PRIMARY KEY (purchase_id),
     FOREIGN KEY (account_id) REFERENCES account(account_id),
     FOREIGN KEY (address_id) REFERENCES address(address_id)
+);
+
+-- this is the order_item table from the diagram
+CREATE TABLE IF NOT EXISTS purchase_item (
+    purchase_item_id INT AUTO_INCREMENT,
+    purchase_id INT NOT NULL,
+    account_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    PRIMARY KEY (purchase_item_id),
+    FOREIGN KEY (purchase_id) REFERENCES purchase(purchase_id),
+    FOREIGN KEY (account_id) REFERENCES account(account_id),
+    FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
 
 CREATE TABLE IF NOT EXISTS payment (
