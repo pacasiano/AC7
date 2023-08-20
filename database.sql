@@ -67,6 +67,15 @@ CREATE TABLE IF NOT EXISTS product (
     PRIMARY KEY (product_id)
 );
 
+-- stores the price history of a product
+-- query using the date and product_id (latest, etc.)
+CREATE TABLE IF NOT EXISTS price (
+    product_id INT NOT NULL,
+    price DECIMAL(10, 2),
+    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES product(product_id)
+);
+
 -- this is the order table, but 'order' is a reserved keyword
 /* A new purchase entry (row) is immediately made for each account. 
 It has a status, either "current" (the one displayed in the shopping cart page) or "past"
