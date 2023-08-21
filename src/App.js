@@ -1,4 +1,4 @@
-import {Routes, Route} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import React from "react";
 import Main from "./pages/main";
 import Store from "./pages/store";
@@ -11,34 +11,41 @@ import Orders from "./pages/orders";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import Checkout from "./pages/checkout";
+import Admin from "./pages/admin";
 
 import './App.css';
 
 function App() {
+  const path = window.location.pathname;
 
   return (
     <div>
-      <Header />
-        <div className="h-12"></div>
+      {path === "/AC7/Admin" ? (
         <Routes>
-          {/* Default Route */}
-          <Route element={<Main />} />
-
-          <Route path="/" element={<Main />} />
-          <Route path="/home" element={<Main />} />
-          <Route path="/store" element={<Store />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/orders" element={<Orders />} />
-          <Route path="/product" element={<Product />} />
-          <Route path="/sign-up" element={<Signup />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/checkout" element={<Checkout />} />
+        <Route path="/admin" element={<Admin />} />
         </Routes>
-      <Footer />
+      ) : (
+        <div>
+          <Header />
+          <div className="h-12"></div>
+          <Routes>
+            {/* Other routes */}
+            <Route path="/" element={<Main />} />
+            <Route path="/home" element={<Main />} />
+            <Route path="/store" element={<Store />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/product" element={<Product />} />
+            <Route path="/sign-up" element={<Signup />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/checkout" element={<Checkout />} />
+          </Routes>
+          <Footer />
+        </div>
+      )}
     </div>
   );
-
 }
 
 export default App;
