@@ -59,13 +59,15 @@ CREATE TABLE IF NOT EXISTS employee (
 
 CREATE TABLE IF NOT EXISTS product (
     product_id BIGINT UNSIGNED AUTO_INCREMENT,
+    inventory_in_id BIGINT UNSIGNED,
     name VARCHAR(255) NOT NULL,
     description VARCHAR(255) NOT NULL,
     price DECIMAL(10,2) NOT NULL,
     category VARCHAR(255) NOT NULL,
     threshold INT UNSIGNED NOT NULL,
     quantity INT UNSIGNED NOT NULL,
-    PRIMARY KEY (product_id)
+    PRIMARY KEY (product_id),
+    FOREIGN KEY (inventory_in_id) REFERENCES inventory_in(inventory_in_id)
 );
 
 -- stores the price history of a product
@@ -157,8 +159,8 @@ CREATE TABLE IF NOT EXISTS supplier (
 CREATE TABLE IF NOT EXISTS inventory_in (
     -- not sure if this needs a PK. A composite key composed of supplier_id and product_id wouldn't be unique
     -- However, both FKs are already used as indices when querying so PK prolly not needed
+    inventory_in_id BIGINT UNSIGNED,
     supplier_id BIGINT UNSIGNED NOT NULL,
-    product_id BIGINT UNSIGNED NOT NULL,
     payment_date TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,
     -- when payment_status is updated, the payment_date will also update
     payment_type ENUM('cash', 'gcash'),
@@ -168,5 +170,4 @@ CREATE TABLE IF NOT EXISTS inventory_in (
     date_ordered TIMESTAMP NOT NULL, -- when/how do we record this? when we order, we don't create an entry for inventory in yet
     date_delivered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (supplier_id) REFERENCES supplier(supplier_id),
-    FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
