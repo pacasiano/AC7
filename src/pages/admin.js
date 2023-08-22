@@ -13,7 +13,7 @@ import Shipping from "../components/shipping";
 
 export default function Admin() {
 
-    const [page, setPage] = useState("orders");
+    const [page, setPage] = useState("inventory");
 
     return (
         <div>
@@ -56,7 +56,7 @@ export default function Admin() {
                                 case "shipping":
                                     return <Shipping />;
                                 default:
-                                    return <Orders />;
+                                    return <Inventory />;
                             }
                         })()}
                     </div>

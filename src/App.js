@@ -20,7 +20,7 @@ function App() {
 
   return (
     <div>
-      {path === "/AC7/Admin" ? (
+      {path === "/AC7/admin" ? (
         <Routes>
         <Route path="/admin" element={<Admin />} />
         </Routes>
