@@ -22,15 +22,15 @@ function Product() {
   };
 
   return (
-    <div className="flex flex-col lg:-mt-20 mt-0 justify-center h-screen border-2">
+    <div className="flex flex-col lg:-mt-20 mt-0 justify-center h-screen ">
       <section className="text-gray-700 body-font overflow-hidden bg-white">
-        <div className="flex flex-col md:flex-row lg:px-0 px-9 py-15 justify-center border-2 border-red-600 overflow-clip">
+        <div className="flex flex-col md:flex-row lg:px-0 px-9 py-15 justify-center  border-red-600 overflow-clip">
           <img
             alt="ecommerce"
-            className="lg:w-3rem md:w-2rem w-1rem object-cover object-center rounded-xl aspect-auto border-2 border-yellow-600"
+            className="lg:w-3rem md:w-2rem w-1rem object-cover object-center rounded-xl aspect-auto  border-yellow-600"
             src={Item1}
           />
-          <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 border-2 border-blue-600">
+          <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6  border-blue-600">
             <h1 className="text-gray-900 text-3xl title-font pb-3 font-medium mb-1">
               {name}
             </h1>
