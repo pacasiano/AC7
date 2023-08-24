@@ -97,7 +97,9 @@ CREATE TABLE IF NOT EXISTS product (
 CREATE TABLE IF NOT EXISTS inventory_in_product (
     inventory_in_id BIGINT UNSIGNED NOT NULL,
     product_id BIGINT UNSIGNED NOT NULL,
-    quantity INT UNSIGNED NOT NULL
+    quantity INT UNSIGNED NOT NULL,
+    FOREIGN KEY (inventory_in_id) REFERENCES inventory_in(inventory_in_id),
+    FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
 
 -- stores the price history of a product
@@ -110,45 +112,45 @@ CREATE TABLE IF NOT EXISTS price (
 );
 
 -- this is the order table, but 'order' is a reserved keyword
-/* A new purchase entry (row) is immediately made for each account. 
-It has a status, either "current" (the one displayed in the shopping cart page) or "past"
-(a purchase made before). We do this so that a purchase can have many purchase items, 
-which means that we can store purchase_id to the purchase_item table 
-(not purchase_item_id stored in purchase table)*/
-CREATE TABLE IF NOT EXISTS purchase (
-    purchase_id BIGINT UNSIGNED AUTO_INCREMENT,
+/* A new sale entry (row) is immediately made for each account. 
+It has a status, either "in progress" (the one displayed in the shopping cart page) or "complete"
+(a sale made before). We do this so that a sale can have many sale items, 
+which means that we can store sale_id to the sale_item table 
+(not sale_item_id stored in purchase table)*/
+CREATE TABLE IF NOT EXISTS sale (
+    sale_id BIGINT UNSIGNED AUTO_INCREMENT,
     account_id BIGINT UNSIGNED NOT NULL,
     address_id BIGINT UNSIGNED NOT NULL,
-    order_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    order_status ENUM('in progress', 'complete'),
-    PRIMARY KEY (purchase_id),
+    sale_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    sale_status ENUM('in progress', 'complete') UNIQUE,
+    PRIMARY KEY (sale_id),
     FOREIGN KEY (account_id) REFERENCES account(account_id),
     FOREIGN KEY (address_id) REFERENCES address(address_id)
 );
 
 -- this is the order_item table from the diagram
-CREATE TABLE IF NOT EXISTS purchase_item (
-    purchase_item_id BIGINT UNSIGNED AUTO_INCREMENT,
-    purchase_id BIGINT UNSIGNED NOT NULL,
+CREATE TABLE IF NOT EXISTS sale_item (
+    sale_item_id BIGINT UNSIGNED AUTO_INCREMENT,
+    sale_id BIGINT UNSIGNED NOT NULL,
     account_id BIGINT UNSIGNED NOT NULL,
     product_id BIGINT UNSIGNED NOT NULL,
     quantity INT UNSIGNED NOT NULL,
     price DECIMAL(10,2) NOT NULL,
-    PRIMARY KEY (purchase_item_id),
-    FOREIGN KEY (purchase_id) REFERENCES purchase(purchase_id),
+    PRIMARY KEY (sale_item_id),
+    FOREIGN KEY (sale_id) REFERENCES sale(sale_id),
     FOREIGN KEY (account_id) REFERENCES account(account_id),
     FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
 
 CREATE TABLE IF NOT EXISTS payment (
     payment_id BIGINT UNSIGNED AUTO_INCREMENT,
-    purchase_id BIGINT UNSIGNED NOT NULL,
+    sale_id BIGINT UNSIGNED NOT NULL,
     account_id BIGINT UNSIGNED NOT NULL,
     mode_of_payment ENUM('cod', 'gcash') NOT NULL,
     payment_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     payment_status ENUM('complete', 'incomplete'), -- we allow utang right?
     PRIMARY KEY (payment_id),
-    FOREIGN KEY (purchase_id) REFERENCES purchase(purchase_id),
+    FOREIGN KEY (sale_id) REFERENCES sale(sale_id),
     FOREIGN KEY (account_id) REFERENCES account(account_id)
 );
 
@@ -164,7 +166,7 @@ CREATE TABLE IF NOT EXISTS shipment (
     -- once a shipment is made, it must be recorded so we get sent_date
     -- everytime the shipment_status changes, received_date also changes until shipment_status is complete
     shipment_id BIGINT UNSIGNED AUTO_INCREMENT,
-    purchase_id BIGINT UNSIGNED NOT NULL,
+    sale_id BIGINT UNSIGNED NOT NULL,
     address_id BIGINT UNSIGNED NOT NULL,
     tracking_number VARCHAR(255) NOT NULL,
     courier VARCHAR(255) NOT NULL,
@@ -172,10 +174,10 @@ CREATE TABLE IF NOT EXISTS shipment (
     received_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     shipment_status ENUM('in progress', 'complete'),
     PRIMARY KEY (shipment_id),
-    FOREIGN KEY (purchase_id) REFERENCES purchase(purchase_id),
+    FOREIGN KEY (sale_id) REFERENCES sale(sale_id),
     FOREIGN KEY (address_id) REFERENCES address(address_id)
 );
 
 -- create payment table for partial payments to the supplier
--- change purchase to sales
+-- change sale to sale
 -- 
