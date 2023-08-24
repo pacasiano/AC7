@@ -121,7 +121,7 @@ function CartItem() {
                 </button>
               </div>
             </td>
-            <td className="text-xl font-medium font-semibold  ">
+            <td className="text-xl font-medium ">
               <div className="flex justify-center">
                 ${total}
               </div>

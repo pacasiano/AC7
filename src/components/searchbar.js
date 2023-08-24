@@ -3,6 +3,7 @@ import { MdSearch } from 'react-icons/md';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import "../App.css";
+import { Link } from "react-router-dom";
 
 function Search() {
 
@@ -44,7 +45,7 @@ function Search() {
         <div className="relative">
           <div className="absolute inset-y-[4px] left-1 items-center text-md m-0 hover:cursor-pointer"><button onClick={(e) => setSearchTerm(e.target.value)}><FontAwesomeIcon icon={faMagnifyingGlass} style={{ color: "#000000", }} /></button></div>
             <input type="text" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="flex justify-center items-center rounded-md caret-black pl-6 my-1 w-full text-base overflow-clip hover:shadow-xl focus:shadow-xl focus:outline-none shadow-sm" />
-              <div id="searchResult" className={`absolute w-full translate-y-4 bg-gray-200 drop-shadow-xl rounded-xl py-2 px-4 ${searchTerm.length === 0 ? 'hidden' : ''}`}>
+              <div id="searchResult" className={`absolute w-full translate-y-4 bg-white py-2 px-4 drop-shadow-xl rounded-xl ${searchTerm.length === 0 ? 'hidden' : ''}`}>
               {isLoading ? (
                 <div className="flex items-center text-blue-900">
                   <MdSearch className="animate-spin mr-2" />{' '}
@@ -52,11 +53,11 @@ function Search() {
                 </div>
               ) : (
                 searchResults.length > 0 ? (
-                  <ul>
-                    {searchResults.map(item => (
-                      <li key={item.id}>{item.name}</li>
-                    ))}
-                  </ul>
+                    <ul>
+                      {searchResults.map(item => (
+                        <li key={item.id}><Link className="cursor-pointer hover:font-semibold">{item.name}</Link></li>
+                      ))}
+                    </ul>
                 ) : (
                   <p>No results</p>
                 )
