@@ -72,15 +72,23 @@ CREATE TABLE IF NOT EXISTS inventory_in (
     -- However, both FKs are already used as indices when querying so PK prolly not needed
     inventory_in_id BIGINT UNSIGNED AUTO_INCREMENT,
     supplier_id BIGINT UNSIGNED NOT NULL,
-    payment_date TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-    -- when payment_status is updated, the payment_date will also update
-    payment_type ENUM('cash', 'gcash'),
-    payment_status ENUM('paid', 'not paid'),
-    payment DECIMAL(10,2) NOT NULL,
+    payment_amount INT UNSIGNED NOT NULL, -- total payment of a particular delivery
     date_ordered TIMESTAMP NOT NULL, -- when/how do we record this? when we order, we don't create an entry for inventory in yet
     date_delivered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (inventory_in_id),
     FOREIGN KEY (supplier_id) REFERENCES supplier(supplier_id)
+);
+
+CREATE TABLE IF NOT EXISTS payment (
+    payment_id BIGINT UNSIGNED,
+    inventory_in_id BIGINT UNSIGNED NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
+    payment_type ENUM('cash', 'gcash'),
+    payment_status ENUM('fully paid', 'not paid') DEFAULT 'not paid',
+    payment_date TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+    -- when payment_status is updated, the payment_date will also update
+    PRIMARY KEY (payment_id),
+    FOREIGN KEY (inventory_in_id) REFERENCES inventory_in(inventory_in_id)
 );
 
 CREATE TABLE IF NOT EXISTS product (
