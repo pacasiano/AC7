@@ -57,17 +57,47 @@ CREATE TABLE IF NOT EXISTS employee (
     FOREIGN KEY (account_id) REFERENCES account(account_id)
 );
 
+CREATE TABLE IF NOT EXISTS supplier (
+    supplier_id BIGINT UNSIGNED AUTO_INCREMENT,
+    address_id BIGINT UNSIGNED NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    contact_info VARCHAR(15) NOT NULL,
+    PRIMARY KEY (supplier_id),
+    FOREIGN KEY (address_id) REFERENCES address(address_id)
+);
+
+-- a new entry is made in this table for every product that is in a delivery supply
+CREATE TABLE IF NOT EXISTS inventory_in (
+    -- not sure if this needs a PK. A composite key composed of supplier_id and product_id wouldn't be unique
+    -- However, both FKs are already used as indices when querying so PK prolly not needed
+    inventory_in_id BIGINT UNSIGNED AUTO_INCREMENT,
+    supplier_id BIGINT UNSIGNED NOT NULL,
+    payment_date TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+    -- when payment_status is updated, the payment_date will also update
+    payment_type ENUM('cash', 'gcash'),
+    payment_status ENUM('paid', 'not paid'),
+    payment DECIMAL(10,2) NOT NULL,
+    date_ordered TIMESTAMP NOT NULL, -- when/how do we record this? when we order, we don't create an entry for inventory in yet
+    date_delivered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (inventory_in_id),
+    FOREIGN KEY (supplier_id) REFERENCES supplier(supplier_id)
+);
+
 CREATE TABLE IF NOT EXISTS product (
     product_id BIGINT UNSIGNED AUTO_INCREMENT,
-    inventory_in_id BIGINT UNSIGNED,
     name VARCHAR(255) NOT NULL,
     description VARCHAR(255) NOT NULL,
     price DECIMAL(10,2) NOT NULL,
     category VARCHAR(255) NOT NULL,
     threshold INT UNSIGNED NOT NULL,
     quantity INT UNSIGNED NOT NULL,
-    PRIMARY KEY (product_id),
-    FOREIGN KEY (inventory_in_id) REFERENCES inventory_in(inventory_in_id)
+    PRIMARY KEY (product_id)
+);
+
+CREATE TABLE IF NOT EXISTS inventory_in_product (
+    inventory_in_id BIGINT UNSIGNED NOT NULL,
+    product_id BIGINT UNSIGNED NOT NULL,
+    quantity INT UNSIGNED NOT NULL
 );
 
 -- stores the price history of a product
@@ -131,7 +161,7 @@ CREATE TABLE IF NOT EXISTS gcash_payment (
 );
 
 CREATE TABLE IF NOT EXISTS shipment (
-    -- once a shipment it made, it must be recorded so we get sent_date
+    -- once a shipment is made, it must be recorded so we get sent_date
     -- everytime the shipment_status changes, received_date also changes until shipment_status is complete
     shipment_id BIGINT UNSIGNED AUTO_INCREMENT,
     purchase_id BIGINT UNSIGNED NOT NULL,
@@ -146,28 +176,6 @@ CREATE TABLE IF NOT EXISTS shipment (
     FOREIGN KEY (address_id) REFERENCES address(address_id)
 );
 
-CREATE TABLE IF NOT EXISTS supplier (
-    supplier_id BIGINT UNSIGNED NOT NULL,
-    address_id BIGINT UNSIGNED NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    contact_info VARCHAR(15) NOT NULL,
-    PRIMARY KEY (supplier_id),
-    FOREIGN KEY (address_id) REFERENCES address(address_id)
-);
-
--- a new entry is made in this table for every product that is in a delivery supply
-CREATE TABLE IF NOT EXISTS inventory_in (
-    -- not sure if this needs a PK. A composite key composed of supplier_id and product_id wouldn't be unique
-    -- However, both FKs are already used as indices when querying so PK prolly not needed
-    inventory_in_id BIGINT UNSIGNED,
-    supplier_id BIGINT UNSIGNED NOT NULL,
-    payment_date TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-    -- when payment_status is updated, the payment_date will also update
-    payment_type ENUM('cash', 'gcash'),
-    payment_status ENUM('paid', 'not paid'),
-    payment DECIMAL(10,2) NOT NULL,
-    quantity INT UNSIGNED NOT NULL,
-    date_ordered TIMESTAMP NOT NULL, -- when/how do we record this? when we order, we don't create an entry for inventory in yet
-    date_delivered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (supplier_id) REFERENCES supplier(supplier_id),
-);
+-- create payment table for partial payments to the supplier
+-- change purchase to sales
+-- 
