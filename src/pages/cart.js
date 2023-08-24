@@ -14,14 +14,20 @@ function Cart() {
             <div className="flex flex-row justify-start pb-4 text-xl font-semibold">
               Item Summary
             </div>
-            <div className="flex flex-row justify-start xl:gap-24 lg:gap-16 md:gap-28 sm:gap-20 gap-12 pl-20 ">
-              <div className="text-md ">Item</div>
-              <div className="text-md ">Price</div>
-              <div className="text-md ">Quantity</div>
-              <div className="text-md ">Total</div>
+            <div className="">
+              <table class="table-fixed w-full">
+                <thead>
+                  <tr>
+                    <th className="text-xl font-normal">Item</th>
+                    <th className="text-xl font-normal">Price</th>
+                    <th className="text-xl font-normal">Quantity</th>
+                    <th className="text-xl font-normal">Total</th>
+                  </tr>
+                </thead>
+              </table>
             </div>
           </div>
-          <div className="flex flex-col">
+          <div className="bg-gray-100 p-5">
             <CartSummary />
           </div>
         </div>
@@ -75,56 +81,54 @@ function CartItem() {
   };
 
   return (
-    <div className="flex flex-col w-full">
-      <div className="bg-gray-100 p-5">
-        <div className="flex flex-row justify-start gap-8 ">
-          <div className="flex items-center">
-          </div>
-          <div className="lg:w-36 md:w-32 w-28 flex-shrink-0">
-            <img
-              src={Item1}
-              className="object-fill resize-none rounded-md w-36"
-              alt="Item1"
-            />
-          </div>
-          <div className="flex flex-col  w-2/4">
-            <div className="flex justify-start text-xl font-bold lg:pt-5 pt-0 pb-2 ">
-              {name}
-            </div>
-            <div className="flex flex-row justify-evenly lg:gap-10 gap-0">
-              <div className="relative flex flex-col justify-center gap-3">
-                <div className="flex justify-end lg:text-md font-medium text-sm">
-                  $100.00
-                </div>
-                <button className="absolute -bottom-4 text-xs font-thin ">
-                  Remove
-                </button>
+      <table className="table-fixed w-full">
+        <tbody>
+          <tr>
+            <td className="p-2">
+              <div className="flex justify-center">
+              <img  
+                src={Item1}
+                className="object-scale-down rounded-md w-full h-36"
+                alt="Item1"
+              />
               </div>
-              <div className="flex flex-row items-center justify-center lg:w-24 w-16 pb-1 ">
-                <button
-                  onClick={decrementQuantity}
-                  className="flex justify-center m-0 mt-1 p-1 w-1/3 align-middle lg:text-md text-xs hover:font-extrabold "
-                >
+            </td>
+            <td className="">
+              <div className="flex flex-col justify-center items-center ">
+                <div>
+                  <div className="flex justify-start text-xl font-bold pt-0 pb-2  ">
+                    {name}
+                  </div>
+                  <div className="flex justify-start font-normal text-sm ">
+                    $100.00
+                  </div>
+                  <button className="absolute  text-xs font-thin ">
+                    Remove
+                  </button>
+                </div>  
+              </div>
+            </td>
+            <td className="pb-1 ">
+              <div className="flex flex-row gap-5 justify-center"> 
+                <button onClick={decrementQuantity}className="flex justify-center m-0 mt-1 p-1 text-xl hover:font-extrabold ">
                   -
                 </button>
-                <div className="flex justify-center m-0 pt-2 p-1 lg:w-1/3 w-1/5 lg:text-md text-sm font-semibold ">
-                  {quantity}
-                </div>
-                <button
-                  onClick={incrementQuantity}
-                  className="flex justify-center m-0 mt-1 p-1 w-1/3 align-middle lg:text-md text-xs hover:font-extrabold "
-                >
-                  +
+                  <div className="flex justify-center m-0 pt-2 text-xl font-light ">
+                    {quantity}
+                  </div>
+                <button onClick={incrementQuantity} className="flex justify-center m-0 mt-1 p-1 text-xl hover:font-extrabold ">
+                    +
                 </button>
               </div>
-              <div className="flex flex-col justify-center pl-8 lg:w-16 w-12 lg:text-md text-sm font-semibold ">
+            </td>
+            <td className="text-xl font-medium font-semibold  ">
+              <div className="flex justify-center">
                 ${total}
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
   );
 }
 
