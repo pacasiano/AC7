@@ -14,15 +14,14 @@ let connection = mysql.createConnection({
 //this router will return a json obj containing a json array of users
 router.get('/', (req, res) => {
 
-    let q = 'SELECT * FROM customers';
-    let users = connection.query(q, function(error, results, fields) {
+    let q = 'SELECT * FROM customer';
+    connection.query(q, function(error, results, fields) {
         if (error) throw error;
-        return results; //returns an array of obj literals, each obj literal is a row from users table
+        console.log(results);
+        console.log(JSON.stringify(results));
+        res.json(results); //returns an array of obj literals in JSON format, each obj literal is a row from users table
     });
 
-    connection.end();
-
-    res.json(users); //converts 'users' to JSON using JSON.stringify()
 });
 
 module.exports = router;

@@ -1,9 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import "../App.css";
 
 export default function Users() {
 
     const[account, setAccount]= useState("customer");
+
+    const [users, setUsers] = useState([]);
+
+    useEffect(() => {
+        fetch('/api/users')
+            .then((res) => res.json())
+            .then((users) => {
+                setUsers(users);
+            });
+    }, []);
 
     return(
         <div className="h-screen px-8 pt-8">
@@ -36,10 +46,10 @@ export default function Users() {
                     <table className="w-full border-collapse border">
                         <thead>
                             <tr className="bg-gray-400">
-                                <th className="text-sm font-semibold border p-2 text-white">User ID</th>
+                                <th className="text-sm font-semibold border p-2 text-white">Account ID</th>
                                 <th className="text-sm font-semibold border p-2 text-white">First Name</th>
                                 <th className="text-sm font-semibold border p-2 text-white">Last Name</th>
-                                <th className="text-sm font-semibold border p-2 text-white">Address</th>
+                                {/* <th className="text-sm font-semibold border p-2 text-white">Address</th> */}
                                 <th className="text-sm font-semibold border p-2 text-white">Contact</th>
                                 <th className="text-sm font-semibold border p-2 text-white">Email</th>
                                 <th className="text-sm font-semibold border p-2 text-white">Reputation</th>
@@ -47,18 +57,21 @@ export default function Users() {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr className="bg-gray-300">
-                                <td className="text-sm font-semibold border p-2">12341234</td>
-                                <td className="text-sm font-semibold border p-2">Juan</td>
-                                <td className="text-sm font-semibold border p-2">Dela Cruz</td>
-                                <td className="text-sm font-semibold border p-2">Manila City</td>
-                                <td className="text-sm font-semibold border p-2">09123456789</td>
-                                <td className="text-sm font-semibold border p-2">junjun@gmail.com</td>
-                                <td className="text-sm font-semibold border p-2">1  </td>
-                                <td className="flex flex-row gap-2 text-sm font-semibold border p-2 ">
-                                <button className="bg-green-500 text-white px-4 py-2 w-full rounded">EDIT</button>
-                                </td>
-                            </tr>
+                            {
+                                users.map((user) => (
+                                    <tr className="bg-gray-300" key={user.account_id}>
+                                        <td className="text-sm font-semibold border p-2">{user.account_id}</td>
+                                        <td className="text-sm font-semibold border p-2">{user.first_name}</td>
+                                        <td className="text-sm font-semibold border p-2">{user.last_name}</td>
+                                        <td className="text-sm font-semibold border p-2">{user.contact_info}</td>
+                                        <td className="text-sm font-semibold border p-2">{user.email}</td>
+                                        <td className="text-sm font-semibold border p-2">{user.reputation}</td>
+                                        <td className="flex flex-row gap-2 text-sm font-semibold border p-2 ">
+                                        <button className="bg-green-500 text-white px-4 py-2 w-full rounded">EDIT</button>
+                                         </td>
+                                    </tr>
+                                ))
+                            }
                         </tbody>
                     </table>
                     ) : (

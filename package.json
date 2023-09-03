@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "homepage": "https://pacasiano.github.io/AC7",
   "private": true,
+  "proxy": "http://localhost:8080",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
     "@fortawesome/free-brands-svg-icons": "^6.4.0",
