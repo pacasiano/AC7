@@ -33,10 +33,10 @@ function Checkout() {
                 <div className="flex flex-row justify-start pb-3 pt-2 text-xl font-semibold">
                     Billing Information
                 </div>
-                <form className="flex flex-col">
+                <form method="POST" action="/checkout" className="flex flex-col">
                     <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Gcash Number</span>
-                        <input className="rounded-sm"/>
+                        <input name="gcash_number" type="text" className="rounded-sm"/>
                     </label>
                 </form>
             </div>
@@ -44,7 +44,7 @@ function Checkout() {
             <div className="flex flex-row justify-start py-4 text-xl font-semibold">
                 Shipping Information
             </div>
-            <form className="flex xl:flex-row xl:gap-10 gap-5 flex-col pb-3">
+            <form method="POST" action="/checkout" className="flex xl:flex-row xl:gap-10 gap-5 flex-col pb-3">
                 <div className="flex flex-col gap-5 ">
                     <div className="flex flex-row justify-start gap-5 w-1/2">
                         <label className="flex flex-col max-w-sm">
