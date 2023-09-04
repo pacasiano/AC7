@@ -1,6 +1,7 @@
 import React from "react";
 import "../App.css";
 import navlogo from "../imgs/navlogo.png";
+import { Link } from "react-router-dom";
 
 function Landing() {
 
@@ -20,7 +21,7 @@ function Landing() {
         </a>
         <div className="w-full bg-white rounded-lg shadow  md:mt-0 sm:max-w-md xl:p-0 ">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl ">
+            <h1 className="flex justify-center text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl ">
               Create an Account
             </h1>
             <form className="space-y-4 md:space-y-6" action="#">
@@ -103,14 +104,14 @@ function Landing() {
               >
                 Create an account
               </button>
-              <p className="text-sm font-light text-gray-500">
+              <p className="flex justify-center text-sm font-light text-gray-500">
                 Already have an account?{" "}
-                <a
-                  href="/Login"
+                <Link
+                  to="/login"
                   className="font-medium text-blue-400 hover:underline"
                 >
                   Login here
-                </a>
+                </Link>
               </p>
             </form>
           </div>
