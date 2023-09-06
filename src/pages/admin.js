@@ -18,9 +18,9 @@ export default function Admin() {
 
     return (
         <div>
-            <div className="h-screen w-screen fixed">
+            <div className="h-screen w-screen ">
                 <div className="flex flex-row" >
-                    <div id="sideBar" className="flex flex-col bg-gray-200 w-52 h-screen">
+                    <div id="sideBar" className="fixed h-screen overflow-y-auto scrolling-sidebar flex flex-col bg-gray-200 w-52">
                         <img src={navlogo} alt="AC7 Logo" className="py-5 aspect-auto"></img>
                             <div className="flex flex-col pl-7 gap-5">
                                 <div id="orders" className="">
@@ -39,7 +39,7 @@ export default function Admin() {
                                     </button>
                                     <div className="flex justify-center">
                                         <button onClick={() => setPage("inventoryIn")} >
-                                        <div className="text-md italic font-normal">Add Item</div>
+                                        <div className="text-md italic font-normal">Inventory In</div>
                                         </button>
                                     </div>
                                 </div>
@@ -50,7 +50,7 @@ export default function Admin() {
                                 </div>
                             </div>
                     </div>
-                    <div id="body" className="w-full ">
+                    <div id="body" className="w-full pl-56 ">
                     {(() => {
                             switch (page) {
                                 case "inventory":

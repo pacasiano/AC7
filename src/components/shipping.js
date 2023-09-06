@@ -14,7 +14,7 @@ export default function Shipping() {
                             <span className="text-md font-bold">Delivery List</span>
                         </div>
                         <div className="flex flex-row gap-2">
-                            <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">Veiw All</span></button>
+                            <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">View All</span></button>
                         </div>
                     </div>
                     <table className="w-full border-collapse border">
