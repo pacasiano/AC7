@@ -20,8 +20,11 @@ function App() {
 
   return (
     <div>
-      {path === "/AC7/admin" ? (
+      {path === "/AC7/admin" || path === "/AC7/login" || path === "/AC7/signup" || path === "/AC7" ? (
         <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/admin" element={<Admin />} />
         </Routes>
       ) : (
@@ -29,7 +32,6 @@ function App() {
           <Header />
           <div className="h-12"></div>
           <Routes>
-            {/* Other routes */}
             <Route path="/" element={<Main />} />
             <Route path="/home" element={<Main />} />
             <Route path="/store" element={<Store />} />
