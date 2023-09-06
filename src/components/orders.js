@@ -1,9 +1,19 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import "../App.css";
 
 export default function Orders() {
 
-    const today = new Date().toLocaleDateString();
+    // const today = new Date().toLocaleDateString();
+
+    const [orders, setOrders] = useState([]);
+
+    useEffect(() => {
+        fetch('/api/orders')
+            .then((res) => res.json())
+            .then((orders) => {
+                setOrders(orders);
+            });
+    }, []);
 
     return(
         <div className="h-screen px-8 pt-8">
@@ -34,7 +44,7 @@ export default function Orders() {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr className="bg-gray-300">
+                            {/* <tr className="bg-gray-300">
                                 <td className="text-sm font-semibold border p-2">12341234</td>
                                 <td className="text-sm font-semibold border p-2">1323123</td>
                                 <td className="text-sm font-semibold border p-2">4842983</td>
@@ -43,7 +53,21 @@ export default function Orders() {
                                 <td className="text-sm font-semibold border p-2">Paid</td>
                                 <td className="text-sm font-semibold border p-2">1</td>
                                 <td className="text-sm font-semibold border p-2">P99.00</td>
-                            </tr>
+                            </tr> */}
+                            {
+                                orders.map((order) => (
+                                    <tr className="bg-gray-300" key={order.sale_id}>
+                                        <td className="text-sm font-semibold border p-2">{order.sale_id}</td>
+                                        <td className="text-sm font-semibold border p-2">{order.account_id}</td>
+                                        <td className="text-sm font-semibold border p-2">{order.product_id}</td>
+                                        <td className="text-sm font-semibold border p-2">{order.address_id}</td>
+                                        <td className="text-sm font-semibold border p-2">{order.sale_date}</td>
+                                        <td className="text-sm font-semibold border p-2">{order.sale_status}</td>
+                                        <td className="text-sm font-semibold border p-2">{order.quantity}</td>
+                                        <td className="text-sm font-semibold border p-2">{order.price}</td>
+                                    </tr>
+                                ))
+                            }
                         </tbody>
                     </table>
 

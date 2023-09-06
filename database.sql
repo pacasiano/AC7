@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS customer (
     customer_id BIGINT UNSIGNED AUTO_INCREMENT,
     account_id BIGINT UNSIGNED NOT NULL,
     first_name VARCHAR(255) NOT NULL,
-    middle_name VARCHAR(255) NOT NULL,
+    middle_name VARCHAR(255),
     last_name VARCHAR(255) NOT NULL,
     contact_info VARCHAR(15) NOT NULL,
     email VARCHAR(50) NOT NULL,
@@ -130,7 +130,7 @@ CREATE TABLE IF NOT EXISTS sale (
     account_id BIGINT UNSIGNED NOT NULL,
     address_id BIGINT UNSIGNED NOT NULL,
     sale_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    sale_status ENUM('in progress', 'complete') UNIQUE,
+    sale_status ENUM('in progress', 'complete'),
     PRIMARY KEY (sale_id),
     FOREIGN KEY (account_id) REFERENCES account(account_id),
     FOREIGN KEY (address_id) REFERENCES address(address_id)
@@ -186,6 +186,50 @@ CREATE TABLE IF NOT EXISTS shipment (
     FOREIGN KEY (address_id) REFERENCES address(address_id)
 );
 
--- create payment table for partial payments to the supplier
--- change sale to sale
--- 
+-- DUMMY data
+INSERT INTO account(username, password, account_type) 
+VALUES ('boywonder1', 'gothamsavior42', 'customer'),
+('starfirealien', 'tamaranlove17', 'customer'),
+('shapeshiftpro', 'greengorillabanana', 'customer'),
+('darksorceress', 'azarathrising99', 'customer'),
+('obvictoriano', 'adduislife', 'customer'); 
+
+INSERT INTO customer(account_id, first_name, middle_name, last_name, contact_info, email) 
+VALUES (1, 'Dick', 'Robin', 'Grayson', '123-4567', 'robin@titans.net'),
+(2, 'Koriandr', NULL, 'Starfire', '987-6543', 'starfire@starfireplanet.com'),
+(3, 'Garfield', 'Beastboy', 'Logan', '789-0123', 'beastboy@animalkingdom.org'),
+(4, 'Rachel', 'Raven', 'Roth', '321-6789', 'raven@darknessrealm.net'),
+(5, 'Victoriano', NULL, 'Oneil', '888-8888', 'obvictoriano@addu.edu.ph');
+
+INSERT INTO address(customer_id, city, zip_code, baranggay, province, street) 
+VALUES(1, 'Gotham', '123', 'Baranggay 10', 'NA', '26 street'),
+(2, 'Jump City', '456', 'Baranggay 12', 'NA', '26 street'),
+(3, 'Jump City', '789', 'Baranggay 10', 'NA', '26 street'),
+(4, 'Azarath', '567', 'Baranggay 10', 'NA', '26 street'),
+(5, 'Davao City', '8000', 'Baranggay Buhangin', 'Davao', '24 Jump Street');
+
+INSERT INTO product(name, description, price, category, threshold, quantity)
+VALUES('Product 1', 'Hello world', 12.11, 'Cosmetics', 20, 50);
+
+INSERT INTO sale(account_id, address_id, sale_status)
+VALUES (1, 1, 'in progress'),
+(2, 2, 'in progress'),
+(2, 2, 'in progress'),
+(1, 1, 'in progress'), 
+(4, 4, 'in progress'),
+(5, 5, 'in progress'),
+(5, 5, 'in progress'),
+(5, 5, 'in progress');
+
+INSERT INTO sale_item(sale_id, account_id, product_id, quantity, price)
+VALUES (1, 1, 1, 3, 36.33),
+(2, 2, 1, 3, 36.33),
+(2, 2, 1, 3, 36.33),
+(1, 1, 1, 3, 36.33),
+(4, 4, 1, 3, 36.33),
+(5, 5, 1, 3, 36.33),
+(5, 5, 1, 3, 36.33),
+(5, 5, 1, 3, 36.33);
+
+-- sale table might not need address_id since it already has account_id and account is connected to address
+-- sale_item might not need account_id since it already has sale_id which has account_id
