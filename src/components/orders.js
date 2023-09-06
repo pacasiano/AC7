@@ -17,7 +17,7 @@ export default function Orders() {
                             <span className="text-md font-bold">Order List</span>
                         </div>
                         <div className="flex flex-row gap-2">
-                            <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">Veiw All</span></button>
+                            <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">View All</span></button>
                         </div>
                     </div>
                     <table className="w-full border-collapse border">
@@ -31,7 +31,6 @@ export default function Orders() {
                                 <th className="text-sm font-semibold border p-2 text-white">Status</th>
                                 <th className="text-sm font-semibold border p-2 text-white">Quantity</th>
                                 <th className="text-sm font-semibold border p-2 text-white">Total</th>
-                                <th className="text-sm font-semibold border p-2 text-white">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -44,9 +43,6 @@ export default function Orders() {
                                 <td className="text-sm font-semibold border p-2">Paid</td>
                                 <td className="text-sm font-semibold border p-2">1</td>
                                 <td className="text-sm font-semibold border p-2">P99.00</td>
-                                <td className="flex flex-row gap-2 text-sm font-semibold border p-2 ">
-                                <button className="bg-green-500 text-white px-4 py-2 w-full rounded">EDIT</button>
-                                </td>
                             </tr>
                         </tbody>
                     </table>
