@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import "../App.css";
+import ReactModal from "react-modal";
+import {useForm} from "react-hook-form";
 
 export default function Users() {
 
     const[account, setAccount]= useState("customer");
+    const [isOpen, setIsOpen] = useState(false);
+    const { register, handleSubmit, watch, formState: { errors } } = useForm();
+    const onSubmit = data => console.log(data);
 
     return(
         <div className="h-screen px-8 pt-8">
@@ -29,8 +34,46 @@ export default function Users() {
                             <button onClick={()=> setAccount("customer")}><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">View User Accounts</span></button>  
                             )}
                             {account==="employee" && (
-                            <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">Add</span></button>
+                            <button onClick={()=> setIsOpen(true)}><span className=" text-md bg-gray-100 px-2 py-1 rounded-md font-bold">Add</span></button>
                             )}
+                            <ReactModal isOpen={isOpen} onRequestClose={() => setIsOpen(false)} className={"ml-[45rem] my-[10rem] h-[32rem] w-[32rem]  bg-gray-200 flex flex-col align-items: center items-center"}>
+                                <div className=" bg-gray-400 w-[32rem] mt-[2rem] pb-8 pt-8 text-xl font-bold text-center text-justified text-white">
+                                    Enter Employee Details
+                                </div>
+                                <div className="flex flex-col space-y-2.5 mt-[2rem]">
+                                    <form onSubmit={handleSubmit(onSubmit)}>
+                                    {/* register your input into the hook by invoking the "register" function */}
+                                    <div className="flex flex-row pb-4">
+                                        <div className="w-24">
+                                            First Name
+                                        </div>
+                                        <input defaultValue=" " {...register("example")} />
+                                    </div>
+                                    <div className="flex flex-row pb-4">
+                                        <div className="w-24">
+                                            Last Name
+                                        </div>
+                                        <input defaultValue="" {...register("example")} />
+                                    </div>
+                                    <div className="flex flex-row pb-4">
+                                        <div className="w-24">
+                                            Position
+                                        </div>
+                                        <input defaultValue="" {...register("example")} />
+                                    </div>
+                                    <div className="flex flex-row pb-4">
+                                        <div className="w-24">
+                                            Contact Info
+                                        </div>
+                                        <input defaultValue="" {...register("example")} />
+                                    </div>
+                                    
+                                    <div className="ml-[6rem] bg-green-500 w-[4rem] text-center rounded-lg text-white">
+                                        <input type="submit"/>
+                                    </div>
+                                    </form>
+                                </div>
+                            </ReactModal>  
                             <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">Veiw All</span></button>
                         </div>
                     </div>
@@ -92,7 +135,8 @@ export default function Users() {
                     </table>
                     ) }
                 </div>
-            </div>   
+            </div> 
         </div>
+        
     );
 };
