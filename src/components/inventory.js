@@ -19,60 +19,18 @@ export default function Inventory() {
                         </div>
                         <div className="flex flex-row gap-2">
                             <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">View Transactions</span></button>
-                            <button ><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">Add Item</span></button>
-                            <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">Veiw All</span></button>
+                            <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">Add Item</span></button>
+                            <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">Vieww All</span></button>
                         </div>
                     </div>
+    
                     {editItem && (
-                    <form>
-                        <table className="w-full border-collapse border">
-                            <thead>
-                                <tr className="bg-gray-300">
-                                    <th className="text-sm font-semibold border p-2">
-                                        <span for="name" className="flex justify-start font-bold">Name</span>
-                                        <input id="name" className="w-full  pl-1 rounded-md "></input></th>
-                                    <th className="text-sm font-semibold border p-2">
-                                        <span for="desc" className="flex justify-start font-bold">Description</span>
-                                        <input id="desc" className="w-full  rounded-md "></input></th>
-                                    <th className="text-sm font-semibold border p-2">
-                                        <span for="cat" className="flex justify-start font-bold">Category</span>
-                                        <input id="cat" className="w-full rounded-md "></input></th>
-                                    <th className="text-sm font-semibold border p-2">
-                                        <span for="price" className="flex justify-start font-bold">Price</span>
-                                        <input id="price" className="w-full rounded-md "></input></th>
-                                    <th className="text-sm font-semibold border p-2">
-                                        <span for="tres" className="flex justify-start font-bold">Threshold</span>
-                                        <input id="tres" className="w-full rounded-md "></input></th>
-                                    <th className="text-sm font-semibold border p-2">
-                                        <span for="quan" className="flex justify-start font-bold">Quantity</span>
-                                        <input id="quan" className="w-full rounded-md "></input></th>
-                                    <th className="text-md font-semibold border p-2">
-                                        <button type="submit" className="w-full h-full bg-gray-100 px-2 py-1 font-bold rounded-md ">Submit</button></th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </form>
+                        EditItem()
                     )}
                     {addItem && (
-                        <div>
-                            <form>
-                        <table className="w-full border-collapse border">
-                            <thead>
-                                <tr className="bg-gray-300">
-                                    <th className="text-sm font-semibold border p-2">
-                                        <span for="name" className="flex justify-start font-bold">Name</span>
-                                        <input id="name" className="w-full  pl-1 rounded-md "></input></th>
-                                    <th className="text-sm font-semibold border p-2">
-                                        <span for="quan" className="flex justify-start font-bold">Quantity</span>
-                                        <input id="quan" className="w-full rounded-md "></input></th>
-                                    <th className="text-md font-semibold border p-2">
-                                        <button type="submit" className="w-full h-full bg-gray-100 px-2 py-1 font-bold rounded-md ">Submit</button></th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </form>
-                        </div>
+                        AddItem()
                     )}
+
                     <table className="w-full border-collapse border">
                         <thead>
                             <tr className="bg-gray-400">
@@ -110,9 +68,62 @@ export default function Inventory() {
                             </tr>
                         </tbody>
                     </table>
-
                 </div>
             </div>   
         </div>
     );
 };
+
+function EditItem() {
+    
+    return (<form>
+                <table className="w-full border-collapse border">
+                    <thead>
+                        <tr className="bg-gray-300">
+                            <th className="text-sm font-semibold border p-2">
+                                <span for="name" className="flex justify-start font-bold">Name</span>
+                                <input id="name" className="w-full  pl-1 rounded-md "></input></th>
+                            <th className="text-sm font-semibold border p-2">
+                                <span for="desc" className="flex justify-start font-bold">Description</span>
+                                <input id="desc" className="w-full  rounded-md "></input></th>
+                            <th className="text-sm font-semibold border p-2">
+                                <span for="cat" className="flex justify-start font-bold">Category</span>
+                                <input id="cat" className="w-full rounded-md "></input></th>
+                            <th className="text-sm font-semibold border p-2">
+                                <span for="price" className="flex justify-start font-bold">Price</span>
+                                <input id="price" className="w-full rounded-md "></input></th>
+                            <th className="text-sm font-semibold border p-2">
+                                <span for="tres" className="flex justify-start font-bold">Threshold</span>
+                                <input id="tres" className="w-full rounded-md "></input></th>
+                            <th className="text-sm font-semibold border p-2">
+                                <span for="quan" className="flex justify-start font-bold">Quantity</span>
+                                <input id="quan" className="w-full rounded-md "></input></th>
+                            <th className="text-md font-semibold border p-2">
+                                <button type="submit" className="w-full h-full bg-gray-100 px-2 py-1 font-bold rounded-md ">Submit</button></th>
+                        </tr>
+                    </thead>
+                </table>
+            </form>
+    );
+}
+
+function AddItem() {
+    return (
+    <div>
+        <form>
+            <table className="w-full border-collapse border">
+                <thead>
+                    <tr className="bg-gray-300">
+                        <th className="text-sm font-semibold border p-2">
+                            <span for="name" className="flex justify-start font-bold">Name</span>
+                            <input id="name" className="w-full  pl-1 rounded-md "></input></th>
+                        <th className="text-sm font-semibold border p-2">
+                            <span for="quan" className="flex justify-start font-bold">Quantity</span>
+                            <input id="quan" className="w-full rounded-md "></input></th>
+                        <th className="text-md font-semibold border p-2">
+                            <button type="submit" className="w-full h-full bg-gray-100 px-2 py-1 font-bold rounded-md ">Submit</button></th>
+                    </tr>
+                </thead>
+            </table>
+        </form>
+    </div>);}

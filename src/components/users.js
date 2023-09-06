@@ -38,7 +38,9 @@ export default function Users() {
                             ) : (
                             <button onClick={()=> setAccount("customer")}><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">View User Accounts</span></button>  
                             )}
+                            {account==="employee" && (
                             <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">Add</span></button>
+                            )}
                             <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">Veiw All</span></button>
                         </div>
                     </div>
