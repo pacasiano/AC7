@@ -10,7 +10,7 @@ import Inventory from "../components/inventory";
 import Orders from "../components/orders";
 import Users from "../components/users";
 import Shipping from "../components/shipping";
-import AddItem from "../components/addItem";
+import InventoryIn from "../components/InventoryIn";
 
 export default function Admin() {
 
@@ -38,7 +38,7 @@ export default function Admin() {
                                     <div className="text-xl font-semibold"><FontAwesomeIcon icon={faInbox} /> Inventory</div>
                                     </button>
                                     <div className="flex justify-center">
-                                        <button onClick={() => setPage("addItem")} >
+                                        <button onClick={() => setPage("inventoryIn")} >
                                         <div className="text-md italic font-normal">Add Item</div>
                                         </button>
                                     </div>
@@ -61,8 +61,8 @@ export default function Admin() {
                                     return <Users />;
                                 case "shipping":
                                     return <Shipping />;
-                                case "addItem":
-                                    return <AddItem />;
+                                case "inventoryIn":
+                                    return <InventoryIn />;
                                 default:
                                     return <Inventory />;
                             }

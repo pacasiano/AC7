@@ -20,7 +20,7 @@ export default function Inventory() {
                         <div className="flex flex-row gap-2">
                             <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">View Transactions</span></button>
                             <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">Add Item</span></button>
-                            <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">Vieww All</span></button>
+                            <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">View All</span></button>
                         </div>
                     </div>
     
