@@ -10,6 +10,7 @@ import Inventory from "../components/inventory";
 import Orders from "../components/orders";
 import Users from "../components/users";
 import Shipping from "../components/shipping";
+import InventoryIn from "../components/InventoryIn";
 
 export default function Admin() {
 
@@ -24,22 +25,27 @@ export default function Admin() {
                             <div className="flex flex-col pl-7 gap-5">
                                 <div id="orders" className="">
                                     <button onClick={() => setPage("orders")}>
-                                    <div className="text-xl font-light"><FontAwesomeIcon icon={faShoppingCart} /> Orders</div>
+                                    <div className="text-xl font-semibold"><FontAwesomeIcon icon={faShoppingCart} /> Orders</div>
                                     </button>
                                 </div>
                                 <div id="accounts" className="">
                                     <button onClick={() => setPage("users")} >
-                                    <div className="text-xl font-light"><FontAwesomeIcon icon={faUsers} /> Accounts</div>
+                                    <div className="text-xl font-semibold"><FontAwesomeIcon icon={faUsers} /> Accounts</div>
                                     </button>
                                 </div>
                                 <div id="inventory" className="">
                                     <button onClick={() => setPage("inventory")} >
-                                    <div className="text-xl font-light"><FontAwesomeIcon icon={faInbox} /> Inventory</div>
+                                    <div className="text-xl font-semibold"><FontAwesomeIcon icon={faInbox} /> Inventory</div>
                                     </button>
+                                    <div className="flex justify-center">
+                                        <button onClick={() => setPage("inventoryIn")} >
+                                        <div className="text-md italic font-normal">Add Item</div>
+                                        </button>
+                                    </div>
                                 </div>
                                 <div id="shipping" className="">
                                     <button onClick={() => setPage("shipping")} >
-                                    <div className="text-xl font-light"><FontAwesomeIcon icon={faTruck} /> Shipping</div>
+                                    <div className="text-xl font-semibold"><FontAwesomeIcon icon={faTruck} /> Shipping</div>
                                     </button>
                                 </div>
                             </div>
@@ -55,6 +61,8 @@ export default function Admin() {
                                     return <Users />;
                                 case "shipping":
                                     return <Shipping />;
+                                case "inventoryIn":
+                                    return <InventoryIn />;
                                 default:
                                     return <Inventory />;
                             }
