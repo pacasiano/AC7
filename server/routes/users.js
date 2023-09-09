@@ -17,8 +17,8 @@ router.get('/', (req, res) => {
     let q = 'SELECT * FROM customer';
     connection.query(q, function(error, results, fields) {
         if (error) throw error;
-        console.log(results);
-        console.log(JSON.stringify(results));
+        // console.log(results);
+        // console.log(JSON.stringify(results));
         res.json(results); //returns an array of obj literals in JSON format, each obj literal is a row from users table
     });
 

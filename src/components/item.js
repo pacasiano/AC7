@@ -3,10 +3,7 @@ import Item1 from "../imgs/Item1.png";
 import { Link } from "react-router-dom";
 import "../App.css";
 
-function Item() {
-
-  var name = "Beauty Pill";
-  var price = 100;
+function Item(props) {
 
   return (
     <div className="item shadow-md rounded-md">
@@ -17,9 +14,12 @@ function Item() {
         </Link>
         <div className="flex flex-col px-2 justify-start gap-2 lg:w-52 w-40">
           <div className="flex flex-col pl-3">
-            <div className="flex justify-start m-0 text-xl font-extrabold">{name}</div>
-            <div className="flex m-0 justify-start text-xs font-semibold">${price}</div>
-            <div className="flex m-0 justify-start text-xs">I am the description</div>
+            <div className="flex justify-start m-0 text-xl font-extrabold">{props.product_obj.name}</div>
+            <div className="flex m-0 justify-start text-xs font-semibold">${props.product_obj.price}</div>
+            <div className="flex m-0 justify-start text-xs">{props.product_obj.description}</div>
+            {/* props is the parameter name here. product_obj is the parameter name we set in itemSlider.js 
+            which contains the columns we queried from routes/products.js. 
+            Basically, 'props' contains a nested obj. We access the nested obj using 'product_obj'*/}
           </div>
           <div className="flex justify-center py-2">
             <button className="flex items-center justify-center w-11/12 mb-2 h-6 text-xs font-bold text-white bg-black rounded-md">Add to Cart</button>

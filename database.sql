@@ -209,7 +209,10 @@ VALUES(1, 'Gotham', '123', 'Baranggay 10', 'NA', '26 street'),
 (5, 'Davao City', '8000', 'Baranggay Buhangin', 'Davao', '24 Jump Street');
 
 INSERT INTO product(name, description, price, category, threshold, quantity)
-VALUES('Product 1', 'Hello world', 12.11, 'Cosmetics', 20, 50);
+VALUES
+('Whitening Body Lotion', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis nunc eget turpis scelerisque, id ultrices justo ornare.', 100, 'Cosmetics', 20, 50),
+('Bleaching Whipped Cream', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis nunc eget turpis scelerisque, id ultrices justo ornare.', 150, 'Cosmetics', 20, 50),
+('Kojic Soap', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis nunc eget turpis scelerisque, id ultrices justo ornare.', 50, 'Cosmetics', 20, 50);
 
 INSERT INTO sale(account_id, address_id, sale_status)
 VALUES (1, 1, 'in progress'),
