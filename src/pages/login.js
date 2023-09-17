@@ -22,7 +22,7 @@ function Landing() {
             <h1 className="flex justify-center text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl ">
               Login to Account
             </h1>
-            <form className="space-y-4 md:space-y-6" action="/api/sign-up" method="POST">
+            <form className="space-y-4 md:space-y-6" action="/api/login" method="POST">
               <div>
                 <label for="username"
                   className="block mb-2 text-sm font-medium text-gray-900"

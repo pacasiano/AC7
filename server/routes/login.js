@@ -12,7 +12,7 @@ let connection = mysql.createConnection({
 //parse/extract data from a <form>
 app.use(express.urlencoded( { extended: true } ));
 
-app.post('/api/sign-up', (req, res) => {
+app.post('/api/login', (req, res) => {
     const {username, password} = req.body;
     // try {
     //     console.log('Receieved username: ' + req.body.username)
