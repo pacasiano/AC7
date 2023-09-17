@@ -19,6 +19,7 @@ router.get('/', (req, res) => {
     connection.query(q, function(error, results, fields) {
         if (error) throw error;
         res.json(results); //returns an array of obj literals in JSON format, each obj literal is a row from the query
+        // connection.end();
     });
 
 });

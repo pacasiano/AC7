@@ -18,6 +18,7 @@ router.get('/', (req, res) => {
         console.log(results);
         console.log(JSON.stringify(results));
         res.json(results); //returns an array of obj literals in JSON format, each obj literal is a row from the query
+        // connection.end();
     });
 
 });
