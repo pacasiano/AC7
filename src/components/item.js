@@ -13,11 +13,11 @@ function Item(props) {
           <Link to="/product">
           <img className="object-cover h-15 px-3 pt-3 rounded-md aspect-auto" src={Item1} alt="Item1" />
           </Link>
-          <div className="flex flex-col px-2 justify-start gap-2 lg:w-52 w-40">
-            <div className="flex flex-col pl-3">
-              <input className="flex justify-start m-0 text-xl font-extrabold" value={props.product_obj.name} readOnly={true}/>
-              <input className="flex m-0 justify-start text-xs font-semibold" value={`$${props.product_obj.price}`} readOnly={true} />
-              <input className="flex m-0 justify-start text-xs" value={props.product_obj.description} readOnly={true}/>
+          <div className="flex flex-col px-2 justify-start gap-2 w-full">
+            <div className="flex flex-col pl-3 w-full">
+              <input className="flex justify-start m-0 pb-2 text-xl font-extrabold focus:outline-none" value={props.product_obj.name} readOnly={true}/>
+              <input className="flex m-0 justify-start pb-2 text-xs font-semibold focus:outline-none" value={`$${props.product_obj.price}`} readOnly={true} />
+              <textarea className="flex m-0 justify-start text-xs focus:outline-none h-12 resize-none" value={props.product_obj.description} readOnly={true}/>
               {/* props is the parameter name here. product_obj is the parameter name we set in itemSlider.js 
               which contains the columns we queried from routes/products.js. 
             Basically, 'props' contains a nested obj. We access the nested obj using 'product_obj'*/}
