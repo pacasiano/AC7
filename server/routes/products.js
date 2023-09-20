@@ -15,8 +15,8 @@ router.get('/', (req, res) => {
     let q = 'SELECT product_id, name, description, price FROM product';
     connection.query(q, function(error, results, fields) {
         if (error) throw error;
-        console.log(results);
-        console.log(JSON.stringify(results));
+        // console.log(results);
+        // console.log(JSON.stringify(results));
         res.json(results); //returns an array of obj literals in JSON format, each obj literal is a row from the query
         // connection.end();
     });

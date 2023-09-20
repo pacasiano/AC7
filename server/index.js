@@ -4,6 +4,7 @@ const users = require('./routes/users');
 const orders= require('./routes/orders');
 const products = require('./routes/products');
 const login = require('./routes/login');
+const item = require('./routes/item');
 
 /*when localhost:8080/api/users is requested, 
 the users.js file from routes folder will run 
@@ -16,6 +17,8 @@ app.use('/api/orders', orders);
 app.use('/api/products', products);
 
 app.post('/api/login', login);
+
+app.post('/api/item', item)
 
 // app.get('/api', (req, res) => {
 //     res.send('Hello world from express');
