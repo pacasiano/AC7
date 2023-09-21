@@ -12,6 +12,7 @@ import Header from "./components/header";
 import Footer from "./components/footer";
 import Checkout from "./pages/checkout";
 import Admin from "./pages/admin";
+import IndivOrder from "./components/indivOrder"
 
 import './App.css';
 
@@ -43,6 +44,7 @@ function App() {
             <Route path="/sign-up" element={<Signup />} />
             <Route path="/login" element={<Login />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/order" element={<IndivOrder />} />
           </Routes>
           <Footer />
         </div>
