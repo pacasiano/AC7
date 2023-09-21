@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState , useContext } from "react";
+import { myContext } from "../context/inventoryContext";
 import "../App.css";
 
 export default function Inventory() {
 
     const [addItem, showAddItem] = useState(false);
     const [editItem, showEditItem] = useState(false);
+
+    const { setPage } = useContext(myContext) 
 
     return(
         <div className="h-screen px-8 pt-8">
@@ -19,7 +22,7 @@ export default function Inventory() {
                         </div>
                         <div className="flex flex-row gap-2">
                             <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">View Transactions</span></button>
-                            <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">Add Item</span></button>
+                            <button onClick={() => setPage("inventoryIn")}><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">Add Item</span></button>
                             <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">View All</span></button>
                         </div>
                     </div>

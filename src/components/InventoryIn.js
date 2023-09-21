@@ -1,21 +1,31 @@
 import React, { useState } from "react"
-import { useForm } from "react-hook-form";
+import Select from "react-select"
 import "../App.css"
 
 export default function InventoryIn() {
 
     const [numbersToBeDelivered, setNumbersToBeDelivered] = useState(1);
 
-    // Function to handle changes in the input field
-    const handleInputChange = (event) => {
-        if(Number(event.target.value) < 1 || Number(event.target.value) > 100){
-            alert("Please enter a number between 0 and 100");
-            return;
-        };
-      setNumbersToBeDelivered(Number(event.target.value));
-    };
-  
+    const options = [
+        {value: "1", label: "Supplier 1"},
+        {value: "2", label: "Supplier 2"},
+        {value: "3", label: "Supplier 3"},
+        {value: "4", label: "Supplier 4"},
+        {value: "5", label: "Supplier 5"},
+    ];
 
+    const options2 = [
+        {value: "1", label: "1 Item"},
+        {value: "2", label: "2 Items"},
+        {value: "3", label: "3 Items"},
+        {value: "4", label: "4 Items"},
+        {value: "5", label: "5 Items"},
+        {value: "6", label: "6 Items"},
+        {value: "7", label: "7 Items"},
+        {value: "8", label: "8 Items"},
+        {value: "9", label: "9 Items"},
+        {value: "10", label: "10 Items"},
+    ];
 
     return(
         <div className=" px-8 py-8 ">
@@ -35,45 +45,22 @@ export default function InventoryIn() {
                         <tbody>
                             <tr className="bg-gray-300">
                                 <td className="text-sm font-semibold border p-2">
-                                    <select name="supplierName" className="w-full text-center bg-gray-300 border-b-2 border-gray-400 pt-2 pl-1">
-                                        {/*Iterate the Suppliers here*/}
-                                        <option value="1">Supplier 1</option>
-                                    </select></td>
+                                    <Select options={options} name="supplierName" className="w-full text-center"/></td>
                                 <td className="text-sm font-semibold border p-2">
-                                    <input name="amount" type="number" className="w-full text-center bg-gray-300 border-b-2 border-gray-400 pt-2 pl-1"></input></td>
+                                    <input name="amount" type="number" className="w-full h-10 text-center"></input></td>
                                 <td className="text-sm font-semibold border p-2">
-                                    <select className=" w-full text-center bg-gray-300 border-b-2 border-gray-400 pt-2 pl-1" value={numbersToBeDelivered} onChange={handleInputChange}>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">5</option>
-                                        <option value="7">6</option>
-                                        <option value="8">7</option>
-                                        <option value="9">8</option>
-                                        <option value="10">9</option>
-                                        <option value="11">10</option>
-                                        <option value="12">12</option>
-                                        <option value="13">13</option>
-                                        <option value="14">14</option>
-                                        <option value="15">15</option>
-                                        <option value="16">16</option>
-                                        <option value="17">17</option>
-                                        <option value="18">18</option>
-                                        <option value="19">19</option>
-                                        <option value="20">20</option>
-                                    </select>
+                                    <Select options={options2} onChange={(opt) => setNumbersToBeDelivered(opt.value)} className=" w-full text-center" />
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                     <div className="flex flex-col gap-3">
                         <span className="text-xl font-bold ">Items</span>
-                        <table className="w-full border-collapse border">
+                        <table className="w-full">
                             <thead className="bg-gray-400">
                                 <tr>
                                     <th className="text-sm font-semibold border p-2 text-white">Item Name</th>
+                                    <th className="text-sm w-44 font-semibold border p-2 text-white">Price per Item</th>
                                     <th className="text-sm w-44 font-semibold border p-2 text-white">Quantity</th>
                                 </tr>
                             </thead>
@@ -97,16 +84,24 @@ export default function InventoryIn() {
 }
 
 function Items() {
+
+    const options = [
+        {value: "1", label: "Item 1"},
+        {value: "2", label: "Item 2"},
+        {value: "3", label: "Item 3"},
+        {value: "4", label: "Item 4"},
+    ];
+
     return(
-        <tbody className="bg-gray-200">
+
+        <tbody className="bg-gray-300">
             <tr>
                 <td className="text-sm font-semibold border p-2 text-black">
-                    <select name="item" className="h-10 w-full text-center bg-gray-200 border-b-2 border-gray-400 pt-2 pl-1">
-                        {/*Iterate the Items here*/}
-                        <option value="1">Item 1</option>    
-                    </select></td>
+                    <Select options={options} name="item" className="h-10 w-full text-center"/></td>
                 <td className="text-sm font-semibold border p-2 text-black">
-                    <input name="quantity" type="number" className="h-10 w-full text-center bg-gray-200 border-b-2 border-gray-400 pt-2 pl-1"></input></td>
+                    <input name="price" type="number" className="h-10 w-full text-center pl-1"></input></td>
+                <td className="text-sm font-semibold border p-2 text-black">
+                    <input name="quantity" type="number" className="h-10 w-full text-center pl-1"></input></td>
             </tr>
         </tbody>
 

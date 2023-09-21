@@ -135,7 +135,7 @@ function CartItem() {
 function CartSummary() {
   let Items = [];
 
-  for (var i = 0; i < 3; i++) {
+  for (var i = 0; i < 5; i++) {
     Items.push(<CartItem />);
   }
 

@@ -11,6 +11,7 @@ import Orders from "../components/orders";
 import Users from "../components/users";
 import Shipping from "../components/shipping";
 import InventoryIn from "../components/InventoryIn";
+import { myContext } from "../context/inventoryContext";
 
 export default function Admin() {
 
@@ -37,11 +38,6 @@ export default function Admin() {
                                     <button onClick={() => setPage("inventory")} >
                                     <div className="text-xl font-semibold"><FontAwesomeIcon icon={faInbox} /> Inventory</div>
                                     </button>
-                                    <div className="flex justify-center">
-                                        <button onClick={() => setPage("inventoryIn")} >
-                                        <div className="text-md italic font-normal">Inventory In</div>
-                                        </button>
-                                    </div>
                                 </div>
                                 <div id="shipping" className="">
                                     <button onClick={() => setPage("shipping")} >
@@ -51,6 +47,7 @@ export default function Admin() {
                             </div>
                     </div>
                     <div id="body" className="w-full pl-56 ">
+                    <myContext.Provider value={{page, setPage}}>
                     {(() => {
                             switch (page) {
                                 case "inventory":
@@ -67,6 +64,7 @@ export default function Admin() {
                                     return <Inventory />;
                             }
                         })()}
+                    </myContext.Provider>
                     </div>
                 </div>
             </div>
