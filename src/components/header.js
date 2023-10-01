@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import navlogo from "../imgs/navlogo.png";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -13,6 +13,34 @@ import Search from "./searchbar";
 import '../App.css';
 
 function Header() {
+
+    // const [cookies, setCookies] = useState(document.cookie);
+
+    // const handleSubmit = async (event) => {
+    // event.preventDefault();
+
+    // const formData = new FormData(event.target);
+
+    // try {
+    //     const response = await fetch('/api/cart', {
+    //         method: 'POST',
+    //         body: formData,
+    //         headers: {
+    //         'Cookie': cookies, // Include cookies in the headers
+    //         },
+    //     });
+
+    //     if (response.ok) {
+    //         // Handle a successful response from the server
+    //         console.log('Form submitted successfully.');
+    //     } else {
+    //     // Handle errors here
+    //     console.error('Error:', response.statusText);
+    //     }
+    // } 
+    // catch (error) {
+    //     console.error('Error:', error);
+    // }};
 
     return (
         <div className="header">
@@ -30,6 +58,9 @@ function Header() {
                     <div className="flex items-center md:visible collapse h-full">
                         <Search/>
                     </div>
+                    {/* <form id="myForm" className="flex items-center text-xl m-0" action="/api/cart" method="POST">
+                        <CustomLink to="/api/cart/5"><FontAwesomeIcon icon={faCartShopping} style={{color: "#000000",}} onClick={() => {document.getElementById("myForm").submit();}} /></CustomLink>
+                    </form> */}
                     <CustomLink to="/cart" className="flex items-center text-xl m-0"><FontAwesomeIcon icon={faCartShopping} style={{color: "#000000",}} /></CustomLink>
                     <button onClick={userDropdown} className="flex cursor-pointer items-center text-xl transition ease-out duration-500 hover:bg-gray-300 my-2 px-2 rounded-md"><FontAwesomeIcon icon={faUser} style={{color: "#000000",}} /></button>
                     <UserDropdown

@@ -7,6 +7,8 @@ const login = require('./routes/login');
 const item = require('./routes/item');
 const cart = require('./routes/cart');
 
+app.use(express.urlencoded( { extended: true } ));
+
 /*when localhost:8080/api/users is requested, 
 the users.js file from routes folder will run 
 which will return a JSON object containing the users from the users table.
@@ -17,11 +19,11 @@ app.use('/api/orders', orders);
 
 app.use('/api/products', products);
 
-app.post('/api/login', login);
+app.use('/api/login', login);
 
-app.post('/api/item', item);
+app.use('/api/item', item);
 
-app.get('/api/cart', cart);
+app.use('/api/cart', cart);    
 
 // app.get('/api', (req, res) => {
 //     res.send('Hello world from express');

@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const mysql = require('mysql2');
 const cookieParser = require('cookie-parser');
+const router = express.Router();
 
 app.use(cookieParser());
 
@@ -15,7 +16,7 @@ const connection = mysql.createConnection({
     database: 'ac7_database'
 });
 
-app.post('/api/item', (req, res) => {
+router.post('/api/item', (req, res) => {
     const {username, password} = req.body;
     //instead of req.headers.cookie which returns a string, we can use the cookie parser 'req.cookies' to return an object
     const {account_id} = req.cookies;
@@ -65,4 +66,4 @@ app.post('/api/item', (req, res) => {
     //sale_item(sale_id, account_id, product_id, price)
 });
 
-module.exports = app;
+module.exports = router;

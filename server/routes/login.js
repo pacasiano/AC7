@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const router = express.Router();
 
 const cookieParser = require('cookie-parser');
 
@@ -13,17 +14,15 @@ let connection = mysql.createConnection({
     database: 'ac7_database'
 });
 
-//parse/extract data from a <form>
-app.use(express.urlencoded( { extended: true } ));
-
-app.post('/api/login', (req, res) => {
+router.post('/', (req, res) => {
+    console.log(req.body)
     const {username, password} = req.body;
-    // try {
-    //     console.log('Receieved username: ' + req.body.username)
-    // }
-    // catch (err) {
-    //     console.log(err)
-    // }
+    try {
+        console.log('Receieved username: ' + req.body.username)
+    }
+    catch (err) {
+        console.log(err)
+    }
 
     let q = `SELECT account_id, username, password FROM account WHERE username = '${username}'`;
     connection.query(q, function(error, results, fields) {
@@ -53,4 +52,4 @@ app.post('/api/login', (req, res) => {
     });
 });
 
-module.exports = app;
+module.exports = router;

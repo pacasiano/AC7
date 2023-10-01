@@ -1,11 +1,25 @@
-import React, { useState } from "react";
-import Item1 from "../imgs/Item1.png";
+import React, { useState, useEffect } from "react";
 import "../App.css";
 import { Link } from "react-router-dom";
 import CODLogo from "../imgs/CODLogo.png";
 import gcashLogo from "../imgs/gcashLogo.png";
+import CartItem from "../components/cartItem";
 
 function Cart() {
+
+  const cookie = document.cookie;
+  const accountId = cookie.slice(cookie.indexOf('=')+1);
+
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    fetch(`/api/cart/${accountId}`)
+      .then((res) => res.json())
+      .then((items) => {
+        setItems(items);
+      });
+  }, []);
+
   return (
     <div className="Cart">
       <div className="flex flex-col lg:flex-row lg:items-start items-center lg:gap-0 gap-5 justify-evenly py-16">
@@ -28,7 +42,9 @@ function Cart() {
             </div>
           </div>
           <div className="bg-gray-100 p-5">
-            <CartSummary />
+            {items.map((item) => {
+              return <CartItem item={item}/>
+            })}
           </div>
         </div>
         <div className="flex flex-col lg:justify-start w-11/12 lg:w-1/4 ">
@@ -59,87 +75,6 @@ function Cart() {
       </div>
     </div>
   );
-}
-
-function CartItem() {
-  var name = "Beauty Pill";
-  var price = 100;
-
-  const [quantity, setQuantity] = useState(1);
-  const [total, setTotal] = useState(price);
-
-  const incrementQuantity = () => {
-    setQuantity(quantity + 1);
-    setTotal(total + price);
-  };
-
-  const decrementQuantity = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
-      setTotal(total - price);
-    }
-  };
-
-  return (
-      <table className="table-fixed w-full">
-        <tbody>
-          <tr>
-            <td className="p-2">
-              <div className="flex justify-center">
-              <img  
-                src={Item1}
-                className="object-scale-down rounded-md w-full h-36"
-                alt="Item1"
-              />
-              </div>
-            </td>
-            <td className="">
-              <div className="flex flex-col justify-center items-center ">
-                <div>
-                  <div className="flex justify-start text-xl font-bold pt-0 pb-2  ">
-                    {name}
-                  </div>
-                  <div className="flex justify-start font-normal text-sm ">
-                    $100.00
-                  </div>
-                  <button className="absolute  text-xs font-thin ">
-                    Remove
-                  </button>
-                </div>  
-              </div>
-            </td>
-            <td className="pb-1 ">
-              <div className="flex flex-row gap-5 justify-center"> 
-                <button onClick={decrementQuantity}className="flex justify-center m-0 mt-1 p-1 text-xl hover:font-extrabold ">
-                  -
-                </button>
-                  <div className="flex justify-center m-0 pt-2 text-xl font-light ">
-                    {quantity}
-                  </div>
-                <button onClick={incrementQuantity} className="flex justify-center m-0 mt-1 p-1 text-xl hover:font-extrabold ">
-                    +
-                </button>
-              </div>
-            </td>
-            <td className="text-xl font-medium ">
-              <div className="flex justify-center">
-                ${total}
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-  );
-}
-
-function CartSummary() {
-  let Items = [];
-
-  for (var i = 0; i < 3; i++) {
-    Items.push(<CartItem />);
-  }
-
-  return Items;
 }
 
 export default Cart;
