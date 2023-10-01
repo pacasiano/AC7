@@ -4,10 +4,10 @@ const mysql = require('mysql2');
 const cookieParser = require('cookie-parser');
 const router = express.Router();
 
-app.use(cookieParser());
+router.use(cookieParser());
 
 //parse/extract data from a <form>
-app.use(express.urlencoded( { extended: true } ));
+// app.use(express.urlencoded( { extended: true } ));
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -16,7 +16,7 @@ const connection = mysql.createConnection({
     database: 'ac7_database'
 });
 
-router.post('/api/item', (req, res) => {
+router.post('/', (req, res) => {
     const {username, password} = req.body;
     //instead of req.headers.cookie which returns a string, we can use the cookie parser 'req.cookies' to return an object
     const {account_id} = req.cookies;

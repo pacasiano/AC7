@@ -10,13 +10,15 @@ function CartItem({item}) {
   
     const incrementQuantity = () => {
       setQuantity(quantity + 1);
-      setTotal(parseInt(total) + parseInt(price));
+      let totalCalc = parseInt(total) + parseInt(price); 
+      setTotal(totalCalc.toFixed(2));
     };
   
     const decrementQuantity = () => {
       if (quantity > 1) {
         setQuantity(quantity - 1);
-        setTotal(parseInt(total) - parseInt(price));
+        let totalCalc = parseInt(total) - parseInt(price); 
+        setTotal(totalCalc.toFixed(2));
       }
     };
   
