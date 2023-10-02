@@ -9,17 +9,27 @@ function Cart() {
 
   const cookie = document.cookie;
   function getAcctIdFromCookie (cookieStr) {
-      //document.cookie is a string. We use .split() to convert it to an array with each cookie being an element
-      const cookiesArray = cookieStr.split(';');
-      for(let i = 0; i < cookiesArray.length; i++) {
-          if (cookiesArray[i].indexOf('account_id') > 0) {
-              //find the cookie with 'account_id' substring
-              const id = cookiesArray[i].replace('account_id=', '').trim();
-              return id;
-          }
-      }
-  }
-  const accountId = getAcctIdFromCookie(cookie);
+    //if browser has more than one cookie, the if statement will run
+    if (cookieStr.indexOf(';') > 0) {
+        //document.cookie is a string. We use .split() to convert it to an array with each cookie being an element
+        const cookiesArray = cookieStr.split(';');
+        for(let i = 0; i < cookiesArray.length; i++) {
+            if (cookiesArray[i].indexOf('account_id') > 0) {
+                //find the cookie with 'account_id' substring
+                const id = cookiesArray[i].replace('account_id=', '').trim();
+                console.log(id)
+                return id;
+            }
+        }
+    }
+    else {
+        const id = cookie.slice(cookie.indexOf('=')+1);
+        console.log(id)
+        return id;
+    }
+}
+
+const accountId = getAcctIdFromCookie(cookie);
 
   const [items, setItems] = useState([]);
 
