@@ -10,8 +10,8 @@ USE ac7_database;
 -- consider using OAuth (sign in with google) to decrease data in our db
 CREATE TABLE IF NOT EXISTS account (
     account_id BIGINT UNSIGNED AUTO_INCREMENT,
-    username VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL,
+    username VARCHAR(25) UNIQUE NOT NULL,
+    password VARCHAR(128) NOT NULL,
     -- store pw as hash value that can't be decrypted
     account_type ENUM('employee', 'customer') NOT NULL,
     PRIMARY KEY (account_id)
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS employee (
 CREATE TABLE IF NOT EXISTS supplier (
     supplier_id BIGINT UNSIGNED AUTO_INCREMENT,
     address_id BIGINT UNSIGNED NOT NULL,
-    name VARCHAR(255) NOT NULL,
+    name VARCHAR(128) NOT NULL,
     contact_info VARCHAR(15) NOT NULL,
     PRIMARY KEY (supplier_id),
     FOREIGN KEY (address_id) REFERENCES address(address_id)
@@ -72,20 +72,20 @@ CREATE TABLE IF NOT EXISTS inventory_in (
     -- However, both FKs are already used as indices when querying so PK prolly not needed
     inventory_in_id BIGINT UNSIGNED AUTO_INCREMENT,
     supplier_id BIGINT UNSIGNED NOT NULL,
-    payment_amount INT UNSIGNED NOT NULL, -- total payment of a particular delivery
-    date_ordered TIMESTAMP NOT NULL, -- when/how do we record this? when we order, we don't create an entry for inventory in yet
+    payment_amount DECIMAL(10,2) NOT NULL, -- total payment of a particular delivery
+    date_ordered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, -- when/how do we record this? when we order, we don't create an entry for inventory in yet
     date_delivered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (inventory_in_id),
     FOREIGN KEY (supplier_id) REFERENCES supplier(supplier_id)
 );
 
 CREATE TABLE IF NOT EXISTS payment (
-    payment_id BIGINT UNSIGNED,
+    payment_id BIGINT UNSIGNED AUTO_INCREMENT,
     inventory_in_id BIGINT UNSIGNED NOT NULL,
     amount DECIMAL(10,2) NOT NULL,
     payment_type ENUM('cash', 'gcash'),
     payment_status ENUM('fully paid', 'not paid') DEFAULT 'not paid',
-    payment_date TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+    payment_date TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     -- when payment_status is updated, the payment_date will also update
     PRIMARY KEY (payment_id),
     FOREIGN KEY (inventory_in_id) REFERENCES inventory_in(inventory_in_id)
@@ -93,10 +93,10 @@ CREATE TABLE IF NOT EXISTS payment (
 
 CREATE TABLE IF NOT EXISTS product (
     product_id BIGINT UNSIGNED AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL,
-    description VARCHAR(255) NOT NULL,
+    name VARCHAR(128) NOT NULL,
+    description VARCHAR(128) NOT NULL,
     price DECIMAL(10,2) NOT NULL,
-    category VARCHAR(255) NOT NULL,
+    category VARCHAR(128) NOT NULL,
     threshold INT UNSIGNED NOT NULL,
     quantity INT UNSIGNED NOT NULL,
     PRIMARY KEY (product_id)
@@ -129,7 +129,8 @@ CREATE TABLE IF NOT EXISTS sale (
     sale_id BIGINT UNSIGNED AUTO_INCREMENT,
     account_id BIGINT UNSIGNED NOT NULL,
     address_id BIGINT UNSIGNED NOT NULL,
-    sale_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    sale_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
+    --the date updates when the sale_status is changed from in progress to 'complete' ryt?
     sale_status ENUM('in progress', 'complete'),
     PRIMARY KEY (sale_id),
     FOREIGN KEY (account_id) REFERENCES account(account_id),
@@ -176,8 +177,8 @@ CREATE TABLE IF NOT EXISTS shipment (
     shipment_id BIGINT UNSIGNED AUTO_INCREMENT,
     sale_id BIGINT UNSIGNED NOT NULL,
     address_id BIGINT UNSIGNED NOT NULL,
-    tracking_number VARCHAR(255) NOT NULL,
-    courier VARCHAR(255) NOT NULL,
+    tracking_number VARCHAR(20) NOT NULL, -- tracking numbers are usually 12-20 in length in ph (esp with LBC and JRS). Wont exceed 20
+    courier VARCHAR(50) NOT NULL, -- we can abbrieviate names to about 4 letters but just to be safe we use 50 charlength
     sent_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     received_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     shipment_status ENUM('in progress', 'complete'),
