@@ -130,7 +130,7 @@ CREATE TABLE IF NOT EXISTS sale (
     account_id BIGINT UNSIGNED NOT NULL,
     address_id BIGINT UNSIGNED NOT NULL,
     sale_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
-    --the date updates when the sale_status is changed from in progress to 'complete' ryt?
+    -- the date updates when the sale_status is changed from in progress to 'complete' ryt?
     sale_status ENUM('in progress', 'complete'),
     PRIMARY KEY (sale_id),
     FOREIGN KEY (account_id) REFERENCES account(account_id),

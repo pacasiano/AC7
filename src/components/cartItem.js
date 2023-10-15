@@ -3,20 +3,22 @@ import Item1 from "../imgs/Item1.png";
 
 function CartItem({item}) {
     
-    const {name, price} = item;
+    const {name, price, quantity} = item;
+    let displayQty = parseInt(quantity);
+    console.log("Cart Item Quantity : " + displayQty)
     
-    const [quantity, setQuantity] = useState(1);
+    const [hookQty, setQuantity] = useState(displayQty);
     const [total, setTotal] = useState(price);
   
     const incrementQuantity = () => {
-      setQuantity(quantity + 1);
+      setQuantity(hookQty + 1);
       let totalCalc = parseInt(total) + parseInt(price); 
       setTotal(totalCalc.toFixed(2));
     };
   
     const decrementQuantity = () => {
-      if (quantity > 1) {
-        setQuantity(quantity - 1);
+      if (hookQty > 1) {
+        setQuantity(hookQty - 1);
         let totalCalc = parseInt(total) - parseInt(price); 
         setTotal(totalCalc.toFixed(2));
       }
@@ -56,7 +58,7 @@ function CartItem({item}) {
                     -
                   </button>
                     <div className="flex justify-center m-0 pt-2 text-xl font-light ">
-                      {quantity}
+                      {hookQty}
                     </div>
                   <button onClick={incrementQuantity} className="flex justify-center m-0 mt-1 p-1 text-xl hover:font-extrabold ">
                       +

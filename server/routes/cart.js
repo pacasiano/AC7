@@ -13,21 +13,12 @@ let connection = mysql.createConnection({
     database: 'ac7_database'
 });
 
-// router.post('/', (req, res) => {
-
-//     // need the account_id from cookies to know which account's shopping cart to query
-//     // shopping cart display-data needed: product.name, product.price,  
-//     const {account_id} = req.cookies;
-//     console.log("Account ID (cookies): " + account_id);
-//     res.redirect('http://localhost:3000/AC7/cart');
-// });
-
 
 router.get('/:id', (req, res) => {
 
     console.log('RUNNING .get("/cart/:id")')
     const {id: account_id} = req.params;
-    let q = 'SELECT product.name, product.price, sale.account_id FROM sale ' + 
+    let q = 'SELECT product.name, product.price, sale_item.quantity, sale.account_id FROM sale ' + 
             'INNER JOIN sale_item USING (sale_id) ' +
             'INNER JOIN product USING (product_id) ' +
             `WHERE sale.account_id = ${account_id};`;

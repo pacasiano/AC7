@@ -23,6 +23,7 @@ router.post('/', (req, res) => {
     let {product_id, product_name, product_price} = req.body;
     product_price = product_price.replace('$', ''); //the value returned from client-side has a dollar sign, so we remove it
 
+    //1st Query: We want the sale_id with the sale_status of 'in progress'
     let q = `SELECT sale_id FROM sale WHERE account_id = '${account_id}' AND sale_status = 'in progress'`;
     connection.query(q, function(err, results) {
         if (err) {
@@ -42,20 +43,54 @@ router.post('/', (req, res) => {
         }
     
         const { sale_id } = results[0];
-    
-        let q2 = `INSERT INTO sale_item(sale_id, account_id, product_id, price) VALUES (${sale_id}, ${account_id}, ${product_id}, '${product_price}')`;
+
+        //✅get the product_id of the product that was added to cart
+        //check if the current sale has a sale_item with this product_id
+        //if there is, increment the qty of that product in that sale_item
+        //if not, add a sale_item with that product_id
+
+        let q2 = `SELECT sale_item_id, product_id FROM sale INNER JOIN sale_item WHERE sale.account_id = ${account_id} AND product_id = ${product_id}`
         connection.query(q2, function(err, results) {
-            if (err) {
-                console.error("Error inserting into the database:", err);
-                // Handle the error as needed, e.g., return an error response or throw an exception.
-                // You may want to end the request or provide a meaningful response to the client.
-                res.status(500).json({ error: "Database insert error" });
-                return; // Exit the function early to prevent further execution
+            console.log("INSIDE 2nd QUERY: ");
+            console.log(results) 
+            if (results[0]) {
+                //If this product exists in the cart already, we want to (1) take its quantity then (2) increment it
+                console.log("INSIDE 3RD QUERY")
+                let q3 =  'SELECT sale_item.quantity FROM sale INNER JOIN sale_item USING (sale_id) ' + 
+                            `WHERE sale.account_id = ${account_id} AND product_id = ${product_id}`;
+                connection.query(q3, function(err, results) {
+                    console.log(results[0])
+                    let {quantity} = results[0]; 
+                    quantity = parseInt(quantity)+1;
+                    console.log('Updated quantity: ' + quantity)
+                    let updateQtyQuery = `UPDATE sale_item INNER JOIN sale USING (sale_id) SET quantity = ${quantity} ` + 
+                                        `WHERE sale.account_id = ${account_id} AND product_id = ${product_id}`;
+                    connection.query(updateQtyQuery, function(err, results) {
+                        console.log("Sale_item quantity successfully updated!")
+                        res.redirect('http://localhost:3000/AC7/cart');
+                    })
+                })
             }
+            else {
+                //4th Query: Create sale_items with the sale_id we got from 1st Query
+                console.log('INSIDE 4th QUERY')
+                let q4 = `INSERT INTO sale_item(sale_id, account_id, product_id, price) VALUES (${sale_id}, ${account_id}, ${product_id}, '${product_price}')`;
+                connection.query(q4, function(err, results) {
+                    if (err) {
+                        console.error("Error inserting into the database:", err);
+                        // Handle the error as needed, e.g., return an error response or throw an exception.
+                        // You may want to end the request or provide a meaningful response to the client.
+                        res.status(500).json({ error: "Database insert error" });
+                        return; // Exit the function early to prevent further execution
+                    }
+            
+                    console.log("Insert successful:", results);
+                    res.redirect('http://localhost:3000/AC7/cart');
+                });
+            }
+        }) 
+
     
-            console.log("Insert successful:", results);
-            res.redirect('http://localhost:3000/AC7/cart');
-        });
     });
     
     
