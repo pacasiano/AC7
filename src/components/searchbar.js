@@ -43,9 +43,9 @@ function Search() {
   return (
         <>
         <div className="relative">
-          <div className="absolute inset-y-[4px] left-1 items-center text-md m-0 hover:cursor-pointer"><button onClick={(e) => setSearchTerm(e.target.value)}><FontAwesomeIcon icon={faMagnifyingGlass} style={{ color: "#000000", }} /></button></div>
-            <input type="text" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="flex justify-center items-center rounded-md caret-black pl-6 my-1 w-full text-base overflow-clip hover:shadow-xl focus:shadow-xl focus:outline-none shadow-sm" />
-              <div id="searchResult" className={`absolute w-full translate-y-4 bg-white py-2 px-4 drop-shadow-xl rounded-xl ${searchTerm.length === 0 ? 'hidden' : ''}`}>
+          <div className="absolute inset-y-[8px] left-1 items-center text-md m-0 hover:cursor-pointer"><button onClick={(e) => setSearchTerm(e.target.value)}><FontAwesomeIcon icon={faMagnifyingGlass} style={{ color: "#000000", }} /></button></div>
+          <input type="text" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="flex justify-center items-center rounded-md caret-black pl-6 my-1 w-full h-8 text-base overflow-clip hover:shadow-xl focus:shadow-xl focus:outline-none shadow-sm" />
+            <div id="searchResult" className={`absolute w-full translate-y-0 bg-white py-2 px-5 drop-shadow-xl rounded-xl ${searchTerm.length === 0 ? 'hidden' : ''}`}>
               {isLoading ? (
                 <div className="flex items-center text-blue-900">
                   <MdSearch className="animate-spin mr-2" />{' '}

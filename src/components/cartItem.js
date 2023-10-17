@@ -39,7 +39,7 @@ function CartItem({item}) {
               </td>
               <td className="">
                 <div className="flex flex-col justify-center items-center ">
-                  <div>
+                  <div className="pl-5">
                     <div className="flex justify-start text-xl font-bold pt-0 pb-2  ">
                       {name}
                     </div>
