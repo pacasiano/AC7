@@ -38,9 +38,9 @@ function CartItem({item}) {
                 </div>
               </td>
               <td className="">
-                <div className="flex flex-col justify-center items-center ">
-                  <div className="pl-5">
-                    <div className="flex justify-start text-xl font-bold pt-0 pb-2  ">
+                <div className="flex flex-col justify-start items-start">
+                  <div className="pl-2">
+                    <div className="flex justify-start text-xl font-bold pt-0 pb-2">
                       {name}
                     </div>
                     <div className="flex justify-start font-normal text-sm ">
