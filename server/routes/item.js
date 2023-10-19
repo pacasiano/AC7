@@ -101,6 +101,7 @@ router.post('/', (req, res) => {
     //sale_item(sale_id, account_id, product_id, price)
 });
 
+//this is for DELETE http request. We use POST since <form> doesnt have a method for delete
 router.post('/:id', (req, res) => {
     console.log('DELETE item works!')
     const {id: product_id} = req.params;
