@@ -3,9 +3,10 @@ import Item1 from "../imgs/Item1.png";
 
 function CartItem({item}) {
     
-    const {name, price, quantity} = item;
+    const {name, price, quantity, product_id} = item;
     let displayQty = parseInt(quantity);
     console.log("Cart Item Quantity : " + displayQty)
+    // console.log(item)
     
     const [hookQty, setQuantity] = useState(displayQty);
     const [total, setTotal] = useState(price);
@@ -23,6 +24,8 @@ function CartItem({item}) {
         setTotal(totalCalc.toFixed(2));
       }
     };
+    //use useEffect to monitor change in hookQty. After some delay, record the qty in db
+    //to remove an item, wrap the item in a form with method=DELETE
   
     return (
         <table className="table-fixed w-full">
@@ -38,23 +41,25 @@ function CartItem({item}) {
                 </div>
               </td>
               <td className="">
-                <div className="flex flex-col justify-center items-center ">
-                  <div>
-                    <div className="flex justify-start text-xl font-bold pt-0 pb-2  ">
-                      {name}
-                    </div>
-                    <div className="flex justify-start font-normal text-sm ">
-                      ${price}
-                    </div>
-                    <button className="absolute  text-xs font-thin ">
-                      Remove
-                    </button>
-                  </div>  
-                </div>
+                <form action={`http://localhost:8080/api/item/${product_id}`} method="POST">
+                  <div className="flex flex-col justify-center items-center ">
+                    <div>
+                      <div className="flex justify-start text-xl font-bold pt-0 pb-2  ">
+                        {name}
+                      </div>
+                      <div className="flex justify-start font-normal text-sm ">
+                        ${price}
+                      </div>
+                      <button className="absolute text-xs font-thin ">
+                        Remove
+                      </button>
+                    </div>  
+                  </div>
+                </form>
               </td>
               <td className="pb-1 ">
                 <div className="flex flex-row gap-5 justify-center"> 
-                  <button onClick={decrementQuantity}className="flex justify-center m-0 mt-1 p-1 text-xl hover:font-extrabold ">
+                  <button onClick={decrementQuantity} className="flex justify-center m-0 mt-1 p-1 text-xl hover:font-extrabold ">
                     -
                   </button>
                     <div className="flex justify-center m-0 pt-2 text-xl font-light ">

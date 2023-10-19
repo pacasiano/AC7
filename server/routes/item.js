@@ -51,15 +51,15 @@ router.post('/', (req, res) => {
 
         let q2 = `SELECT sale_item_id, product_id FROM sale INNER JOIN sale_item WHERE sale.account_id = ${account_id} AND product_id = ${product_id}`
         connection.query(q2, function(err, results) {
-            console.log("INSIDE 2nd QUERY: ");
-            console.log(results) 
+            // console.log("INSIDE 2nd QUERY: ");
+            // console.log(results) 
             if (results[0]) {
                 //If this product exists in the cart already, we want to (1) take its quantity then (2) increment it
-                console.log("INSIDE 3RD QUERY")
+                // console.log("INSIDE 3RD QUERY")
                 let q3 =  'SELECT sale_item.quantity FROM sale INNER JOIN sale_item USING (sale_id) ' + 
                             `WHERE sale.account_id = ${account_id} AND product_id = ${product_id}`;
                 connection.query(q3, function(err, results) {
-                    console.log(results[0])
+                    // console.log(results[0])
                     let {quantity} = results[0]; 
                     quantity = parseInt(quantity)+1;
                     console.log('Updated quantity: ' + quantity)
@@ -100,5 +100,17 @@ router.post('/', (req, res) => {
     //once you have the sale_id, create a sale_item entry 
     //sale_item(sale_id, account_id, product_id, price)
 });
+
+router.post('/:id', (req, res) => {
+    console.log('DELETE item works!')
+    const {id: product_id} = req.params;
+    const {account_id} = req.cookies;
+    // console.log(req.params);
+    const q = `DELETE FROM sale_item WHERE account_id = ${account_id} AND product_id = ${product_id}`;
+    connection.query(q, (err, results) => {
+        console.log(`Successfully deleted item with id ${product_id} from account with id ${account_id}`)
+        res.redirect('http://localhost:3000/AC7/cart');
+    });
+})
 
 module.exports = router;

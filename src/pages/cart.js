@@ -30,7 +30,7 @@ function Cart() {
     }
   }
 
-const accountId = getAcctIdFromCookie(cookie);
+  const accountId = getAcctIdFromCookie(cookie);
 
   const [items, setItems] = useState([]);
 
