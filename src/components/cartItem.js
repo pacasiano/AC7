@@ -5,7 +5,7 @@ function CartItem({item}) {
     
     const {name, price, quantity, product_id} = item;
     let displayQty = parseInt(quantity);
-    console.log("Cart Item Quantity : " + displayQty)
+    // console.log("Cart Item Quantity : " + displayQty)
     // console.log(item)
     
     const [hookQty, setQuantity] = useState(displayQty);
@@ -41,7 +41,7 @@ function CartItem({item}) {
                 </div>
               </td>
               <td className="">
-                <form action={`http://localhost:8080/api/item/${product_id}`} method="POST">
+                <form action={`/api/item/${product_id}`} method="POST">
                   <div className="flex flex-col justify-start items-start">
                     <div className="pl-2">
                       <div className="flex justify-start text-xl font-bold pt-0 pb-2">

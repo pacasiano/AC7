@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS product (
     PRIMARY KEY (product_id)
 );
 
-CREATE TABLE IF NOT EXISTS inventory_in_product (
+CREATE TABLE IF NOT EXISTS inventory_in_item (
     inventory_in_id BIGINT UNSIGNED NOT NULL,
     product_id BIGINT UNSIGNED NOT NULL,
     quantity INT UNSIGNED NOT NULL,
@@ -141,13 +141,11 @@ CREATE TABLE IF NOT EXISTS sale (
 CREATE TABLE IF NOT EXISTS sale_item (
     sale_item_id BIGINT UNSIGNED AUTO_INCREMENT,
     sale_id BIGINT UNSIGNED NOT NULL,
-    account_id BIGINT UNSIGNED NOT NULL,
     product_id BIGINT UNSIGNED NOT NULL,
     quantity INT UNSIGNED NOT NULL DEFAULT 1,
     price DECIMAL(10,2) NOT NULL,
     PRIMARY KEY (sale_item_id),
     FOREIGN KEY (sale_id) REFERENCES sale(sale_id),
-    FOREIGN KEY (account_id) REFERENCES account(account_id),
     FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
 
@@ -221,12 +219,11 @@ VALUES (1, 1, 'in progress'),
 (4, 4, 'in progress'),
 (5, 5, 'in progress');
 
-INSERT INTO sale_item(sale_id, account_id, product_id, quantity, price)
-VALUES (1, 1, 1, 3, 36.33),
-(2, 2, 1, 3, 36.33),
-(3, 4, 1, 3, 36.33),
-(4, 5, 2, 2, 150.00),
-(4, 5, 1, 3, 100.00);
+INSERT INTO sale_item(sale_id, product_id, quantity, price)
+VALUES (1, 1, 3, 36.33),
+(2, 1, 3, 36.33),
+(3, 1, 3, 36.33),
+(4, 2, 2, 150.00),
+(4, 1, 3, 100.00);
 
 -- sale table might not need address_id since it already has account_id and account is connected to address
--- sale_item might not need account_id since it already has sale_id which has account_id

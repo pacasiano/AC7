@@ -18,14 +18,14 @@ function Cart() {
             if (cookiesArray[i].indexOf('account_id') > 0) {
                 //find the cookie with 'account_id' substring
                 const id = cookiesArray[i].replace('account_id=', '').trim();
-                console.log(id)
+                // console.log(id)
                 return id;
             }
         }
     }
     else {
         const id = cookie.slice(cookie.indexOf('=')+1);
-        console.log(id)
+        // console.log(id)
         return id;
     }
   }

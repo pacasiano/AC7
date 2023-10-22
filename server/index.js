@@ -29,4 +29,6 @@ app.use('/api/cart', cart);
 //     res.send('Hello world from express');
 // });
 
-app.listen(8080);
+app.listen(8080, () => {
+    console.log('Server running at port 8080')
+});

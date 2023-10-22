@@ -49,18 +49,19 @@ router.post('/', (req, res) => {
         //if there is, increment the qty of that product in that sale_item
         //if not, add a sale_item with that product_id
 
-        let q2 = `SELECT sale_item_id, product_id FROM sale INNER JOIN sale_item WHERE sale.account_id = ${account_id} AND product_id = ${product_id}`
+        let q2 = `SELECT sale_item_id, product_id FROM sale INNER JOIN sale_item USING (sale_id) WHERE sale.account_id = ${account_id} AND product_id = ${product_id}`
         connection.query(q2, function(err, results) {
-            // console.log("INSIDE 2nd QUERY: ");
-            // console.log(results) 
+            console.log("INSIDE 2nd QUERY: ");
+            console.log(results) 
             if (results[0]) {
                 //If this product exists in the cart already, we want to (1) take its quantity then (2) increment it
                 // console.log("INSIDE 3RD QUERY")
                 let q3 =  'SELECT sale_item.quantity FROM sale INNER JOIN sale_item USING (sale_id) ' + 
                             `WHERE sale.account_id = ${account_id} AND product_id = ${product_id}`;
                 connection.query(q3, function(err, results) {
-                    // console.log(results[0])
-                    let {quantity} = results[0]; 
+                    // console.log('RESULTS. WHERE IS QTY??' )
+                    // console.log(results)
+                    let {quantity} = results[0];
                     quantity = parseInt(quantity)+1;
                     console.log('Updated quantity: ' + quantity)
                     let updateQtyQuery = `UPDATE sale_item INNER JOIN sale USING (sale_id) SET quantity = ${quantity} ` + 
@@ -74,7 +75,7 @@ router.post('/', (req, res) => {
             else {
                 //4th Query: Create sale_items with the sale_id we got from 1st Query
                 console.log('INSIDE 4th QUERY')
-                let q4 = `INSERT INTO sale_item(sale_id, account_id, product_id, price) VALUES (${sale_id}, ${account_id}, ${product_id}, '${product_price}')`;
+                let q4 = `INSERT INTO sale_item(sale_id, product_id, price) VALUES (${sale_id}, ${product_id}, '${product_price}')`;
                 connection.query(q4, function(err, results) {
                     if (err) {
                         console.error("Error inserting into the database:", err);
@@ -107,7 +108,8 @@ router.post('/:id', (req, res) => {
     const {id: product_id} = req.params;
     const {account_id} = req.cookies;
     // console.log(req.params);
-    const q = `DELETE FROM sale_item WHERE account_id = ${account_id} AND product_id = ${product_id}`;
+    const q = 'DELETE sale_item FROM sale_item INNER JOIN sale USING (sale_id)' +
+            ` WHERE account_id = ${account_id} AND product_id = ${product_id}`;
     connection.query(q, (err, results) => {
         console.log(`Successfully deleted item with id ${product_id} from account with id ${account_id}`)
         res.redirect('http://localhost:3000/AC7/cart');
