@@ -33,6 +33,7 @@ function Cart() {
   const accountId = getAcctIdFromCookie(cookie);
 
   const [items, setItems] = useState([]);
+  console.log(items);
 
   useEffect(() => {
     fetch(`/api/cart/${accountId}`)
@@ -41,6 +42,11 @@ function Cart() {
         setItems(items);
       });
   }, []);
+
+  let orderSubtotal = 0;
+  items.forEach((item) => {
+    orderSubtotal += parseFloat(item.price) * item.quantity;
+  })
 
   return (
     <div className="Cart">
@@ -76,7 +82,7 @@ function Cart() {
               <div className="text-xs font-light">Subtotal:</div>
             </div>
             <div className="flex justify-end text-xl font-semibold">
-              $100.00
+              {`$${orderSubtotal.toFixed(2)}`}
             </div>
             <Link to="/checkout">
               <button className="w-full bg-black text-white p-4 mt-7 text-xl">
