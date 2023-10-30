@@ -12,7 +12,7 @@ let connection = mysql.createConnection({
 
 router.get('/', (req, res) => {
     
-    let q = 'SELECT product_id, name, description, price FROM product';
+    let q = 'SELECT product_id, name, description, price, category, threshold, quantity FROM product';
     connection.query(q, function(error, results, fields) {
         if (error) throw error;
         // console.log(results);
@@ -22,5 +22,13 @@ router.get('/', (req, res) => {
     });
 
 });
+
+router.post('/', (req, res) => {
+    
+})
+
+router.post('/:id', (req, res) => {
+
+})
 
 module.exports = router;

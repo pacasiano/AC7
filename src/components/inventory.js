@@ -1,4 +1,4 @@
-import React, { useState , useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { myContext } from "../context/inventoryContext";
 import "../App.css";
 
@@ -7,7 +7,17 @@ export default function Inventory() {
     const [addItem, showAddItem] = useState(false);
     const [editItem, showEditItem] = useState(false);
 
-    const { setPage } = useContext(myContext) 
+    const { setPage } = useContext(myContext);
+
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        fetch('/api/products') //fetch data 
+            .then((res) => res.json()) //convert json into js object
+            .then((products) => { //store the data in 'products' state variable
+                setProducts(products);
+            });
+    }, []);
 
     return(
         <div className="h-screen px-8 pt-8">
@@ -48,27 +58,30 @@ export default function Inventory() {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr className="bg-gray-300">
-                                <td className="text-sm font-semibold border p-2">12341234</td>
-                                <td className="text-sm font-semibold border p-2">Beauty Pill</td>
-                                <td className="text-sm font-semibold border p-2">Description</td>
-                                <td className="text-sm font-semibold border p-2">Pills</td>
-                                <td className="text-sm font-semibold border p-2">P99.00</td>
-                                <td className="text-sm font-semibold border p-2">10</td>
-                                <td className="text-sm font-semibold border p-2">100</td>
-                                <td className="flex flex-row gap-2 text-sm font-semibold border p-2 ">
-                                {addItem === false ? (
-                                <button onClick={() => showAddItem(!addItem)} className="bg-green-500 text-white px-4 py-2 w-full rounded">ADD</button>
-                                ) : (
-                                <button onClick={() => showAddItem(!addItem)} className="bg-red-500 text-white px-4 py-2 w-full rounded">CANCEL</button>
-                                )}
-                                {editItem === false ? (
-                                <button onClick={() => showEditItem(!editItem)} className="bg-green-500 text-white px-4 py-2 w-full rounded">EDIT</button>
-                                ) : (
-                                <button onClick={() => showEditItem(!editItem)} className="bg-red-500 text-white px-4 py-2 w-full rounded">CANCEL</button>
-                                )}
-                                </td>
-                            </tr>
+                            {products.map((product) => (
+                                <tr className="bg-gray-300">
+                                    <td className="text-sm font-semibold border p-2">{product.product_id}</td>
+                                    <td className="text-sm font-semibold border p-2">{product.name}</td>
+                                    <td className="text-sm font-semibold border p-2">{product.description}</td>
+                                    <td className="text-sm font-semibold border p-2">{product.category}</td>
+                                    <td className="text-sm font-semibold border p-2">&#x20B1;{product.price}</td>
+                                    <td className="text-sm font-semibold border p-2">{product.threshold}</td>
+                                    <td className="text-sm font-semibold border p-2">{product.quantity}</td>
+                                    <td className="flex flex-row gap-2 text-sm font-semibold border p-2 ">
+                                    {addItem === false ? (
+                                    <button onClick={() => showAddItem(!addItem)} className="bg-green-500 text-white px-4 py-2 w-full rounded">ADD</button>
+                                    ) : (
+                                    <button onClick={() => showAddItem(!addItem)} className="bg-red-500 text-white px-4 py-2 w-full rounded">CANCEL</button>
+                                    )}
+                                    {editItem === false ? (
+                                    <button onClick={() => showEditItem(!editItem)} className="bg-green-500 text-white px-4 py-2 w-full rounded">EDIT</button>
+                                    ) : (
+                                    <button onClick={() => showEditItem(!editItem)} className="bg-red-500 text-white px-4 py-2 w-full rounded">CANCEL</button>
+                                    )}
+                                    </td>
+                                </tr>
+
+                            ))}
                         </tbody>
                     </table>
                 </div>
@@ -79,7 +92,7 @@ export default function Inventory() {
 
 function EditItem() {
     
-    return (<form>
+    return (<form action="/api/products/:id" method="POST">
                 <table className="w-full border-collapse border">
                     <thead>
                         <tr className="bg-gray-300">
@@ -113,7 +126,7 @@ function EditItem() {
 function AddItem() {
     return (
     <div>
-        <form>
+        <form action="/api/products" method="POST">
             <table className="w-full border-collapse border">
                 <thead>
                     <tr className="bg-gray-300">
