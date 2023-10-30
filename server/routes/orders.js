@@ -12,8 +12,8 @@ let connection = mysql.createConnection({
 
 router.get('/', (req, res) => {
     
-    let q = 'SELECT sale_id, account_id, address_id, DATE_FORMAT(sale_date, \'%M %d, %Y\') AS sale_date, sale_status, sale_item_id, product_id, ' + 
-            'SUM(quantity) AS quantity, SUM(price * quantity) AS price ' +
+    let q = 'SELECT sale_id, account_id, address_id, DATE_FORMAT(sale_date, \'%M %d, %Y\') AS sale_date, sale_status, ' + 
+            'SUM(price * quantity) AS price ' +
             'FROM sale INNER JOIN sale_item USING (sale_id) ' +
             'GROUP BY sale_id';
     connection.query(q, function(error, results, fields) {
