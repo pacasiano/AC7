@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import "../App.css";
+import Order from './ordersExpand';
 
 export default function Orders() {
 
@@ -43,24 +44,12 @@ export default function Orders() {
                                 <th className="text-sm font-semibold border p-2 text-white">Status</th>
                                 {/* <th className="text-sm font-semibold border p-2 text-white">Quantity</th> */}
                                 <th className="text-sm font-semibold border p-2 text-white">Total</th>
+                                <th className="text-sm font-semibold border p-2 text-white">Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {
-                                orders.map((order) => (
-                                    <tr className="bg-gray-300" key={order.sale_id}>
-                                        <td className="text-sm font-semibold border p-2">{order.sale_id}</td>
-                                        <td className="text-sm font-semibold border p-2">{order.account_id}</td>
-                                        {/* <td className="text-sm font-semibold border p-2">{order.product_id}</td> */}
-                                        <td className="text-sm font-semibold border p-2">{order.address_id}</td>
-                                        <td className="text-sm font-semibold border p-2">{order.sale_date}</td>
-                                        <td className="text-sm font-semibold border p-2">{order.sale_status}</td>
-                                        {/* <td className="text-sm font-semibold border p-2">{order.quantity}</td> */}
-                                        <td className="text-sm font-semibold border p-2">{order.price}</td>
-                                    </tr>
-                                ))
-                            }
-                        </tbody>
+                        {orders.map((order) => (
+                        <Order key={order.sale_id} order={order} />
+                        ))}
                     </table>
 
                 </div>
