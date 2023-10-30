@@ -15,6 +15,8 @@ export default function Orders() {
             });
     }, []);
 
+    console.log(orders)
+
     return(
         <div className="h-screen px-8 pt-8">
             <div className="flex flex-col gap-5 ">
@@ -35,35 +37,25 @@ export default function Orders() {
                             <tr className="bg-gray-400">
                                 <th className="text-sm font-semibold border p-2 text-white">Order ID</th>
                                 <th className="text-sm font-semibold border p-2 text-white">User ID</th>
-                                <th className="text-sm font-semibold border p-2 text-white">Product ID</th>
-                                <th className="text-sm font-semibold border p-2 text-white">Address</th>
+                                {/* <th className="text-sm font-semibold border p-2 text-white">Product ID</th> */}
+                                <th className="text-sm font-semibold border p-2 text-white">Address ID</th>
                                 <th className="text-sm font-semibold border p-2 text-white">Date</th>
                                 <th className="text-sm font-semibold border p-2 text-white">Status</th>
-                                <th className="text-sm font-semibold border p-2 text-white">Quantity</th>
+                                {/* <th className="text-sm font-semibold border p-2 text-white">Quantity</th> */}
                                 <th className="text-sm font-semibold border p-2 text-white">Total</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {/* <tr className="bg-gray-300">
-                                <td className="text-sm font-semibold border p-2">12341234</td>
-                                <td className="text-sm font-semibold border p-2">1323123</td>
-                                <td className="text-sm font-semibold border p-2">4842983</td>
-                                <td className="text-sm font-semibold border p-2">Davao City</td>
-                                <td className="text-sm font-semibold border p-2">{today}</td>
-                                <td className="text-sm font-semibold border p-2">Paid</td>
-                                <td className="text-sm font-semibold border p-2">1</td>
-                                <td className="text-sm font-semibold border p-2">P99.00</td>
-                            </tr> */}
                             {
                                 orders.map((order) => (
                                     <tr className="bg-gray-300" key={order.sale_id}>
                                         <td className="text-sm font-semibold border p-2">{order.sale_id}</td>
                                         <td className="text-sm font-semibold border p-2">{order.account_id}</td>
-                                        <td className="text-sm font-semibold border p-2">{order.product_id}</td>
+                                        {/* <td className="text-sm font-semibold border p-2">{order.product_id}</td> */}
                                         <td className="text-sm font-semibold border p-2">{order.address_id}</td>
                                         <td className="text-sm font-semibold border p-2">{order.sale_date}</td>
                                         <td className="text-sm font-semibold border p-2">{order.sale_status}</td>
-                                        <td className="text-sm font-semibold border p-2">{order.quantity}</td>
+                                        {/* <td className="text-sm font-semibold border p-2">{order.quantity}</td> */}
                                         <td className="text-sm font-semibold border p-2">{order.price}</td>
                                     </tr>
                                 ))
