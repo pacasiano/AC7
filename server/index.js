@@ -6,6 +6,7 @@ const products = require('./routes/products');
 const login = require('./routes/login');
 const item = require('./routes/item');
 const cart = require('./routes/cart');
+const checkout = require('./routes/checkout');
 
 app.use(express.urlencoded( { extended: true } ));
 
@@ -23,11 +24,10 @@ app.use('/api/login', login);
 
 app.use('/api/item', item);
 
-app.use('/api/cart', cart);    
+app.use('/api/cart', cart);  
 
-// app.get('/api', (req, res) => {
-//     res.send('Hello world from express');
-// });
+app.use('/api/checkout', checkout);
+
 
 app.listen(8080, () => {
     console.log('Server running at port 8080')

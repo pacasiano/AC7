@@ -33,7 +33,6 @@ function Cart() {
   const accountId = getAcctIdFromCookie(cookie);
 
   const [items, setItems] = useState([]);
-  console.log(items);
 
   useEffect(() => {
     fetch(`/api/cart/${accountId}`)
