@@ -1,7 +1,6 @@
 import React from "react";
 import "../App.css";
 import navlogo from "../imgs/navlogo.png";
-import { Link } from "react-router-dom";
 
 function Landing() {
 

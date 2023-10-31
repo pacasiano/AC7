@@ -23,11 +23,15 @@ function Order({ order }) {
       {isExpanded && (
         <tr className="bg-slate-100 border-collapse border">
           <td colSpan={7}>
+
+            {/* ito yung mag ulit */}
             <div className="flex flex-row justify-evenly">
               <div className="text-sm font-semibold p-2 text-black">Item Id</div>
               <div className="text-sm font-semibold p-2 text-black">Quantity</div>
               <div className="text-sm font-semibold p-2 text-black">Price</div>
             </div>
+            {/* dito mag end */}
+
           </td>
         </tr>
       )}
