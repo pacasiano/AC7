@@ -50,21 +50,21 @@ function Product() {
               <span className="flex flex-row gap-5">
                 <button
                   onClick={decrementQuantity}
-                  className="flex justify-center m-0 mt-1 p-1 w-1/3 align-middle text-md hover:font-extrabold"
+                  className="flex justify-center m-0 mt-1 p-1 w-1/3 align-middle text-xl hover:font-extrabold"
                 >
                   -
                 </button>
-                <div className="inline-block align-middle p-1 w-1/3 text-xl font-semibold">
+                <div className="inline-block align-middle p-1 w-1/3 text-2xl font-semibold">
                   {quantity}
                 </div>
                 <button
                   onClick={incrementQuantity}
-                  className="flex justify-center m-0 mt-1 p-1 w-1/3 align-middle text-md hover:font-extrabold"
+                  className="flex justify-center m-0 mt-1 p-1 w-1/3 align-middle text-xl hover:font-extrabold"
                 >
                   +
                 </button>
               </span>
-              <button className="flex text-white bg-black border-0 py-2 px-6 focus:outline-none hover:scale-105 rounded">
+              <button className="flex justify-center items-center text-white bg-black border-0 px-6 focus:outline-none hover:scale-105 rounded">
                 Add to Cart
               </button>
             </div>
