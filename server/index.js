@@ -7,6 +7,8 @@ const login = require('./routes/login');
 const item = require('./routes/item');
 const cart = require('./routes/cart');
 const checkout = require('./routes/checkout');
+const inventory_in = require('./routes/inventory_in');
+const suppliers = require('./routes/suppliers');
 
 app.use(express.urlencoded( { extended: true } ));
 
@@ -27,6 +29,10 @@ app.use('/api/item', item);
 app.use('/api/cart', cart);  
 
 app.use('/api/checkout', checkout);
+
+app.use('/api/inventory_in', inventory_in);
+
+app.use('/api/suppliers', suppliers)
 
 
 app.listen(8080, () => {

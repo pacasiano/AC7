@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Select from "react-select"
 import "../App.css"
 
@@ -6,13 +6,19 @@ export default function InventoryIn() {
 
     const [numbersToBeDelivered, setNumbersToBeDelivered] = useState(1);
 
-    const options = [
-        {value: "1", label: "Supplier 1"},
-        {value: "2", label: "Supplier 2"},
-        {value: "3", label: "Supplier 3"},
-        {value: "4", label: "Supplier 4"},
-        {value: "5", label: "Supplier 5"},
-    ];
+    const [suppliers, setSuppliers] = useState([]);
+
+    useEffect(() => {
+        fetch('/api/suppliers') //fetch data 
+            .then((res) => res.json()) //convert json into js object
+            .then((suppliers) => { //store the data in 'products' state variable
+                setSuppliers(suppliers);
+            });
+    }, []);
+
+    const options = suppliers.map((supplier) => (
+        {value: `${supplier.name}`, label: `${supplier.name}`}
+    ))
 
     const options2 = [
         {value: "1", label: "1 Item"},
@@ -33,7 +39,7 @@ export default function InventoryIn() {
                 <div id="header" className="flex flex-row justify-start">
                     <span className="text-xl font-bold">Inventory In</span>
                 </div>
-                <div className="flex flex-col gap-3">
+                <form action="/api/inventory_in" method="POST" className="flex flex-col gap-3">
                     <table className="w-full border-collapse border">
                         <thead>
                             <tr className="bg-gray-400">
@@ -47,7 +53,7 @@ export default function InventoryIn() {
                                 <td className="text-sm font-semibold border p-2">
                                     <Select options={options} name="supplierName" className="w-full text-center"/></td>
                                 <td className="text-sm font-semibold border p-2">
-                                    <input name="amount" type="number" className="w-full h-10 text-center"></input></td>
+                                    <input name="payment_amount" type="number" className="w-full h-10 text-center"></input></td>
                                 <td className="text-sm font-semibold border p-2">
                                     <Select options={options2} onChange={(opt) => setNumbersToBeDelivered(opt.value)} className=" w-full text-center" />
                                 </td>
@@ -77,27 +83,33 @@ export default function InventoryIn() {
                             </thead>
                         </table>
                     </div>        
-                </div>
+                </form>
             </div>   
         </div>
     );
 }
 
 function Items() {
+    const [products, setProducts] = useState([]);
 
-    const options = [
-        {value: "1", label: "Item 1"},
-        {value: "2", label: "Item 2"},
-        {value: "3", label: "Item 3"},
-        {value: "4", label: "Item 4"},
-    ];
+    useEffect(() => {
+        fetch('/api/products') //fetch data 
+            .then((res) => res.json()) //convert json into js object
+            .then((products) => { //store the data in 'products' state variable
+                setProducts(products);
+            });
+    }, []);
+
+    const options = products.map((product) => (
+        {value: `${product.name}`, label: `${product.name}`}
+    ))
 
     return(
 
         <tbody className="bg-gray-300">
             <tr>
                 <td className="text-sm font-semibold border p-2 text-black">
-                    <Select options={options} name="item" className="h-10 w-full text-center"/></td>
+                    <Select options={options} name="product_name" className="h-10 w-full text-center"/></td>
                 <td className="text-sm font-semibold border p-2 text-black">
                     <input name="price" type="number" className="h-10 w-full text-center pl-1"></input></td>
                 <td className="text-sm font-semibold border p-2 text-black">

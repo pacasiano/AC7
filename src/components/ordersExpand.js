@@ -15,7 +15,7 @@ function Order({ order }) {
         <td className="text-sm font-semibold border p-2">{order.address_id}</td>
         <td className="text-sm font-semibold border p-2">{order.sale_date}</td>
         <td className="text-sm font-semibold border p-2">{order.sale_status}</td>
-        <td className="text-sm font-semibold border p-2">{order.price}</td>
+        <td className="text-sm font-semibold border p-2">&#x20B1;{order.price}</td>
         <td className="w-32 text-sm font-semibold border p-2">
         <button onClick={toggleExpand} className="bg-blue-500 text-white py-2 w-full rounded">{isExpanded ? 'COLLAPSE' : 'EXPAND'}</button>
         </td>

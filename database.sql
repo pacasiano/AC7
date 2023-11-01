@@ -105,6 +105,7 @@ CREATE TABLE IF NOT EXISTS product (
 CREATE TABLE IF NOT EXISTS inventory_in_item (
     inventory_in_id BIGINT UNSIGNED NOT NULL,
     product_id BIGINT UNSIGNED NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
     quantity INT UNSIGNED NOT NULL,
     FOREIGN KEY (inventory_in_id) REFERENCES inventory_in(inventory_in_id),
     FOREIGN KEY (product_id) REFERENCES product(product_id)
@@ -225,5 +226,7 @@ VALUES (1, 1, 3, 36.33),
 (3, 1, 3, 36.33),
 (4, 2, 2, 150.00),
 (4, 1, 3, 100.00);
+
+ INSERT INTO supplier(address_id, name, contact_info) VALUES (5, 'Taburnok Inc.', '8884700');
 
 -- sale table might not need address_id since it already has account_id and account is connected to address
