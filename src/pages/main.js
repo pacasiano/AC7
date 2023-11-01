@@ -7,7 +7,7 @@ import '../App.css';
 
 function Main() {
     return (
-        <div className="main">
+        <div className="main pt-12">
             <body className=""> {/* h-screen */}
             <div className="relative top-0">
                 <div className="shrink-0"><img src={bodypic} className="object-cover w-full h-72 sm:h-80 md:h-96 lg:h-2/3" alt="HomeBodyPic"/></div>

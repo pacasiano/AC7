@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
 import Select from "react-select"
+import { Link } from "react-router-dom";
 import "../App.css"
 
 export default function InventoryIn() {
@@ -78,7 +79,11 @@ export default function InventoryIn() {
                             <thead>
                                 <tr>
                                     <th className="text-sm font-semibold p-2"></th>
-                                    <th className="text-sm w-44 font-semibold p-2"><button className="bg-green-600 p-3 w-full rounded-xl text-white">SUBMIT</button></th>
+                                    <th className="text-sm w-44 font-semibold p-2">
+                                        <Link to="/inventory-in/confirmation">
+                                        <button className="bg-green-600 p-3 w-full rounded-xl text-white">SUBMIT</button>
+                                        </Link>
+                                    </th>
                                 </tr>
                             </thead>
                         </table>

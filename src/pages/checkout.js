@@ -94,7 +94,7 @@ function Checkout() {
 
 
   return (
-    <div className="Checkout h-screen">
+    <div className="Checkout h-screen pt-16">
       <form method="POST" action="http://localhost:8080/api/checkout" className="flex flex-col lg:flex-row lg:items-start items-center lg:gap-0 gap-5 justify-evenly py-20">
         <div className="flex flex-col lg:w-1/2 w-11/12 gap-5 ">
           <div className="bg-gray-100 p-5">
@@ -183,7 +183,7 @@ function Checkout() {
             <div className="flex justify-end text-xl font-semibold">
               {`$${totalPayment.toFixed(2)}`}
             </div>
-            <Link to="/checkout">
+            <Link to="/order/confirmation">
               <button className="w-full bg-black text-white p-4 mt-7 text-xl">
                 Pay
               </button>

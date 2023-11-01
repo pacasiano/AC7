@@ -48,7 +48,7 @@ function Cart() {
   })
 
   return (
-    <div className="Cart">
+    <div className="Cart h-screen pt-16">
       <div className="flex flex-col lg:flex-row lg:items-start items-center lg:gap-0 gap-5 justify-evenly py-16">
         <div className="flex flex-col lg:w-1/2 w-11/12 gap-5 ">
           <div className="bg-gray-100 p-5">
