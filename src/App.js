@@ -20,6 +20,8 @@ import './App.css';
 
 function App() {
   return (
+    <>
+
     <Routes>
       <Route
         element={
@@ -30,23 +32,24 @@ function App() {
           </div>
         }
       >
-        <Route index element={<Main />} />
         <Route path="home" element={<Main />} />
         <Route path="store" element={<Store />} />
         <Route path="about" element={<About />} />
         <Route path="cart" element={<Cart />} />
         <Route path="orders" element={<Orders />} />
         <Route path="product" element={<Product />} />
-        <Route path="sign-up" element={<Signup />} />
-        <Route path="login" element={<Login />} />
         <Route path="checkout" element={<Checkout />} />
         <Route path="order" element={<IndivOrder />} />
         <Route path="user/profile" element={<Profile  />} />
       </Route>
+      <Route index element={<Login />} />
       <Route path="admin" element={<Admin />} />
+      <Route path="sign-up" element={<Signup />} />
+      <Route path="login" element={<Login />} />
       <Route path="order/confirmation" element={<OrderConfirmation/>} />
       <Route path="inventory-in/confirmation" element={<InventoryInConfirmation/>} />
     </Routes>
+    </>
   );
 }
 

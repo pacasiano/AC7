@@ -9,7 +9,7 @@ export default function Confirmation() {
                 <div className="p-5 flex flex-col justify-center items-center gap-2">
                     <img src={Check} alt="check" className="w-32 h-32"/>
                     <span className="text-xl font-bold">Order successfully placed!</span>
-                    <Link to="/" className="bg-gray-200 p-2 text-center rounded-xl w-full">Continue to Home</Link>
+                    <Link to="/home" className="bg-gray-200 p-2 text-center rounded-xl w-full">Continue to Home</Link>
                 </div>
             </div>
         </div>
