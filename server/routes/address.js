@@ -27,4 +27,13 @@ router.post('/:id', (req, res) => {
     });
 })
 
+router.get('/:id', (req, res) => {
+    const {id : account_id} = req.params;
+    const q = 'SELECT name, city, zip_code, baranggay, province, street FROM address ' + 
+                `WHERE customer_id = (SELECT customer_id FROM customer WHERE account_id = ${account_id})`;
+    connection.query(q, (err, results) => {
+        res.json(results)
+    })
+})
+
 module.exports = router;

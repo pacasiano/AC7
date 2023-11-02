@@ -52,7 +52,19 @@ export default function Settings() {
 
     //the userData[0] || {} syntax ensures that we only destructure once userData contains some data returned by fetch
     //if it is still undefined (fetch has not returned anything), it will default to an empty object - this prevents errors related to undefined values
-    const {email, username, password, first_name, middle_name, last_name, contact_info, baranggay, street, province, city, zip_code, name} = userData[0] || {};
+    const {email, username, password, first_name, middle_name, last_name, contact_info} = userData[0] || {};
+
+    const [addresses, setAddresses] = useState([]);
+
+    useEffect(() => {
+        fetch(`/api/address/${accountId}`)
+        .then((res) => res.json())
+        .then((address) => {
+            setAddresses(address);
+        });
+    }, []);
+
+    // const {baranggay, street, province, city, zip_code, name} = address[0] || {};
 
   return(
     <div className="w-full h-screen pt-16">
@@ -191,36 +203,38 @@ export default function Settings() {
                 <div className="flex flex-col gap-5">
 
                     {/* address card from here, ito yung mag ulit ulit */}
-                    <div className="flex flex-col gap-4 bg-gray-100 p-5">
-                        <div className="flex justify-between">
-                            <span className="text-md font-semibold">{name}</span>
-                            {/* dito yung address id para ma delete, or ano pa need mo */}
-                            <input type="text" value={""} hidden/>
-                            <button type="submit" className="text-xs font-normal bg-slate-800 px-2 py-1 rounded-md text-white">Delete</button>
+                    {addresses.map((address) => (
+                        <div className="flex flex-col gap-4 bg-gray-100 p-5">
+                            <div className="flex justify-between">
+                                <span className="text-md font-semibold">{address.name}</span>
+                                {/* dito yung address id para ma delete, or ano pa need mo */}
+                                <input type="text" value={""} hidden/>
+                                <button type="submit" className="text-xs font-normal bg-slate-800 px-2 py-1 rounded-md text-white">Delete</button>
+                            </div>
+                            <table className="w-full border-collapse">
+                                <thead>
+                                    <tr className="border-b-2">
+                                        <th className="text-sm font-semibold">Baranggay</th>
+                                        <th className="text-sm font-semibold">Street</th>
+                                        <th className="text-sm font-semibold">Province</th>
+                                        <th className="text-sm font-semibold">City</th>
+                                        <th className="text-sm font-semibold">Zip Code</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr className="">
+                                        {/* plug the valeus here */}
+                                        <th className="text-sm font-medium">{address.baranggay}</th>
+                                        <th className="text-sm font-medium">{address.street}</th>
+                                        <th className="text-sm font-medium">{address.province}</th>
+                                        <th className="text-sm font-medium">{address.city}</th>
+                                        <th className="text-sm font-medium">{address.zip_code}</th>
+                                        {/* till dito */}
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <table className="w-full border-collapse">
-                            <thead>
-                                <tr className="border-b-2">
-                                    <th className="text-sm font-semibold">Baranggay</th>
-                                    <th className="text-sm font-semibold">Street</th>
-                                    <th className="text-sm font-semibold">Province</th>
-                                    <th className="text-sm font-semibold">City</th>
-                                    <th className="text-sm font-semibold">Zip Code</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr className="">
-                                    {/* plug the valeus here */}
-                                    <th className="text-sm font-medium">{baranggay}</th>
-                                    <th className="text-sm font-medium">{street}</th>
-                                    <th className="text-sm font-medium">{province}</th>
-                                    <th className="text-sm font-medium">{city}</th>
-                                    <th className="text-sm font-medium">{zip_code}</th>
-                                    {/* till dito */}
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    ))}
                     {/* address card ends here */}
 
                 </div>
