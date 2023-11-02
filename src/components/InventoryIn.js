@@ -52,7 +52,7 @@ export default function InventoryIn() {
                         <tbody>
                             <tr className="bg-gray-300">
                                 <td className="text-sm font-semibold border p-2">
-                                    <Select options={options} name="supplierName" className="w-full text-center"/></td>
+                                    <Select options={options} name="supplier_name" className="w-full text-center"/></td>
                                 <td className="text-sm font-semibold border p-2">
                                     <input name="payment_amount" type="number" className="w-full h-10 text-center"></input></td>
                                 <td className="text-sm font-semibold border p-2">
@@ -80,9 +80,7 @@ export default function InventoryIn() {
                                 <tr>
                                     <th className="text-sm font-semibold p-2"></th>
                                     <th className="text-sm w-44 font-semibold p-2">
-                                        <Link to="/inventory-in/confirmation">
                                         <button className="bg-green-600 p-3 w-full rounded-xl text-white">SUBMIT</button>
-                                        </Link>
                                     </th>
                                 </tr>
                             </thead>
