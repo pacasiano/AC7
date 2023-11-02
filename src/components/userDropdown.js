@@ -12,7 +12,7 @@ function UserDropdown() {
             <div className="flex justify-start flex-col py-1 pl-5 items-start">
                 <Link to="/user/profile" className="block py-2 text-sm text-gray-700 hover:font-bold">Your Profile</Link>
                 <Link to="/orders" className="block py-2 text-sm text-gray-700 hover:font-bold">Orders</Link>
-                <Link to="/user/settings" className="block py-2 text-sm text-gray-700 hover:font-bold">Settings</Link>
+                {/* <Link to="/user/settings" className="block py-2 text-sm text-gray-700 hover:font-bold">Settings</Link> */}
                 <Link to="/user/signout" className="block py-2 text-sm text-gray-700 hover:font-bold">Sign out</Link>
             </div>
         </div>

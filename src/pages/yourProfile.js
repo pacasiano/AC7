@@ -18,7 +18,7 @@ export default function Settings() {
     <div className="w-full h-screen pt-16">
         <div className="pt-12 flex flex-row justify-center gap-5">
             <div className="bg-gray-100 w-1/4 px-5 pt-6 pb-10">
-                <div className="text-2xl font-bold pb-4">Settings</div>
+                <div className="text-2xl font-bold pb-4">Profile</div>
 
                 {/* form from here */}
                 <div className="px-1">

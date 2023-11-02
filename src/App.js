@@ -13,7 +13,7 @@ import Footer from "./components/footer";
 import Checkout from "./pages/checkout";
 import Admin from "./pages/admin";
 import IndivOrder from "./components/indivOrder";
-import Settings from "./pages/settings";
+import Profile from "./pages/yourProfile";
 import OrderConfirmation from "./components/orderConfirmation";
 import InventoryInConfirmation from "./components/inventoryInConfirmation";
 import './App.css';
@@ -41,7 +41,7 @@ function App() {
         <Route path="login" element={<Login />} />
         <Route path="checkout" element={<Checkout />} />
         <Route path="order" element={<IndivOrder />} />
-        <Route path="user/settings" element={<Settings />} />
+        <Route path="user/profile" element={<Profile  />} />
       </Route>
       <Route path="admin" element={<Admin />} />
       <Route path="order/confirmation" element={<OrderConfirmation/>} />
