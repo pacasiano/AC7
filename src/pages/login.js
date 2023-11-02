@@ -54,7 +54,7 @@ function Landing() {
               <p className="flex justify-center text-sm font-light text-gray-500">
                 Don't have an account?{" "}
                 <Link
-                  to="/signup"
+                  to="/sign-up"
                   className="font-medium text-blue-400 hover:underline"
                 >
                   Sign-up here

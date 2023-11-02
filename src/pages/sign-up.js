@@ -1,6 +1,7 @@
 import React from "react";
 import "../App.css";
 import navlogo from "../imgs/navlogo.png";
+import { Link } from "react-router-dom";
 
 function Landing() {
 
@@ -51,7 +52,7 @@ function Landing() {
               </button>
               <p className="flex justify-center text-sm font-light text-gray-500">
                 Already have an account?{" "}
-                <a href="/Login" className="font-medium text-blue-400 hover:underline">Login here</a>
+                <Link to="/login" className="font-medium text-blue-400 hover:underline">Login here</Link>
               </p>
             </form>
           </div>
