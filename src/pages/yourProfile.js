@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { get } from "react-hook-form";
 
 export default function Settings() {
 
@@ -13,6 +14,45 @@ export default function Settings() {
     const toggleEdit = () => {
         setEdit(!isEdit);
     }
+
+    //GET ACCOUNT_ID COOKIE
+    const cookie = document.cookie;
+    function getAcctIdFromCookie (cookieStr) {
+        //if browser has more than one cookie, the if statement will run
+        if (cookieStr.indexOf(';') > 0) {
+            //document.cookie is a string. We use .split() to convert it to an array with each cookie being an element
+            const cookiesArray = cookieStr.split(';');
+            for(let i = 0; i < cookiesArray.length; i++) {
+                if (cookiesArray[i].indexOf('account_id') > 0) {
+                    //find the cookie with 'account_id' substring
+                    const id = cookiesArray[i].replace('account_id=', '').trim();
+                    // console.log(id)
+                    return id;
+                }
+            }
+        }
+        else {
+            const id = cookie.slice(cookie.indexOf('=')+1);
+            // console.log(id)
+            return id;
+        }
+    }
+
+    const accountId = getAcctIdFromCookie(cookie);
+
+    const [userData, setUserData] = useState([]);
+
+    useEffect(() => {
+        fetch(`/api/profile/${accountId}`)
+        .then((res) => res.json())
+        .then((userData) => {
+            setUserData(userData);
+        });
+    }, []);
+
+    //the userData[0] || {} syntax ensures that we only destructure once userData contains some data returned by fetch
+    //if it is still undefined (fetch has not returned anything), it will default to an empty object - this prevents errors related to undefined values
+    const {email, username, password, first_name, middle_name, last_name, contact_info, baranggay, street, province, city, zip_code, name} = userData[0] || {};
 
   return(
     <div className="w-full h-screen pt-16">
@@ -34,34 +74,34 @@ export default function Settings() {
                     <div className="flex flex-col gap-3 pb-3">
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Email</span>
-                        <span className="border-b-2">retep@gmail.com</span>
+                        <span className="border-b-2">{email}</span>
                         </label> 
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Username</span>
-                        <span className="border-b-2">Peter_Pan</span>
+                        <span className="border-b-2">{username}</span>
                         </label> 
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Password</span>
-                        <span className="border-b-2">*******</span>
+                        <span className="border-b-2">{password ? '*'.repeat(password.length) : '*'}</span>
                         </label>
                     </div>
                     <div className="text-md font-bold py-4">Personal Information</div>
                     <div className="flex flex-col gap-3">
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">First name</span>
-                        <span className="border-b-2">Peter</span>
+                        <span className="border-b-2">{first_name}</span>
                         </label> 
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Middle name</span>
-                        <span className="border-b-2">n/a</span>
+                        <span className="border-b-2">{middle_name === null ? '-' : middle_name}</span>
                         </label> 
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Last name</span>
-                        <span className="border-b-2">Casiano</span>
+                        <span className="border-b-2">{last_name}</span>
                         </label>
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">contact number</span>
-                        <span className="border-b-2">09672009871</span>
+                        <span className="border-b-2">{contact_info}</span>
                         </label>
                     </div>
                     </>
@@ -117,34 +157,33 @@ export default function Settings() {
 
                     {/* ito yung form to add a new address */}
                     {isAdd && (
-                        <div className="bg-gray-100 flex flex-row border-t-2 justify-evenly p-5 gap-5 text-sm">
-
+                        <form action={`/api/address/${accountId}`} method="POST" className="bg-gray-100 flex flex-row border-t-2 justify-evenly p-5 gap-5 text-sm">
                             <div className="flex flex-col">
                                 <span for="name" className="flex justify-start font-bold">Name</span>
-                                <input id="name" className="w-full  pl-1 rounded-md "></input>
+                                <input id="name" name="name" className="w-full  pl-1 rounded-md "></input>
                             </div>
                             <div className="flex flex-col">
                                 <span for="barangay" className="flex justify-start font-bold">Barangay</span>
-                                <input id="barangay" className="w-full  pl-1 rounded-md "></input>
+                                <input id="barangay" name="baranggay" className="w-full  pl-1 rounded-md "></input>
                             </div>
                             <div className="flex flex-col">
                                 <span for="street" className="flex justify-start font-bold">Street</span>
-                                <input id="street" className="w-full  pl-1 rounded-md "></input>
+                                <input id="street" name="street" className="w-full  pl-1 rounded-md "></input>
                             </div>
                             <div className="flex flex-col">
                                 <span for="province" className="flex justify-start font-bold">Province</span>
-                                <input id="province" className="w-full  pl-1 rounded-md "></input>
+                                <input id="province" name="province" className="w-full  pl-1 rounded-md "></input>
                             </div>
                             <div className="flex flex-col">
                                 <span for="city" className="flex justify-start font-bold">City</span>
-                                <input id="city" className="w-full  pl-1 rounded-md "></input>
+                                <input id="city" name="city" className="w-full  pl-1 rounded-md "></input>
                             </div>
                             <div className="flex flex-col">
                                 <span for="zipcode" className="flex justify-start font-bold">Zip-Code</span>
-                                <input id="zipcode" className="w-full  pl-1 rounded-md "></input>
+                                <input id="zipcode" name="zip_code" className="w-full  pl-1 rounded-md "></input>
                             </div>
-                            <button type="submit" className="w-24 text-white h-full bg-green-500 px-2 py-1 font-bold rounded-md ">Add</button>
-                        </div>
+                            <button className="w-24 text-white h-full bg-green-500 px-2 py-1 font-bold rounded-md ">Add</button>
+                        </form>
                     )}
                     {/* hanggang dito */}
                 </div>
@@ -154,7 +193,7 @@ export default function Settings() {
                     {/* address card from here, ito yung mag ulit ulit */}
                     <div className="flex flex-col gap-4 bg-gray-100 p-5">
                         <div className="flex justify-between">
-                            <span className="text-md font-semibold">Name</span>
+                            <span className="text-md font-semibold">{name}</span>
                             {/* dito yung address id para ma delete, or ano pa need mo */}
                             <input type="text" value={""} hidden/>
                             <button type="submit" className="text-xs font-normal bg-slate-800 px-2 py-1 rounded-md text-white">Delete</button>
@@ -172,11 +211,11 @@ export default function Settings() {
                             <tbody>
                                 <tr className="">
                                     {/* plug the valeus here */}
-                                    <th className="text-sm font-medium">Communal</th>
-                                    <th className="text-sm font-medium">Emerald</th>
-                                    <th className="text-sm font-medium">Davao Del Sur</th>
-                                    <th className="text-sm font-medium">Davao</th>
-                                    <th className="text-sm font-medium">8000</th>
+                                    <th className="text-sm font-medium">{baranggay}</th>
+                                    <th className="text-sm font-medium">{street}</th>
+                                    <th className="text-sm font-medium">{province}</th>
+                                    <th className="text-sm font-medium">{city}</th>
+                                    <th className="text-sm font-medium">{zip_code}</th>
                                     {/* till dito */}
                                 </tr>
                             </tbody>

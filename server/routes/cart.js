@@ -1,10 +1,8 @@
 const express = require('express');
 const app = express();
 const mysql = require('mysql2');
-const cookieParser = require('cookie-parser');
 const router = express.Router();
 
-app.use(cookieParser());
 
 let connection = mysql.createConnection({
     host: 'localhost',
