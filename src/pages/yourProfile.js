@@ -224,11 +224,11 @@ export default function Settings() {
                                 <tbody>
                                     <tr className="">
                                         {/* plug the valeus here */}
-                                        <th className="text-sm font-medium">{address.baranggay}</th>
-                                        <th className="text-sm font-medium">{address.street}</th>
-                                        <th className="text-sm font-medium">{address.province}</th>
-                                        <th className="text-sm font-medium">{address.city}</th>
-                                        <th className="text-sm font-medium">{address.zip_code}</th>
+                                        <th className="text-sm font-medium w-1/5">{address.baranggay}</th>
+                                        <th className="text-sm font-medium w-1/5">{address.street}</th>
+                                        <th className="text-sm font-medium w-1/5">{address.province}</th>
+                                        <th className="text-sm font-medium w-1/5">{address.city}</th>
+                                        <th className="text-sm font-medium w-1/5">{address.zip_code}</th>
                                         {/* till dito */}
                                     </tr>
                                 </tbody>
