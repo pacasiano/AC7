@@ -34,9 +34,9 @@ router.post('/', (req, res) => {
                 console.log("DB user: " + dbUsername);
                 console.log("DB pw: " + dbPassword);
                 if (password === dbPassword) {
-                    //log the user in
-                    // localStorage.setItem('account_id', `${account_id}`)
-                    res.cookie('account_id', `${account_id}`, {maxAge: 3600000})
+                    const expirationDate = new Date(); //create a new date
+                    expirationDate.setDate(expirationDate.getDate() + 30); //set the date to the current time when user logs in then add 30 days to it
+                    res.cookie('account_id', `${account_id}`, {expires: expirationDate}) //cookie expires in 30 days
                     res.redirect('http://localhost:3000/AC7/home');
                 }
             }
