@@ -56,7 +56,12 @@ function Checkout() {
       setPayment(event.target.value);
     };
 
+    // Gcash reference number
     const [gcashRefNum, setGcashRefNum] = useState();
+
+    const handleGcashRefNumChange = (event) => {
+      setGcashRefNum(event.target.value);
+    };
 
     //Fetch the addresses to be displayed in the Addresses drop down
     const [addresses, setAddress] = useState([]);
@@ -142,7 +147,8 @@ function Checkout() {
                 <div className="flex flex-col">
                     <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Gcash Number</span>
-                        <input onChange={(event) => setGcashRefNum((gcashRefNum) => event.target.value)} name="gcashNumber" type="text" className="rounded-sm"/>
+                        <input onChange={handleGcashRefNumChange} name="gcashNumber" type="text" className="rounded-sm"/>
+                        {/* <input value={gcashRefNum}/> */}
                     </label>
                 </div>
             </div>
