@@ -15,44 +15,87 @@ let connection = mysql.createConnection({
 
 router.post('/', (req, res) => {
     //when a checkout POST request is sent, the data that i want are: 
-    //1. gcash_payment (if gcash)
     //4. Address_id for shipment entry
     console.log('CHECK ME TF OUT')
     console.log(req.body)
-    const {account_id, items_purchased, payment_method, address_name} = req.body;
+    const {account_id, items_purchased, payment_method, address_name, gcash_ref_num} = req.body;
+    //need to validate gcash_ref_num length doesn't exceed 13 and only contains numbers
 
-    //Query 1: Update the product table - stock out the products that were bought in the checkout
-    items_purchased.forEach((item) => {
-        let q1 = `UPDATE product SET quantity = quantity - ${item.quantity} WHERE product_id = ${item.product_id};`
-        connection.query(q1, (err, results) => {
+    //Query 1: Create a sale_payment entry
+    const q1 = `INSERT INTO sale_payment SET sale_id = (SELECT sale_id FROM sale WHERE account_id = ${account_id} AND sale_status = 'in progress'), ` +
+                `mode_of_payment = '${payment_method}'`;
+    connection.query(q1, (err, results) => {
+        if (err) {
+            console.error(err)
+        }
+        else {
+            console.log("Checkout: Query 1 successful")
+        }
+    })
+
+    //Query 2: Store Gcash reference number
+    if (payment_method === 'gcash') {
+        const q2 = `INSERT INTO gcash_payment SET ` +
+                    `reference_num = ${gcash_ref_num}, ` +
+                    `sale_payment_id = (SELECT sale_payment_id FROM sale_payment INNER JOIN sale USING (sale_id) ` +
+                                        `WHERE account_id = ${account_id} AND sale_status = 'in progress')`; 
+        connection.query(q2, (err, results) => {
             if (err) {
                 console.error(err)
             }
             else {
-                console.log('Checkout: Query 1 successful')
+                console.log("Checkout: Query 2 successful")
+            }
+        })
+    }
+
+    //Query #? : Create shipment entry (temporary implementation)
+    const createShipmentQuery = `INSERT INTO shipment SET ` +
+                            `sale_id = (SELECT sale_id FROM sale WHERE account_id = ${account_id} AND sale_status = 'in progress'), ` +
+                            `address_id = (SELECT address_id FROM address WHERE name = '${address_name}' AND ` +
+                                            `customer_id = (SELECT customer_id FROM customer WHERE account_id = ${account_id})), ` +
+                            `tracking_number = '123', courier = 'JNT', shipment_status = 'in progress'`;
+    connection.query(createShipmentQuery, (err, results) => {
+        if (err) {
+            console.error(err)
+        }
+        else {
+            console.log('Checkout: createShipmentQuery successful')
+        }
+    })
+
+    //Query 3: Update the product table - stock out the products that were bought in the checkout
+    items_purchased.forEach((item) => {
+        let q3 = `UPDATE product SET quantity = quantity - ${item.quantity} WHERE product_id = ${item.product_id};`
+        connection.query(q3, (err, results) => {
+            if (err) {
+                console.error(err)
+            }
+            else {
+                console.log('Checkout: Query 3 successful')
             }
         })
     })
 
-    //Query 2: Update the sale_status of the current sale from 'in progress' to 'complete'
-    const q2 = `UPDATE sale SET sale_status = 'complete' WHERE account_id = ${account_id} AND sale_status = 'in progress'`;
-    connection.query(q2, (err, results) => {
+    //Query 4: Update the sale_status of the current sale from 'in progress' to 'complete'
+    const q4 = `UPDATE sale SET sale_status = 'complete' WHERE account_id = ${account_id} AND sale_status = 'in progress'`;
+    connection.query(q4, (err, results) => {
         if (err) { 
             console.error(err) 
         } 
         else {
-            console.log('Checkout: Query 2 successful')
+            console.log('Checkout: Query 4 successful')
         }
     })
 
-    //Query 3: Create a new sale entry for the account
-    const q3 = `INSERT INTO sale(account_id) VALUES(${account_id})`;
-    connection.query(q3, (err, results) => {
-        if (err) { 
-            console.error(err) 
+    //Query 5: Create a new sale entry for the account
+    const q5 = `INSERT INTO sale(account_id) VALUES(${account_id})`;
+    connection.query(q5, (err, results) => {
+        if (err) {
+            console.error(err)
         }
         else {
-            console.log('Checkout: Query 3 successful')
+            console.log('Checkout: Query 5 successful')
         }
     })
     

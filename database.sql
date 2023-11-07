@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS inventory_in (
     FOREIGN KEY (supplier_id) REFERENCES supplier(supplier_id)
 );
 
-CREATE TABLE IF NOT EXISTS payment (
+CREATE TABLE IF NOT EXISTS purchase_payment (
     payment_id BIGINT UNSIGNED AUTO_INCREMENT,
     inventory_in_id BIGINT UNSIGNED NOT NULL,
     amount DECIMAL(10,2) NOT NULL,
@@ -152,23 +152,21 @@ CREATE TABLE IF NOT EXISTS sale_item (
     FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
 
-CREATE TABLE IF NOT EXISTS payment (
-    payment_id BIGINT UNSIGNED AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS sale_payment (
+    sale_payment_id BIGINT UNSIGNED AUTO_INCREMENT,
     sale_id BIGINT UNSIGNED NOT NULL,
-    account_id BIGINT UNSIGNED NOT NULL,
     mode_of_payment ENUM('cod', 'gcash') NOT NULL,
     payment_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    payment_status ENUM('complete', 'incomplete'), -- we allow utang right?
-    PRIMARY KEY (payment_id),
-    FOREIGN KEY (sale_id) REFERENCES sale(sale_id),
-    FOREIGN KEY (account_id) REFERENCES account(account_id)
+    -- payment_status ENUM('complete', 'incomplete'), -- doesn't make sense to allow utang, esp for a small business
+    PRIMARY KEY (sale_payment_id),
+    FOREIGN KEY (sale_id) REFERENCES sale(sale_id)
 );
 
 -- new table, not in diagram
 CREATE TABLE IF NOT EXISTS gcash_payment (
     reference_num CHAR(13) NOT NULL,
-    payment_id BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (payment_id) REFERENCES payment(payment_id)
+    sale_payment_id BIGINT UNSIGNED NOT NULL,
+    FOREIGN KEY (sale_payment_id) REFERENCES sale_payment(sale_payment_id)
     -- not sure if a primary key is necessary
 );
 

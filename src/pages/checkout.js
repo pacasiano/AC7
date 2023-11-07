@@ -146,7 +146,7 @@ function Checkout() {
                 </div>
                 <div className="flex flex-col">
                     <label className="flex flex-col max-w-sm">
-                        <span className="text-sm font-semibold">Gcash Number</span>
+                        <span className="text-sm font-semibold">Gcash Reference Number</span>
                         <input onChange={handleGcashRefNumChange} name="gcashNumber" type="text" className="rounded-sm"/>
                         {/* <input value={gcashRefNum}/> */}
                     </label>
