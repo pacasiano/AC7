@@ -48,7 +48,7 @@ function CartItem({item}) {
                         {name}
                       </div>
                       <div className="flex justify-start font-normal text-sm ">
-                        ${price}
+                        ₱{price}
                       </div>
                       <button className="absolute text-xs font-thin ">
                         Remove
@@ -72,7 +72,7 @@ function CartItem({item}) {
               </td>
               <td className="text-xl font-medium ">
                 <div className="flex justify-center">
-                  ${total}
+                  ₱{total}
                 </div>
               </td>
             </tr>

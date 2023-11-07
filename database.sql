@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS customer (
 CREATE TABLE IF NOT EXISTS address (
     address_id BIGINT UNSIGNED AUTO_INCREMENT,
     customer_id BIGINT UNSIGNED NOT NULL,
-    name VARCHAR(25) NOT NULL DEFAULT 'Address 1',
+    name VARCHAR(25) NOT NULL DEFAULT 'Address 1' UNIQUE,
     city VARCHAR(255) NOT NULL,
     zip_code CHAR(4) NOT NULL,
     baranggay VARCHAR(255) NOT NULL,
@@ -130,13 +130,14 @@ which means that we can store sale_id to the sale_item table
 CREATE TABLE IF NOT EXISTS sale (
     sale_id BIGINT UNSIGNED AUTO_INCREMENT,
     account_id BIGINT UNSIGNED NOT NULL,
-    address_id BIGINT UNSIGNED NOT NULL,
+    -- address_id BIGINT UNSIGNED NOT NULL,
+    -- sale table probably doesn't need an address, no? We only get the address for shipment once the sale is checked out since they select an address there anyway
     sale_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
     -- the date updates when the sale_status is changed from in progress to 'complete' ryt?
-    sale_status ENUM('in progress', 'complete'),
+    sale_status ENUM('in progress', 'complete') DEFAULT 'in progress',
     PRIMARY KEY (sale_id),
-    FOREIGN KEY (account_id) REFERENCES account(account_id),
-    FOREIGN KEY (address_id) REFERENCES address(address_id)
+    FOREIGN KEY (account_id) REFERENCES account(account_id)
+    -- FOREIGN KEY (address_id) REFERENCES address(address_id)
 );
 
 -- this is the order_item table from the diagram
@@ -215,11 +216,11 @@ VALUES
 ('Bleaching Whipped Cream', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis nunc eget turpis scelerisque, id ultrices justo ornare.', 150, 'Cosmetics', 20, 50),
 ('Kojic Soap', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis nunc eget turpis scelerisque, id ultrices justo ornare.', 50, 'Cosmetics', 20, 50);
 
-INSERT INTO sale(account_id, address_id, sale_status)
-VALUES (1, 1, 'in progress'),
-(2, 2, 'in progress'),
-(4, 4, 'in progress'),
-(5, 5, 'in progress');
+INSERT INTO sale(account_id, sale_status)
+VALUES (1, 'in progress'),
+(2, 'in progress'),
+(4, 'in progress'),
+(5, 'in progress');
 
 INSERT INTO sale_item(sale_id, product_id, quantity, price)
 VALUES (1, 1, 3, 36.33),

@@ -32,6 +32,7 @@ function Checkout() {
 
     const accountId = getAcctIdFromCookie(cookie);
 
+    //Cart items summary
     const [items, setItems] = useState([]);
 
     useEffect(() => {
@@ -42,75 +43,98 @@ function Checkout() {
         });
     }, []);
 
+    //Payment summary
     let totalPayment = 0;
     items.forEach((item) => {
       totalPayment += parseFloat(item.price) * item.quantity;
     })
 
-    // dito mo makita anong type of payment
-    const [Payment, setPayment] = useState('gcash');
-      
+    // Payment method
+    const [payment, setPayment] = useState('gcash');
+    
     const handleOptionChange = (event) => {
       setPayment(event.target.value);
     };
 
-    // dito mo ilagay yung mga Addresses
-    const options = [
+    const [gcashRefNum, setGcashRefNum] = useState();
+
+    //Fetch the addresses to be displayed in the Addresses drop down
+    const [addresses, setAddress] = useState([]);
+
+    useEffect(() => {
+      fetch(`/api/address/${accountId}`)
+        .then((res) => res.json())
+        .then((addresses) => {
+          setAddress(addresses);
+        });
+    }, []);
+
+    // Addresses drop down
+    const options = addresses.map((address) => (
       {
-        value: 'Address 1',
-        label: 'Address 1',
-        baranggay: 'Communal',
-        street: 'Emerald',
-        province: 'Davao Del Sur',
-        city: 'Davao',
-        zipCode: '8000',
-      },
-      {
-        value: 'Address 2',
-        label: 'Address 2',
-        baranggay: 'Another Baranggay',
-        street: 'Another Street',
-        province: 'Another Province',
-        city: 'Another City',
-        zipCode: '12345',
-      },
-      {
-        value: 'Address 3',
-        label: 'Address 3',
-        baranggay: 'Sample Baranggay',
-        street: 'Sample Street',
-        province: 'Sample Province',
-        city: 'Sample City',
-        zipCode: '98765',
-      },
-    ];
+        value: address.name,
+        label: address.name,
+        baranggay: address.baranggay,
+        street: address.street,
+        province: address.province,
+        city: address.city,
+        zipCode: address.zip_code
+      }
+    ))
   
-  // dito mo makita kung anong address naka select
+  // Selected address
   const [selectedOption, setSelectedOption] = useState("Address 1");
 
   const handleSelectChange = (selectedOption) => {
     setSelectedOption(selectedOption);
   };
 
+  function sendPostReq(e) {
+    e.preventDefault();
+    const reqData = {
+      account_id: accountId,
+      items_purchased: items,
+      payment_method: payment,
+      gcash_ref_num: gcashRefNum,
+      address_name: selectedOption.value,
+    }
+
+    fetch('/api/checkout', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(reqData)
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log("Data message" + data.message)
+        window.location.href = '/AC7/order/confirmation';
+      })
+      .catch((err) => {
+        console.error("Error: ", err)
+      })
+  }
+
 
   return (
     <div className="Checkout h-screen pt-16">
-      <form method="POST" action="http://localhost:8080/api/checkout" className="flex flex-col lg:flex-row lg:items-start items-center lg:gap-0 gap-5 justify-evenly py-20">
+      <form onSubmit={sendPostReq} id="billingInfo" className="flex flex-col lg:flex-row lg:items-start items-center lg:gap-0 gap-5 justify-evenly py-20">
         <div className="flex flex-col lg:w-1/2 w-11/12 gap-5 ">
           <div className="bg-gray-100 p-5">
             <div className="flex flex-row justify-start pb-4 text-xl font-semibold">
               Payment Method
             </div>
             <div className="flex flex-row justify-start">
-                <input name="paymentMethod" id="gcash" value="gcash" checked={Payment === 'gcash'} onChange={handleOptionChange}  type="radio"/>
+                <input name="paymentMethod" id="gcash" value="gcash" checked={payment === 'gcash'} onChange={handleOptionChange}  type="radio"/>
                 <label for="gcash" className="transition duration-300 ease-out hover:bg-gray-50 hover:-translate-y-0.5 active:bg-gray-200 active:translate-y-0 pl-2 pr-6 py-1 rounded-md cursor-pointer group-checked:bg-gray-600">
                 Gcash</label>
                 
-                <input name="paymentMethod" id="cod" value="cod" checked={Payment === 'cod'} onChange={handleOptionChange} type="radio"/>
+                <input name="paymentMethod" id="cod" value="cod" checked={payment === 'cod'} onChange={handleOptionChange} type="radio"/>
                 <label for="cod" className="transition duration-300 ease-out hover:bg-gray-50 hover:-translate-y-0.5 active:bg-gray-200 active:translate-y-0 pl-2 py-1 rounded-md cursor-pointer checked:bg-gray500">
                 Cash on Delivery</label>
             </div>
-            {Payment === 'gcash' && (
+            {payment === 'gcash' && (
             <div>
                 <div className="flex flex-row justify-start pb-3 pt-2 text-xl font-semibold">
                     Billing Information
@@ -118,7 +142,7 @@ function Checkout() {
                 <div className="flex flex-col">
                     <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Gcash Number</span>
-                        <input name="gcashNumber" type="text" className="rounded-sm"/>
+                        <input onChange={(event) => setGcashRefNum((gcashRefNum) => event.target.value)} name="gcashNumber" type="text" className="rounded-sm"/>
                     </label>
                 </div>
             </div>
@@ -181,13 +205,16 @@ function Checkout() {
               <div className="text-xs font-light">Total:</div>
             </div>
             <div className="flex justify-end text-xl font-semibold">
-              {`$${totalPayment.toFixed(2)}`}
+              &#x20B1;{`${totalPayment.toFixed(2)}`}
             </div>
-            <Link to="/order/confirmation">
-              <button className="w-full bg-black text-white p-4 mt-7 text-xl">
-                Pay
-              </button>
-            </Link>
+                {/* <Link to="/order/confirmation">
+                </Link> */}
+                <button type='submit' className="w-full bg-black text-white p-4 mt-7 text-xl">
+                  Pay
+                </button>
+                {/* <button onClick={sendPostReq} className="w-full bg-black text-white p-4 mt-7 text-xl">
+                  Pay
+                </button> */}
           </div>
           <div>
             <div className="flex justify-start text-md font-semibold pt-5">

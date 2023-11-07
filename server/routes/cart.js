@@ -14,18 +14,18 @@ let connection = mysql.createConnection({
 
 router.get('/:id', (req, res) => {
 
-    console.log('RUNNING .get("/cart/:id")')
+    // console.log('RUNNING .get("/cart/:id")')
     const {id: account_id} = req.params;
     let q = 'SELECT product.product_id, product.name, product.price, sale_item.quantity, sale.account_id FROM sale ' + 
             'INNER JOIN sale_item USING (sale_id) ' +
             'INNER JOIN product USING (product_id) ' +
-            `WHERE sale.account_id = ${account_id};`;
+            `WHERE sale.account_id = ${account_id} AND sale.sale_status = 'in progress'`;
 
     connection.query(q, function(err, results) {
         if (err) {
             console.log(err.message);
         }
-        console.log(results);
+        // console.log(results);
 
         res.json(results);
     });

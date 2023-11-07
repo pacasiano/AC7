@@ -81,7 +81,7 @@ function Cart() {
               <div className="text-xs font-light">Subtotal:</div>
             </div>
             <div className="flex justify-end text-xl font-semibold">
-              {`$${orderSubtotal.toFixed(2)}`}
+              {`₱${orderSubtotal.toFixed(2)}`}
             </div>
             <Link to="/checkout">
               <button className="w-full bg-black text-white p-4 mt-7 text-xl">
