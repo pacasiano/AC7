@@ -35,7 +35,7 @@ function Landing() {
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5"
                   required=""/>
               </div>
-              <div className="flex justify-center items-start">
+              <div className="flex justify-center items-start pb-5">
                 <div className="flex items-center h-5">
                   <input id="terms" aria-describedby="terms" type="checkbox"
                     className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300"
@@ -47,9 +47,11 @@ function Landing() {
                   </label>
                 </div>
               </div>
+              <Link to="/sign-up/account-information" className="pt-10">
               <button type="submit" className="w-full text-gray-700 bg-gray-200 hover:bg-gray-300 hover:text-gray-50 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                 Create an account
               </button>
+              </Link>
               <p className="flex justify-center text-sm font-light text-gray-500">
                 Already have an account?{" "}
                 <Link to="/login" className="font-medium text-blue-400 hover:underline">Login here</Link>

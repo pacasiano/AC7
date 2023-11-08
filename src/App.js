@@ -16,6 +16,7 @@ import IndivOrder from "./components/indivOrder";
 import Profile from "./pages/yourProfile";
 import OrderConfirmation from "./components/orderConfirmation";
 import InventoryInConfirmation from "./components/inventoryInConfirmation";
+import Signup2 from "./pages/sign-up2";
 import './App.css';
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
       <Route index element={<Login />} />
       <Route path="admin" element={<Admin />} />
       <Route path="sign-up" element={<Signup />} />
+      <Route path="sign-up/account-information" element={<Signup2 />} />
       <Route path="login" element={<Login />} />
       <Route path="order/confirmation" element={<OrderConfirmation/>} />
       <Route path="inventory-in/confirmation" element={<InventoryInConfirmation/>} />
