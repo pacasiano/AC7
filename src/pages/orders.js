@@ -24,7 +24,7 @@ function Orders() {
               </div>
               <div className="flex flex-col W-1/3 gap-5">
                 <div className="bg-gray-200 p-3">
-                  <button className="text-xl font-bold text-center">Canceled</button>
+                  <button className="text-xl font-bold text-center">Cancelled</button>
                 </div>
                 <OrderCard />
               </div>

@@ -177,7 +177,7 @@ CREATE TABLE IF NOT EXISTS shipment (
     sale_id BIGINT UNSIGNED NOT NULL,
     address_id BIGINT UNSIGNED NOT NULL,
     tracking_number VARCHAR(20) NOT NULL, -- tracking numbers are usually 12-20 in length in ph (esp with LBC and JRS). Wont exceed 20
-    courier VARCHAR(50) NOT NULL, -- we can abbrieviate names to about 4 letters but just to be safe we use 50 charlength
+    courier VARCHAR(50) NOT NULL, -- we can abbreviate names to about 4 letters but just to be safe we use 50 charlength
     sent_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     received_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     shipment_status ENUM('in progress', 'complete'),
@@ -199,7 +199,7 @@ VALUES (1, 'Dick', 'Robin', 'Grayson', '123-4567', 'robin@titans.net'),
 (2, 'Koriandr', NULL, 'Starfire', '987-6543', 'starfire@starfireplanet.com'),
 (3, 'Garfield', 'Beastboy', 'Logan', '789-0123', 'beastboy@animalkingdom.org'),
 (4, 'Rachel', 'Raven', 'Roth', '321-6789', 'raven@darknessrealm.net'),
-(5, 'Victoriano', NULL, 'Oneil', '888-8888', 'obvictoriano@addu.edu.ph');
+(5, 'Oneil', NULL, 'Victoriano', '888-8888', 'obvictoriano@addu.edu.ph');
 
 INSERT INTO address(customer_id, name, city, zip_code, baranggay, province, street) 
 VALUES(1, 'Secret Hideout', 'Gotham', '123', 'Baranggay 10', 'NA', '26 street'),
