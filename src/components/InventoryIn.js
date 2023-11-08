@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react"
 import Select from "react-select"
 import { Link } from "react-router-dom";
 import "../App.css"
+import { uniq } from 'lodash'; // import lodash uniq function
 
 export default function InventoryIn() {
 
     const [numbersToBeDelivered, setNumbersToBeDelivered] = useState(1);
-
+    const [selectedProducts, setSelectedProducts] = useState([]);
     const [suppliers, setSuppliers] = useState([]);
 
     useEffect(() => {
@@ -44,19 +45,19 @@ export default function InventoryIn() {
                     <table className="w-full border-collapse border">
                         <thead>
                             <tr className="bg-gray-400">
-                                <th className="text-md font-bold border p-2 text-white">Supplier Name</th>
-                                <th className="text-md font-bold border w-60 p-2 text-white">Payment</th>
-                                <th className="text-md font-bold border p-2 text-white w-44">Number of Items</th>
+                                <th className="text-md font-bold border p-2 text-white" required>Supplier Name</th>
+                                <th className="text-md font-bold border w-60 p-2 text-white" required>Payment</th>
+                                <th className="text-md font-bold border p-2 text-white w-44" required>Number of Items</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr className="bg-gray-300">
                                 <td className="text-sm font-semibold border p-2">
-                                    <Select options={options} name="supplier_name" className="w-full text-center"/></td>
+                                    <Select options={options} name="supplier_name" className="w-full text-center" required/></td>
                                 <td className="text-sm font-semibold border p-2">
-                                    <input name="payment_amount" type="number" className="w-full h-10 text-center"></input></td>
+                                    <input name="payment_amount" type="number" className="w-full h-10 text-center" required></input></td>
                                 <td className="text-sm font-semibold border p-2">
-                                    <Select options={options2} onChange={(opt) => setNumbersToBeDelivered(opt.value)} className=" w-full text-center" />
+                                    <Select options={options2} onChange={(opt) => setNumbersToBeDelivered(opt.value)} className=" w-full text-center" required />
                                 </td>
                             </tr>
                         </tbody>
@@ -71,9 +72,9 @@ export default function InventoryIn() {
                                     <th className="text-sm w-44 font-semibold border p-2 text-white">Quantity</th>
                                 </tr>
                             </thead>
-                                {Array.from({ length: numbersToBeDelivered }, (_, index) => (
-                                    <Items key={index} />
-                                ))}
+                            {Array.from({ length: numbersToBeDelivered }, (_, index) => (
+                                <Items key={index} selectedProducts={selectedProducts} setSelectedProducts={setSelectedProducts} />
+                            ))}
                         </table>
                         <table className="w-full border-0 border-collapse">
                             <thead>
@@ -92,8 +93,9 @@ export default function InventoryIn() {
     );
 }
 
-function Items() {
+function Items({ selectedProducts, setSelectedProducts }) {
     const [products, setProducts] = useState([]);
+    const [selectedOption, setSelectedOption] = useState(null);
 
     useEffect(() => {
         fetch('/api/products') //fetch data 
@@ -104,19 +106,42 @@ function Items() {
     }, []);
 
     const options = products.map((product) => (
-        {value: `${product.name}`, label: `${product.name}`}
+        {
+            value: `${product.name}`, 
+            label: `${product.name}`,
+            isDisabled: selectedProducts.includes(product.name)
+        }
     ))
+
+    const handleProductChange = (option) => {
+        let updatedProducts = [...selectedProducts];
+        if (selectedOption) {
+            updatedProducts = updatedProducts.filter(product => product !== selectedOption.value);
+        }
+        if (option) {
+            updatedProducts = [...updatedProducts, option.value];
+        }
+        setSelectedProducts(updatedProducts);
+        setSelectedOption(option);
+    }
 
     return(
 
         <tbody className="bg-gray-300">
             <tr>
                 <td className="text-sm font-semibold border p-2 text-black">
-                    <Select options={options} name="product_name" className="h-10 w-full text-center"/></td>
+                <Select 
+                    options={options} 
+                    name="product_name" 
+                    className="h-10 w-full text-center" 
+                    onChange={handleProductChange}
+                    required
+                />
+                </td>
                 <td className="text-sm font-semibold border p-2 text-black">
-                    <input name="price" type="number" className="h-10 w-full text-center pl-1"></input></td>
+                    <input name="price" type="number" className="h-10 w-full text-center pl-1" required></input></td>
                 <td className="text-sm font-semibold border p-2 text-black">
-                    <input name="quantity" type="number" className="h-10 w-full text-center pl-1"></input></td>
+                    <input name="quantity" type="number" className="h-10 w-full text-center pl-1" required></input></td>
             </tr>
         </tbody>
 
