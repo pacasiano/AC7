@@ -14,9 +14,9 @@ const connection = mysql.createConnection({
 router.post('/:id', (req, res) => {
     //Address table needs all the properties below + customer_id
     const {id: account_id} = req.params;
-    const {name, baranggay, street, province, city, zip_code} = req.body
+    const {name, barangay, street, province, city, zip_code} = req.body
     const q = `INSERT INTO address SET customer_id = (SELECT customer_id FROM customer WHERE account_id = ${account_id}), ` +
-            `name = '${name}', baranggay = '${baranggay}', street = '${street}', province = '${province}', city = '${city}', zip_code = '${zip_code}'`;
+            `name = '${name}', barangay = '${barangay}', street = '${street}', province = '${province}', city = '${city}', zip_code = '${zip_code}'`;
     connection.query(q, (err, results) => {
         if (err) {
             console.error(err)
@@ -29,7 +29,7 @@ router.post('/:id', (req, res) => {
 
 router.get('/:id', (req, res) => {
     const {id : account_id} = req.params;
-    const q = 'SELECT name, city, zip_code, baranggay, province, street FROM address ' + 
+    const q = 'SELECT name, city, zip_code, barangay, province, street FROM address ' + 
                 `WHERE customer_id = (SELECT customer_id FROM customer WHERE account_id = ${account_id})`;
     connection.query(q, (err, results) => {
         res.json(results)

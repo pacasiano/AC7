@@ -33,10 +33,10 @@ CREATE TABLE IF NOT EXISTS customer (
 CREATE TABLE IF NOT EXISTS address (
     address_id BIGINT UNSIGNED AUTO_INCREMENT,
     customer_id BIGINT UNSIGNED NOT NULL,
-    name VARCHAR(25) NOT NULL DEFAULT 'Address 1' UNIQUE,
+    name VARCHAR(25) NOT NULL DEFAULT 'Address 1',
     city VARCHAR(255) NOT NULL,
     zip_code CHAR(4) NOT NULL,
-    baranggay VARCHAR(255) NOT NULL,
+    barangay VARCHAR(255) NOT NULL,
     province VARCHAR(255) NOT NULL,
     street VARCHAR(255) NOT NULL,
     PRIMARY KEY (address_id),
@@ -201,12 +201,12 @@ VALUES (1, 'Dick', 'Robin', 'Grayson', '123-4567', 'robin@titans.net'),
 (4, 'Rachel', 'Raven', 'Roth', '321-6789', 'raven@darknessrealm.net'),
 (5, 'Oneil', NULL, 'Victoriano', '888-8888', 'obvictoriano@addu.edu.ph');
 
-INSERT INTO address(customer_id, name, city, zip_code, baranggay, province, street) 
-VALUES(1, 'Secret Hideout', 'Gotham', '123', 'Baranggay 10', 'NA', '26 street'),
-(2, 'Home', 'Jump City', '456', 'Baranggay 12', 'NA', '26 street'),
-(3, 'Zoo', 'Jump City', '789', 'Baranggay 10', 'NA', '26 street'),
-(4, 'Literally Hell', 'Azarath', '567', 'Baranggay 10', 'NA', '26 street'),
-(5, 'My Sweet Home', 'Davao City', '8000', 'Baranggay Buhangin', 'Davao', '24 Jump Street');
+INSERT INTO address(customer_id, name, city, zip_code, barangay, province, street) 
+VALUES(1, 'Secret Hideout', 'Gotham', '123', 'Barangay 10', 'NA', '26 street'),
+(2, 'Home', 'Jump City', '456', 'Barangay 12', 'NA', '26 street'),
+(3, 'Zoo', 'Jump City', '789', 'Barangay 10', 'NA', '26 street'),
+(4, 'Literally Hell', 'Azarath', '567', 'Barangay 10', 'NA', '26 street'),
+(5, 'My Sweet Home', 'Davao City', '8000', 'Barangay Buhangin', 'Davao', '24 Jump Street');
 
 INSERT INTO product(name, description, price, category, threshold, quantity)
 VALUES

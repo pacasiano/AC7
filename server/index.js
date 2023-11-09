@@ -10,7 +10,9 @@ const checkout = require('./routes/checkout');
 const inventory_in = require('./routes/inventory_in');
 const suppliers = require('./routes/suppliers');
 const profile = require('./routes/profile.js');
-const address = require('./routes/address.js')
+const address = require('./routes/address.js');
+const account = require('./routes/account.js');
+const customer = require('./routes/customer.js')
 
 app.use(express.urlencoded( { extended: true } ));
 
@@ -36,9 +38,13 @@ app.use('/api/inventory_in', inventory_in);
 
 app.use('/api/suppliers', suppliers);
 
-app.use('/api/profile', profile)
+app.use('/api/profile', profile);
 
-app.use('/api/address', address)
+app.use('/api/address', address);
+
+app.use('/api/account', account);
+
+app.use('/api/customer', customer)
 
 
 app.listen(8080, () => {

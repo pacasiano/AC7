@@ -79,7 +79,7 @@ function Checkout() {
       {
         value: address.name,
         label: address.name,
-        baranggay: address.baranggay,
+        barangay: address.barangay,
         street: address.street,
         province: address.province,
         city: address.city,
@@ -167,7 +167,7 @@ function Checkout() {
               <table className="w-full border-collapse">
                   <thead>
                       <tr className="border-b-2">
-                          <td className="text-sm font-semibold">Baranggay</td>
+                          <td className="text-sm font-semibold">Barangay</td>
                           <td className="text-sm font-semibold">Street</td>
                           <td className="text-sm font-semibold">Province</td>
                           <td className="text-sm font-semibold">City</td>
@@ -176,8 +176,8 @@ function Checkout() {
                   </thead>
                   <tbody>
                     <tr className="">
-                      <td className="text-sm font-medium baranggay-value">
-                      {selectedOption?.baranggay}
+                      <td className="text-sm font-medium barangay-value">
+                      {selectedOption?.barangay}
                       </td>
                       <td className="text-sm font-medium street-value">
                       {selectedOption?.street}

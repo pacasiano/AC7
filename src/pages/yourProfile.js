@@ -64,7 +64,7 @@ export default function Settings() {
         });
     }, []);
 
-    // const {baranggay, street, province, city, zip_code, name} = address[0] || {};
+    // const {barangay, street, province, city, zip_code, name} = address[0] || {};
 
   return(
     <div className="w-full h-screen pt-16">
@@ -176,7 +176,7 @@ export default function Settings() {
                             </div>
                             <div className="flex flex-col">
                                 <span for="barangay" className="flex justify-start font-bold">Barangay</span>
-                                <input id="barangay" name="baranggay" className="w-full  pl-1 rounded-md "></input>
+                                <input id="barangay" name="barangay" className="w-full  pl-1 rounded-md "></input>
                             </div>
                             <div className="flex flex-col">
                                 <span for="street" className="flex justify-start font-bold">Street</span>
@@ -214,7 +214,7 @@ export default function Settings() {
                             <table className="w-full border-collapse">
                                 <thead>
                                     <tr className="border-b-2">
-                                        <th className="text-sm font-semibold">Baranggay</th>
+                                        <th className="text-sm font-semibold">Barangay</th>
                                         <th className="text-sm font-semibold">Street</th>
                                         <th className="text-sm font-semibold">Province</th>
                                         <th className="text-sm font-semibold">City</th>
@@ -224,7 +224,7 @@ export default function Settings() {
                                 <tbody>
                                     <tr className="">
                                         {/* plug the valeus here */}
-                                        <th className="text-sm font-medium w-1/5">{address.baranggay}</th>
+                                        <th className="text-sm font-medium w-1/5">{address.barangay}</th>
                                         <th className="text-sm font-medium w-1/5">{address.street}</th>
                                         <th className="text-sm font-medium w-1/5">{address.province}</th>
                                         <th className="text-sm font-medium w-1/5">{address.city}</th>
