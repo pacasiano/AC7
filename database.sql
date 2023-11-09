@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS employee (
     employee_id BIGINT UNSIGNED AUTO_INCREMENT,
     account_id BIGINT UNSIGNED NOT NULL,
     first_name VARCHAR(255) NOT NULL,
-    middle_name VARCHAR(255) NOT NULL,
+    middle_name VARCHAR(255),
     last_name VARCHAR(255) NOT NULL,
     position VARCHAR(255) NOT NULL,
     emp_status ENUM('active', 'inactive') NOT NULL DEFAULT 'active', -- status is a reserved word
@@ -192,7 +192,8 @@ VALUES ('boywonder1', 'gothamsavior42', 'customer'),
 ('starfirealien', 'tamaranlove17', 'customer'),
 ('shapeshiftpro', 'greengorillabanana', 'customer'),
 ('darksorceress', 'azarathrising99', 'customer'),
-('obvictoriano', 'adduislife', 'customer'); 
+('obvictoriano', 'adduislife', 'customer'),
+('obet', 'iluvmen', 'employee'); 
 
 INSERT INTO customer(account_id, first_name, middle_name, last_name, contact_info, email) 
 VALUES (1, 'Dick', 'Robin', 'Grayson', '123-4567', 'robin@titans.net'),
@@ -200,6 +201,9 @@ VALUES (1, 'Dick', 'Robin', 'Grayson', '123-4567', 'robin@titans.net'),
 (3, 'Garfield', 'Beastboy', 'Logan', '789-0123', 'beastboy@animalkingdom.org'),
 (4, 'Rachel', 'Raven', 'Roth', '321-6789', 'raven@darknessrealm.net'),
 (5, 'Oneil', NULL, 'Victoriano', '888-8888', 'obvictoriano@addu.edu.ph');
+
+INSERT INTO employee(account_id, first_name, middle_name, last_name, position, emp_status, contact_info)
+VALUES (6, 'obet', NULL, 'dohsgit', 'Employee', 'active', '333-4233');
 
 INSERT INTO address(customer_id, name, city, zip_code, barangay, province, street) 
 VALUES(1, 'Secret Hideout', 'Gotham', '123', 'Barangay 10', 'NA', '26 street'),
