@@ -44,7 +44,6 @@ router.post('/', (req, res) => {
             res.redirect('http://localhost:3000/AC7/login')
         }
     })
-
 })
 
 

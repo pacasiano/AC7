@@ -11,19 +11,33 @@ const connection = mysql.createConnection({
 
 router.use(express.json())
 
+//Create new account
 router.post('/', (req, res) => {
     //username must be unique
     const {username, password} = req.body;
-    const q = `INSERT INTO account SET username = '${username}', password = '${password}', account_type = 'customer'`;
-    connection.query(q, (err, results) => {
+
+    //Query 1: Create new account
+    const q1 = `INSERT INTO account SET username = '${username}', password = '${password}', account_type = 'customer'`;
+    connection.query(q1, (err, results) => {
         if (err) {console.error(err)}
         else {
-            console.log('Step 1: Account creation successful')
-            // res.redirect('http://localhost:3000/AC7/sign-up/account-information');
+            console.log('Step 1.1: Account creation successful')
+            
+        } 
+    })
+
+    //Query 2: Create and assign sale entry for new customer account
+    const q2 = `INSERT INTO sale SET account_id = (SELECT account_id FROM account WHERE username = '${username}')`
+    connection.query(q2, (err, results) => {
+        if (err) {
+            console.error(err)
+        }
+        else {
+            console.log('Step 1.2: Account creation successful')
             res.json({
                 message: 'FUCK YES!'
             })
-        } 
+        }
     })
 })
 
