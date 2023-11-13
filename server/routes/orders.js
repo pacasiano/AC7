@@ -1,7 +1,7 @@
 const express = require('express');
-const router = express.Router();
-
+const app = express();
 const mysql = require('mysql2');
+const router = express.Router();
 
 let connection = mysql.createConnection({
     host: 'localhost',
@@ -10,17 +10,16 @@ let connection = mysql.createConnection({
     database: 'ac7_database'
 });
 
-router.get('/', (req, res) => {
-    
-    let q = 'SELECT sale_id, account_id, address_id, DATE_FORMAT(sale_date, \'%M %d, %Y\') AS sale_date, sale_status, ' + 
-            'SUM(price * quantity) AS price ' +
-            'FROM sale INNER JOIN sale_item USING (sale_id) ' +
-            'INNER JOIN shipment USING (sale_id) ' +
-            'GROUP BY sale_id';
-    connection.query(q, function(error, results, fields) {
-        if (error) throw error;
-        res.json(results); //returns an array of obj literals in JSON format, each obj literal is a row from the query
-        // connection.end();
+router.get('/:id', (req, res) => {
+    const { id: account_id } = req.params;
+    let q = `SELECT sale_id, sale_date, sale_status FROM sale WHERE account_id = ${account_id}`;
+    connection.query(q, function (err, results) {
+        if (err) {
+            console.log(err.message);
+        }
+        // console.log(results);
+
+        res.json(results);
     });
 
 });

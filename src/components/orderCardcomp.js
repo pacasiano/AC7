@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import "../App.css";
 import Item1 from "../imgs/Item1.png";
 import { Link } from "react-router-dom";
-import PropPass from "../components/indivOrder"
 
 
 export default function OnGoing() {
@@ -39,8 +38,9 @@ export default function OnGoing() {
                 setOrders(orders);
             });
     }, []);
+
     const orderCards = orders.slice(0, 2).map((order) => {
-        if(order.sale_status=="in progress"){
+        if(order.sale_status=="complete"){
             return ( 
                 <Link to={"/order"} className="bg-gray-100 p-5 hover:-translate-y-1 hover:shadow-xl hover:cursor-pointer">
                     <div className="flex flex-col">
@@ -53,7 +53,7 @@ export default function OnGoing() {
                                 <p className="text-xs font-medium text-start">Date ordered: <span className="text-xs font-semibold"></span></p>
                                 <p className="text-xs font-medium text-start">Date Delivered: <span className="text-xs font-semibold"></span></p>
                                 <p className="text-xs font-medium text-start">Order Status: <span className="text-xs font-semibold">{order.sale_status}</span></p>
-                                <p className="text-xs font-medium text-start">Total: <span className="text-xs font-semibold"></span></p>
+                                <p className="text-xs font-medium text-start">Total: <span className="text-xs font-semibold">Php</span></p>
                             </div>
                         </div>
                     </div>
