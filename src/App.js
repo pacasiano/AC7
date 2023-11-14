@@ -17,40 +17,75 @@ import Profile from "./pages/yourProfile";
 import OrderConfirmation from "./components/orderConfirmation";
 import InventoryInConfirmation from "./components/inventoryInConfirmation";
 import Signup2 from "./pages/sign-up2";
+import Error404 from "./pages/Error404";
 import './App.css';
 
 function App() {
+  const cookie = document.cookie;
+
+  function getAcctIdFromCookie(cookieStr) {
+    if (cookieStr.indexOf(';') > 0) {
+      const cookiesArray = cookieStr.split(';');
+      for (let i = 0; i < cookiesArray.length; i++) {
+        if (cookiesArray[i].indexOf('account_id') > 0) {
+          const id = cookiesArray[i].replace('account_id=', '').trim();
+          return id;
+        }
+      }
+    } else {
+      const id = cookie.slice(cookie.indexOf('=') + 1);
+      return id;
+    }
+  }
+
+  const accountId = getAcctIdFromCookie(cookie);
+
   return (
     <>
-
-    <Routes>
-      <Route
-        element={
-          <div>
-            <Header />
-            <Outlet />
-            <Footer />
-          </div>
-        }
-      >
-        <Route path="home" element={<Main />} />
-        <Route path="store" element={<Store />} />
-        <Route path="about" element={<About />} />
-        <Route path="cart" element={<Cart />} />
-        <Route path="orders" element={<Orders />} />
-        <Route path="product" element={<Product />} />
-        <Route path="checkout" element={<Checkout />} />
-        <Route path="order" element={<IndivOrder />} />
-        <Route path="user/profile" element={<Profile  />} />
-      </Route>
-      <Route index element={<Login />} />
-      <Route path="admin" element={<Admin />} />
-      <Route path="sign-up" element={<Signup />} />
-      <Route path="sign-up/account-information" element={<Signup2 />} />
-      <Route path="login" element={<Login />} />
-      <Route path="order/confirmation" element={<OrderConfirmation/>} />
-      <Route path="inventory-in/confirmation" element={<InventoryInConfirmation/>} />
-    </Routes>
+      {accountId === "5" ? (
+        // If user account
+        <>
+          <Routes>
+            <Route
+              element={
+                <div>
+                  <Header />
+                  <Outlet />
+                  <Footer />
+                </div>
+              }
+            >
+              <Route path="home" element={<Main />} />
+              <Route path="store" element={<Store />} />
+              <Route path="about" element={<About />} />
+              <Route path="cart" element={<Cart />} />
+              <Route path="orders" element={<Orders />} />
+              <Route path="product" element={<Product />} />
+              <Route path="checkout" element={<Checkout />} />
+              <Route path="order" element={<IndivOrder />} />
+              <Route path="user/profile" element={<Profile />} />
+            </Route>
+            <Route path="order/confirmation" element={<OrderConfirmation />} />
+            {/* Add a wildcard route for unmatched paths */}
+            <Route path="*" element={<Error404 />} />
+          </Routes>
+        </>
+      ) : accountId === "admin" ? (
+        // If admin account
+        <Routes>
+          <Route index element={<Admin />} />
+          <Route path="admin" element={<Admin />} />
+          <Route path="inventory-in/confirmation" element={<InventoryInConfirmation />} />
+        </Routes>
+      ) : (
+        // If neither user nor admin (for simplicity assuming it's the login page)
+        <Routes>
+          <Route index element={<Login />} />
+          <Route path="login" element={<Login />} />
+          <Route path="sign-up" element={<Signup />} />
+          <Route path="sign-up/account-information" element={<Signup2 />} />
+        </Routes>
+      )}
     </>
   );
 }
