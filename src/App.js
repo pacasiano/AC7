@@ -76,6 +76,7 @@ function App() {
           <Route index element={<Admin />} />
           <Route path="admin" element={<Admin />} />
           <Route path="inventory-in/confirmation" element={<InventoryInConfirmation />} />
+          <Route path="*" element={<Error404 />} />
         </Routes>
       ) : (
         // If neither user nor admin (for simplicity assuming it's the login page)
@@ -84,6 +85,7 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="sign-up" element={<Signup />} />
           <Route path="sign-up/account-information" element={<Signup2 />} />
+          <Route path="*" element={<Error404 />} />
         </Routes>
       )}
     </>
