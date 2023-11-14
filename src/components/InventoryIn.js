@@ -46,6 +46,7 @@ export default function InventoryIn() {
                         <thead>
                             <tr className="bg-gray-400">
                                 <th className="text-md font-bold border p-2 text-white" required>Supplier Name</th>
+                                <th className="text-md font-bold border p-2 text-white w-2/5" required>Comments</th>
                                 <th className="text-md font-bold border w-60 p-2 text-white" required>Payment</th>
                                 <th className="text-md font-bold border p-2 text-white w-44" required>Number of Items</th>
                             </tr>
@@ -54,6 +55,8 @@ export default function InventoryIn() {
                             <tr className="bg-gray-300">
                                 <td className="text-sm font-semibold border p-2">
                                     <Select options={options} name="supplier_name" className="w-full text-center" required/></td>
+                                <td className="text-sm font-semibold border p-2">
+                                    <input name="comments" type="text" className="w-full h-10 text-center" /></td>
                                 <td className="text-sm font-semibold border p-2">
                                     <input name="payment_amount" type="number" className="w-full h-10 text-center" required></input></td>
                                 <td className="text-sm font-semibold border p-2">
