@@ -41,6 +41,22 @@ router.post('/', (req, res) => {
     })
 })
 
+//Get account_type for authorization
+router.get('/:id', (req, res) => {
+    const {id: account_id} = req.params;
+    const q1 = `SELECT account_type FROM account WHERE account_id = ${account_id}`;
+    connection.query(q1, (err, results) => {
+        if(err) {
+            console.error(err)
+        }
+        else {
+            const {account_type} = results[0];
+            console.log(`Account with ID of ${account_id} is of type ${account_type}`)
+            res.json(results)
+        }
+    })
+})
+
 
 
 module.exports = router;

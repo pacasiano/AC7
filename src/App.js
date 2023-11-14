@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { Routes, Route, Outlet } from "react-router-dom";
 import Main from "./pages/main";
 import Store from "./pages/store";
@@ -19,8 +19,10 @@ import InventoryInConfirmation from "./components/inventoryInConfirmation";
 import Signup2 from "./pages/sign-up2";
 import Error404 from "./pages/Error404";
 import './App.css';
+import { MdDataSaverOn } from "react-icons/md";
 
 function App() {
+  //Get cookie
   const cookie = document.cookie;
 
   function getAcctIdFromCookie(cookieStr) {
@@ -40,9 +42,22 @@ function App() {
 
   const accountId = getAcctIdFromCookie(cookie);
 
+  const [user, setUser] = useState([]);
+
+  useEffect(() => {
+    fetch(`/api/account/${accountId}`)
+      .then((res) => res.json())
+      .then((user) => {
+        setUser(user);
+      });
+  }, []);
+
+  const {account_type} = user[0] || {};
+  console.log(account_type + " Account type")
+
   return (
     <>
-      {accountId === "5" ? (
+      {account_type === "customer" ? (
         // If user account
         <>
           <Routes>
@@ -71,7 +86,7 @@ function App() {
             <Route path="*" element={<Error404 />} />
           </Routes>
         </>
-      ) : accountId === "admin" ? (
+      ) : account_type === "employee" ? (
         // If admin account
         <Routes>
           <Route index element={<Admin />} />
