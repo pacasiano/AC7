@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import Select from "react-select"
-import { Link } from "react-router-dom";
 import "../App.css"
-import { uniq } from 'lodash'; // import lodash uniq function
+import { myContext } from "../context/inventoryContext";
+
 
 export default function InventoryIn() {
 
     const [numbersToBeDelivered, setNumbersToBeDelivered] = useState(1);
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [suppliers, setSuppliers] = useState([]);
+    const { setPage } = useContext(myContext);
 
     useEffect(() => {
         fetch('/api/suppliers') //fetch data 
@@ -17,6 +18,7 @@ export default function InventoryIn() {
                 setSuppliers(suppliers);
             });
     }, []);
+
 
     const options = suppliers.map((supplier) => (
         {value: `${supplier.name}`, label: `${supplier.name}`}
@@ -38,14 +40,21 @@ export default function InventoryIn() {
     return(
         <div className=" px-8 py-8 ">
             <div className="flex flex-col gap-5 ">
-                <div id="header" className="flex flex-row justify-start">
+                <div id="header" className="flex flex-row justify-between">
                     <span className="text-xl font-bold">Inventory In</span>
+                    <button
+                        onClick={() => setPage("inventory")}
+                        className="bg-gray-200 px-2 py-1 rounded-md font-medium"
+                    >
+                        Back
+                    </button>
                 </div>
                 <form action="/api/inventory_in" method="POST" className="flex flex-col gap-3">
                     <table className="w-full border-collapse border">
                         <thead>
                             <tr className="bg-gray-400">
                                 <th className="text-md font-bold border p-2 text-white" required>Supplier Name</th>
+                                <th className="text-md font-bold border p-2 text-white w-2/5" required>Comments</th>
                                 <th className="text-md font-bold border w-60 p-2 text-white" required>Payment</th>
                                 <th className="text-md font-bold border p-2 text-white w-44" required>Number of Items</th>
                             </tr>
@@ -54,6 +63,8 @@ export default function InventoryIn() {
                             <tr className="bg-gray-300">
                                 <td className="text-sm font-semibold border p-2">
                                     <Select options={options} name="supplier_name" className="w-full text-center" required/></td>
+                                <td className="text-sm font-semibold border p-2">
+                                    <input name="comments" type="text" className="w-full h-10 text-center" /></td>
                                 <td className="text-sm font-semibold border p-2">
                                     <input name="payment_amount" type="number" className="w-full h-10 text-center" required></input></td>
                                 <td className="text-sm font-semibold border p-2">

@@ -44,7 +44,12 @@ function UserDropdown() {
 
     function removeCookie() {
         document.cookie = "account_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    }
+        window.location.href = "/";
+        setTimeout(() => {
+          window.location.reload();
+        }, 0);
+      }
+      
 
 
     return (
@@ -57,7 +62,7 @@ function UserDropdown() {
                 <Link to="/user/profile" className="block py-2 text-sm text-gray-700 hover:font-bold">Your Profile</Link>
                 <Link to="/orders" className="block py-2 text-sm text-gray-700 hover:font-bold">Orders</Link>
                 {/* <Link to="/user/settings" className="block py-2 text-sm text-gray-700 hover:font-bold">Settings</Link> */}
-                <Link to="/login" onClick={removeCookie} className="block py-2 text-sm text-gray-700 hover:font-bold">Sign out</Link>
+                <Link to="/" onClick={removeCookie} className="block py-2 text-sm text-gray-700 hover:font-bold">Sign out</Link>
             </div>
         </div>
     );
