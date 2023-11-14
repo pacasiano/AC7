@@ -55,6 +55,7 @@ function App() {
                 </div>
               }
             >
+              <Route index element={<Main />} />
               <Route path="home" element={<Main />} />
               <Route path="store" element={<Store />} />
               <Route path="about" element={<About />} />
