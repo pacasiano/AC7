@@ -13,10 +13,20 @@ import Shipping from "../components/shipping";
 import InventoryIn from "../components/InventoryIn";
 import InventoryOut from "../components/inventoryOut";
 import { myContext } from "../context/inventoryContext";
+import { Link } from "react-router-dom";
 
 export default function Admin() {
 
     const [page, setPage] = useState("inventory");
+
+    function removeCookie() {
+        document.cookie = "account_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        window.location.href = "/";
+        setTimeout(() => {
+          window.location.reload();
+        }, 0);
+      }
+      
 
     return (
         <div>
@@ -24,26 +34,31 @@ export default function Admin() {
                 <div className="flex flex-row" >
                     <div id="sideBar" className="fixed h-screen overflow-y-auto scrolling-sidebar flex flex-col bg-gray-200 w-52">
                         <img src={navlogo} alt="AC7 Logo" className="py-5 aspect-auto"></img>
-                            <div className="flex flex-col pl-7 gap-5">
-                                <div id="orders" className="">
-                                    <button onClick={() => setPage("orders")}>
-                                    <div className="text-xl font-semibold"><FontAwesomeIcon icon={faShoppingCart} /> Orders</div>
-                                    </button>
+                            <div className="flex flex-col justify-between h-full">
+                                <div className="flex flex-col pl-7 gap-5 ">
+                                    <div id="orders" className="">
+                                        <button onClick={() => setPage("orders")}>
+                                        <div className="text-xl font-semibold"><FontAwesomeIcon icon={faShoppingCart} /> Orders</div>
+                                        </button>
+                                    </div>
+                                    <div id="accounts" className="">
+                                        <button onClick={() => setPage("users")} >
+                                        <div className="text-xl font-semibold"><FontAwesomeIcon icon={faUsers} /> Accounts</div>
+                                        </button>
+                                    </div>
+                                    <div id="inventory" className="">
+                                        <button onClick={() => setPage("inventory")} >
+                                        <div className="text-xl font-semibold"><FontAwesomeIcon icon={faInbox} /> Inventory</div>
+                                        </button>
+                                    </div>
+                                    <div id="shipping" className="">
+                                        <button onClick={() => setPage("shipping")} >
+                                        <div className="text-xl font-semibold"><FontAwesomeIcon icon={faTruck} /> Shipping</div>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div id="accounts" className="">
-                                    <button onClick={() => setPage("users")} >
-                                    <div className="text-xl font-semibold"><FontAwesomeIcon icon={faUsers} /> Accounts</div>
-                                    </button>
-                                </div>
-                                <div id="inventory" className="">
-                                    <button onClick={() => setPage("inventory")} >
-                                    <div className="text-xl font-semibold"><FontAwesomeIcon icon={faInbox} /> Inventory</div>
-                                    </button>
-                                </div>
-                                <div id="shipping" className="">
-                                    <button onClick={() => setPage("shipping")} >
-                                    <div className="text-xl font-semibold"><FontAwesomeIcon icon={faTruck} /> Shipping</div>
-                                    </button>
+                                <div className="flex w-full pl-7 pb-7">
+                                    <Link to="/" onClick={removeCookie} className="text-xl font-bold text-black hover:bg-gray-50 rounded-md py-1 px-2">Sign out</Link>
                                 </div>
                             </div>
                     </div>
