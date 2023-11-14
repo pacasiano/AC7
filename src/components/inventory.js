@@ -31,7 +31,9 @@ export default function Inventory() {
                             <span className="text-md font-bold">Product List</span>
                         </div>
                         <div className="flex flex-row gap-2">
-                            <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">View Transactions</span></button>
+                            <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">View Stock Transactions</span></button>
+                            <button onClick={() => setPage("inventoryIn")}><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">Stock-in</span></button>
+                            <button onClick={() => setPage("inventoryOut")}><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">Stock-out</span></button>
                             <button onClick={() => setPage("inventoryIn")}><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">Add Item</span></button>
                             <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">View All</span></button>
                         </div>
@@ -54,7 +56,6 @@ export default function Inventory() {
                                 <th className="text-sm font-semibold border p-2 text-white">Price</th>
                                 <th className="text-sm font-semibold border p-2 text-white">Threshold</th>
                                 <th className="text-sm font-semibold border p-2 text-white">Quantity</th>
-                                <th className="text-sm font-semibold border p-2 text-white">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -67,18 +68,6 @@ export default function Inventory() {
                                     <td className="text-sm font-semibold border p-2">&#x20B1;{product.price}</td>
                                     <td className="text-sm font-semibold border p-2">{product.threshold}</td>
                                     <td className="text-sm font-semibold border p-2">{product.quantity}</td>
-                                    <td className="flex flex-row gap-2 text-sm font-semibold border p-2 ">
-                                    {addItem === false ? (
-                                    <button onClick={() => showAddItem(!addItem)} className="bg-green-500 text-white px-4 py-2 w-full rounded">ADD</button>
-                                    ) : (
-                                    <button onClick={() => showAddItem(!addItem)} className="bg-red-500 text-white px-4 py-2 w-full rounded">CANCEL</button>
-                                    )}
-                                    {editItem === false ? (
-                                    <button onClick={() => showEditItem(!editItem)} className="bg-green-500 text-white px-4 py-2 w-full rounded">EDIT</button>
-                                    ) : (
-                                    <button onClick={() => showEditItem(!editItem)} className="bg-red-500 text-white px-4 py-2 w-full rounded">CANCEL</button>
-                                    )}
-                                    </td>
                                 </tr>
 
                             ))}

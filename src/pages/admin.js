@@ -11,6 +11,7 @@ import Orders from "../components/orders";
 import Users from "../components/users";
 import Shipping from "../components/shipping";
 import InventoryIn from "../components/InventoryIn";
+import InventoryOut from "../components/inventoryOut";
 import { myContext } from "../context/inventoryContext";
 
 export default function Admin() {
@@ -60,6 +61,8 @@ export default function Admin() {
                                     return <Shipping />;
                                 case "inventoryIn":
                                     return <InventoryIn />;
+                                case "inventoryOut":
+                                    return <InventoryOut />;
                                 default:
                                     return <Inventory />;
                             }
