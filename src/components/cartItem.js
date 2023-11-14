@@ -9,7 +9,7 @@ function CartItem({item}) {
     // console.log(item)
     
     const [hookQty, setQuantity] = useState(displayQty);
-    const [total, setTotal] = useState(price);
+    const [total, setTotal] = useState((price * quantity).toFixed(2));
   
     const incrementQuantity = () => {
       setQuantity(hookQty + 1);

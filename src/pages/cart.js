@@ -62,7 +62,7 @@ function Cart() {
                     <th className="text-xl font-normal">Item</th>
                     <th className="text-xl font-normal">Price</th>
                     <th className="text-xl font-normal">Quantity</th>
-                    <th className="text-xl font-normal">Total</th>
+                    <th className="text-xl font-normal">Subtotal</th>
                   </tr>
                 </thead>
               </table>
@@ -78,7 +78,7 @@ function Cart() {
           <div className="bg-gray-100 p-5">
             <div className="flex flex-col items-start">
               <div className="text-xl font-bold">Order Summary</div>
-              <div className="text-xs font-light">Subtotal:</div>
+              <div className="text-xs font-light">Total:</div>
             </div>
             <div className="flex justify-end text-xl font-semibold">
               {`₱${orderSubtotal.toFixed(2)}`}
