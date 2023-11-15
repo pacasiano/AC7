@@ -40,9 +40,9 @@ export default function OnGoing() {
     }, []);
 
     const orderCards = orders.slice(0, 2).map((order) => {
-        if(order.sale_status=="complete"){
+        if(order.sale_status==="complete"){
             return ( 
-                <Link to={"/order"} className="bg-gray-100 p-5 hover:-translate-y-1 hover:shadow-xl hover:cursor-pointer">
+                <Link to={"/order"} className="bg-gray-100 p-5 hover:shadow-xl hover:cursor-pointer">
                     <div className="flex flex-col">
                         <div className="flex flex-row gap-4">
                             <div className="flex">
@@ -51,7 +51,7 @@ export default function OnGoing() {
                             <div className="flex flex-col justify-start items-start w-56 text-clip ">
                                 <h2 className="text-md font-semibold text-center pb-1">{order.sale_id}</h2>
                                 <p className="text-xs font-medium text-start">Date ordered: <span className="text-xs font-semibold"></span></p>
-                                <p className="text-xs font-medium text-start">Date Delivered: <span className="text-xs font-semibold"></span></p>
+                                <p className="text-xs font-medium text-start">Date Delivered: <span className="text-xs font-semibold">{order.sale_price}</span></p>
                                 <p className="text-xs font-medium text-start">Order Status: <span className="text-xs font-semibold">{order.sale_status}</span></p>
                                 <p className="text-xs font-medium text-start">Total: <span className="text-xs font-semibold">Php</span></p>
                             </div>

@@ -39,7 +39,7 @@ export default function Canc() {
             });
     }, []);
     const orderCards = orders.slice(0, 2).map((order) => {
-        if(order.sale_status=="cancelled"){
+        if(order.sale_status==="cancelled"){
             return (    
                 <Link to={"/order"} className="bg-gray-100 p-5 hover:-translate-y-1 hover:shadow-xl hover:cursor-pointer">
                     <div className="flex flex-col">
@@ -58,10 +58,11 @@ export default function Canc() {
                     </div>
                 </Link>
             );
-        }  
-        });
+        }    
+    });
     return (
         <div className="flex flex-col gap-4">
+            {orderCards}
         {orderCards}
         </div>
     );

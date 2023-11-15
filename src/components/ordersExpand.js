@@ -8,6 +8,8 @@ function Order({ order }) {
   };
 
   return (
+
+    <div className="h-scren w-full px-8 pt-8">
     <tbody>
       <tr className="bg-gray-300">
         <td className="text-sm font-semibold border p-2">{order.sale_id}</td>
@@ -36,6 +38,7 @@ function Order({ order }) {
         </tr>
       )}
     </tbody>
+    </div>
   );
 }
 
