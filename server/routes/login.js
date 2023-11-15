@@ -41,7 +41,7 @@ router.post('/', (req, res) => {
                         res.redirect('http://localhost:3000/AC7/');
                     }
                     else {
-                        res.redirect('http://localhost:3000/AC7/admin');
+                        res.redirect('http://localhost:3000/AC7/');
                     }
                 }
             }

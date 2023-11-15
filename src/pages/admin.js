@@ -21,10 +21,7 @@ export default function Admin() {
 
     function removeCookie() {
         document.cookie = "account_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        window.location.href = "/";
-        setTimeout(() => {
-          window.location.reload();
-        }, 0);
+        window.location.reload();
       }
       
 

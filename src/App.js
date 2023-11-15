@@ -19,7 +19,6 @@ import InventoryInConfirmation from "./components/inventoryInConfirmation";
 import Signup2 from "./pages/sign-up2";
 import Error404 from "./pages/Error404";
 import './App.css';
-import { MdDataSaverOn } from "react-icons/md";
 
 function App() {
   //Get cookie
