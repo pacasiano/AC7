@@ -12,7 +12,7 @@ function Order({ order }) {
       <tr className="bg-gray-300">
         <td className="text-sm font-semibold border p-2">{order.sale_id}</td>
         <td className="text-sm font-semibold border p-2">{order.account_id}</td>
-        <td className="text-sm font-semibold border p-2">{order.address_id}</td>
+        <td className="text-sm font-semibold border p-2">{order.full_name}</td>
         <td className="text-sm font-semibold border p-2">{order.sale_date}</td>
         <td className="text-sm font-semibold border p-2">{order.sale_status}</td>
         <td className="text-sm font-semibold border p-2">&#x20B1;{order.price}</td>

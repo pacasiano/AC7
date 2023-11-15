@@ -39,7 +39,7 @@ export default function Orders() {
                                 <th className="text-sm font-semibold border p-2 text-white">Order ID</th>
                                 <th className="text-sm font-semibold border p-2 text-white">User ID</th>
                                 {/* <th className="text-sm font-semibold border p-2 text-white">Product ID</th> */}
-                                <th className="text-sm font-semibold border p-2 text-white">Address ID</th>
+                                <th className="text-sm font-semibold border p-2 text-white">Full Name</th>
                                 <th className="text-sm font-semibold border p-2 text-white">Date</th>
                                 <th className="text-sm font-semibold border p-2 text-white">Status</th>
                                 {/* <th className="text-sm font-semibold border p-2 text-white">Quantity</th> */}
