@@ -75,11 +75,11 @@ function Landing() {
                 <label for="confirm-password" className="block mb-2 text-sm font-medium text-gray-900">
                   Confirm password
                 </label>
-                <input type="confirm-password" name="confirm-password" id="confirm-password" placeholder="••••••••"
+                <input type="password" name="confirm-password" id="confirm-password" placeholder="••••••••"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5"
                   required=""/>
               </div>
-              <div className="flex justify-center items-start pb-5">
+              <div className="flex justify-center items-start">
                 <div className="flex items-center h-5">
                   <input id="terms" aria-describedby="terms" type="checkbox"
                     className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300"
