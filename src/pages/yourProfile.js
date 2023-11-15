@@ -9,10 +9,15 @@ export default function Settings() {
         setAdd(!isAdd);
     };
 
-    const [isEdit, setEdit] = useState(false);
+    const [isEditAccInfo, setEditAccInfo] = useState(false);
 
-    const toggleEdit = () => {
-        setEdit(!isEdit);
+    const toggleEditAccInfo = () => {
+        setEditAccInfo(!isEditAccInfo);
+    }
+    const [isEditPersonalInfo, setEditPersonalInfo] = useState(false);
+
+    const toggleEditPersonalInfo = () => {
+        setEditPersonalInfo(!isEditPersonalInfo);
     }
 
     //GET ACCOUNT_ID COOKIE
@@ -64,7 +69,107 @@ export default function Settings() {
         });
     }, []);
 
-    // const {barangay, street, province, city, zip_code, name} = address[0] || {};
+    //when save is clicked, it should also send a get request to check if the username already exists
+
+    //useStates, useEffects, and eventHandlers for editting account information
+    const [edit_email, setEdit_email] = useState(email);
+    useEffect(() => {
+        setEdit_email(email);
+      }, [email]);
+    function handleEditEmail(event) {
+        setEdit_email(event.target.value ? event.target.value : email)
+    }
+
+    const [edit_username, setEdit_username] = useState(username);
+    useEffect(() => {
+        setEdit_username(username);
+      }, [username]);
+    function handleEditUsername(event) {
+        setEdit_username(event.target.value ? event.target.value : username)
+    }
+
+    const [edit_password, setEdit_password] = useState(password);
+    useEffect(() => {
+        setEdit_password(password);
+      }, [password]);
+    function handleEditPassword(event) {
+        setEdit_password(event.target.value ? event.target.value : password)
+    }
+
+    function editAccountInfo() {
+        fetch(`/api/account/${accountId}`, {
+            method: 'PATCH',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: edit_email,
+                username: edit_username,
+                password: edit_password
+            })
+        })
+        .then(res => res.json)
+        .then(data => {
+            console.log(data)
+        })
+        .catch(err => console.error(err))
+    }
+
+    
+    //useStates, useEffects, and eventHandlers for editting personal information
+    const [edit_first_name, setEdit_first_name] = useState(first_name);
+    useEffect(() => {
+        setEdit_first_name(first_name);
+      }, [first_name]);
+    function handleEditFirstName(event) {
+        setEdit_first_name(event.target.value ? event.target.value : first_name) 
+        //if event.target.value is empty, set first_name to the original first_name value that was taken from db
+    }
+
+    const [edit_last_name, setEdit_last_name] = useState(last_name);
+    useEffect(() => {
+        setEdit_last_name(last_name);
+      }, [last_name]);
+    function handleEditLastName(event) {
+        setEdit_last_name(event.target.value ? event.target.value : last_name)
+    }
+
+    const [edit_middle_name, setEdit_middle_name] = useState(middle_name);
+    useEffect(() => {
+        setEdit_middle_name(middle_name);
+      }, [middle_name]);
+    function handleEditMiddleName(event) {
+        setEdit_middle_name(event.target.value ? event.target.value : middle_name)
+    }
+
+    const [edit_contactNo, setEdit_contactNo] = useState(contact_info);
+    useEffect(() => {
+        setEdit_contactNo(contact_info);
+      }, [contact_info]);
+    function handleEditContactNo(event) {
+        setEdit_contactNo(event.target.value ? event.target.value : contact_info)
+    }
+
+    function editPersonalInfo() {
+        fetch(`/api/customer/${accountId}`, {
+            method: 'PATCH',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                first_name: edit_first_name,
+                middle_name: edit_middle_name,
+                last_name: edit_last_name,
+                contact_info: edit_contactNo
+            })
+        })
+        .then(res => res.json)
+        .then(data => {
+            console.log(data)
+        })
+        .catch(err => console.error(err))
+    }
+
 
   return(
     <div className="w-full h-screen pt-16">
@@ -72,16 +177,16 @@ export default function Settings() {
             <div className="bg-gray-100 w-1/4 px-5 pt-6 pb-10">
                 <div className="text-2xl font-bold pb-4">Profile</div>
 
-                {/* form from here */}
+                {/* Account Information */}
                 <div className="px-1">
                     <div className="flex flex-row pb-4 gap-2">
                         <div className="text-md font-bold">Account Information</div>
-                        <button onClick={toggleEdit} className="bg-slate-800 text-white px-2 text-xs rounded">{isEdit ? 'Cancel' : 'Edit'}</button>
-                        {isEdit && <button className="bg-slate-800 text-white px-2 text-xs rounded" >Save</button>}
+                        <button onClick={toggleEditAccInfo} className="bg-slate-800 text-white px-2 text-xs rounded">{isEditAccInfo ? 'Cancel' : 'Edit'}</button>
+                        {isEditAccInfo && <button onClick={editAccountInfo} className="bg-slate-800 text-white px-2 text-xs rounded" >Save</button>}
                     </div>
 
 
-                    {!isEdit ? ( 
+                    {!isEditAccInfo ? ( 
                     <>
                     <div className="flex flex-col gap-3 pb-3">
                         <label className="flex flex-col max-w-sm">
@@ -97,7 +202,39 @@ export default function Settings() {
                         <span className="border-b-2">{password ? '*'.repeat(password.length) : '*'}</span>
                         </label>
                     </div>
-                    <div className="text-md font-bold py-4">Personal Information</div>
+                    </>
+                    ):(
+                    <>
+                    {/* Edit Account Information*/}
+                    <div className="flex flex-col gap-3 pb-3">
+                        <label className="flex flex-col max-w-sm">
+                        <span className="text-sm font-semibold">Email</span>
+                        <input onChange={handleEditEmail} name="email" className="rounded-sm w-full"/>
+                        </label> 
+                        <label className="flex flex-col max-w-sm">
+                        <span className="text-sm font-semibold">Username</span>
+                        <input onChange={handleEditUsername} name="username" className="rounded-sm w-full"/>
+                        </label> 
+                        <label className="flex flex-col max-w-sm">
+                        <span className="text-sm font-semibold">Password</span>
+                        <input onChange={handleEditPassword} name="password" className="rounded-sm w-full"/>
+                        </label>
+                    </div>
+                    </>
+                    )}
+
+                </div>
+
+                {/* Personal Information */}
+                <div className="px-1">
+                    <div className="flex flex-row pb-4 gap-2 pt-4">
+                        <div className="text-md font-bold">Personal Information</div>
+                        <button onClick={toggleEditPersonalInfo} className="bg-slate-800 text-white px-2 text-xs rounded">{isEditPersonalInfo ? 'Cancel' : 'Edit'}</button>
+                        {isEditPersonalInfo && <button onClick={editPersonalInfo} className="bg-slate-800 text-white px-2 text-xs rounded" >Save</button>}
+                    </div>
+
+                    {!isEditPersonalInfo ? ( 
+                    <>
                     <div className="flex flex-col gap-3">
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">First name</span>
@@ -105,7 +242,7 @@ export default function Settings() {
                         </label> 
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Middle name</span>
-                        <span className="border-b-2">{middle_name === null ? '-' : middle_name}</span>
+                        <span className="border-b-2">{middle_name === null ? '-' : middle_name === 'null' ? '-' : middle_name}</span>
                         </label> 
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Last name</span>
@@ -119,45 +256,28 @@ export default function Settings() {
                     </>
                     ):(
                     <>
-                    {/* dito yung input form na part */}
-                    <div className="flex flex-col gap-3 pb-3">
-                        <label className="flex flex-col max-w-sm">
-                        <span className="text-sm font-semibold">Email</span>
-                        <input name="email" className="rounded-sm w-full"/>
-                        </label> 
-                        <label className="flex flex-col max-w-sm">
-                        <span className="text-sm font-semibold">Username</span>
-                        <input name="username" className="rounded-sm w-full"/>
-                        </label> 
-                        <label className="flex flex-col max-w-sm">
-                        <span className="text-sm font-semibold">Password</span>
-                        <input name="password" className="rounded-sm w-full"/>
-                        </label>
-                    </div>
-                    <div className="text-md font-bold py-4">Personal Information</div>
+                    {/* Edit Personal Information */}
                     <div className="flex flex-col gap-3">
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">First name</span>
-                        <input name="firstname" className="rounded-sm w-full"/>
+                        <input onChange={handleEditFirstName} name="firstname" className="rounded-sm w-full"/>
                         </label> 
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Middle name</span>
-                        <input name="middlename" className="rounded-sm w-full"/>
+                        <input onChange={handleEditMiddleName} name="middlename" className="rounded-sm w-full"/>
                         </label> 
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Last name</span>
-                        <input name="lastname" className="rounded-sm w-full"/>
+                        <input onChange={handleEditLastName} name="lastname" className="rounded-sm w-full"/>
                         </label>
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">contact number</span>
-                        <input name="contactnumber" className="rounded-sm w-full"/>
+                        <input onChange={handleEditContactNo} name="contactnumber" className="rounded-sm w-full"/>
                         </label>
                     </div>
                     </>
                     )}
-
                 </div>
-                {/* to here */}
 
             </div>
             <div className="flex flex-col gap-5 w-3/5">

@@ -4,6 +4,7 @@ const router = express.Router();
 const cookieParser = require('cookie-parser')
 
 router.use(cookieParser())
+router.use(express.json())
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -43,6 +44,20 @@ router.post('/', (req, res) => {
             console.log('Step 2.2: Address entry successfully created')
             res.redirect('http://localhost:3000/AC7/login')
         }
+    })
+})
+
+router.patch('/:id', (req, res) => {
+    console.log("Edit Personal Info")
+    const {first_name, middle_name, last_name, contact_info} = req.body;
+    const {id: account_id} = req.params;
+    const q1 = `UPDATE customer SET first_name = '${first_name}', middle_name = '${middle_name}', last_name = '${last_name}', ` + 
+                `contact_info = '${contact_info}' WHERE account_id = ${account_id} `;
+    connection.query(q1, (err, results) => {
+        if(err) {
+            console.error(err)
+        }
+        res.json({message: "Goods 👍"})
     })
 })
 

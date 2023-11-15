@@ -57,6 +57,32 @@ router.get('/:id', (req, res) => {
     })
 })
 
+//Edit account information
+router.patch('/:id', (req, res) => {
+    console.log("Edit account info")
+    const {id: account_id} = req.params;
+    const {email, username, password} = req.body;
+    console.log(req.body)
+    const q1 = `UPDATE account SET username = '${username}', password = '${password}' WHERE account_id = ${account_id}`;
+    connection.query(q1, (err, results) => {
+        if (err) {
+            console.error(err)
+        } 
+        else {
+            console.log("Successfully editted acc info")
+        }
+    })
+
+    const q2 = `UPDATE customer SET email = '${email}' WHERE account_id = ${account_id}`
+    connection.query(q2, (err, results) => {
+        if (err) {
+            console.error(err)
+        }
+    })
+
+    res.json({message: "Goods 👍"})
+})
+
 
 
 module.exports = router;
