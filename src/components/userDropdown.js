@@ -44,9 +44,9 @@ function UserDropdown() {
 
     function removeCookie() {
         document.cookie = "account_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        // setTimeout(() => {
+        setTimeout(() => {
           window.location.reload();
-        // }, 0);
+        }, 0);
       }
       
 
