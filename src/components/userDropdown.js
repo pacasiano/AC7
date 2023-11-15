@@ -52,7 +52,7 @@ function UserDropdown() {
 
 
     return (
-        <div id="userDropdown" className="transition duration-500 ease-in-out z-50 absolute translate-x-[26rem] translate-y-2 mt-14 w-44 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+        <div id="userDropdown" className="transition duration-500 ease-in-out z-50 absolute translate-x-[26rem] translate-y-2 mt-14 w-48 pb-1 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
             <div className="flex justify-start items-start pl-5 flex-col py-3 border-b ">
                 <div className="text-xl">{first_name}</div>
                 <div className="text-xs">{email}</div>

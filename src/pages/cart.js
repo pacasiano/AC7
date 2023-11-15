@@ -69,9 +69,15 @@ function Cart() {
             </div>
           </div>
           <div className="bg-gray-100 p-5">
-            {items.map((item) => {
-              return <CartItem item={item}/>
-            })}
+
+            {items.length === 0 ? (
+              <div className="font-light text-center">
+                You currently do not have any Products in your shopping cart
+              </div>
+            ) : (
+              items.map((item) => <CartItem key={item.id} item={item} />)
+            )}
+
           </div>
         </div>
         <div className="flex flex-col lg:justify-start w-11/12 lg:w-1/4 ">
@@ -83,11 +89,16 @@ function Cart() {
             <div className="flex justify-end text-xl font-semibold">
               {`₱${orderSubtotal.toFixed(2)}`}
             </div>
-            <Link to="/checkout">
-              <button className="w-full bg-black text-white p-4 mt-7 text-xl">
+            
+            <Link to={items.length > 0 ? "/checkout" : "#"}>
+              <button 
+                className={`w-full p-4 mt-7 text-xl ${items.length > 0 ? 'bg-black text-white' : 'bg-gray-500 text-gray-300'}`} 
+                disabled={items.length === 0}
+              >
                 Check out
               </button>
             </Link>
+            
           </div>
           <div>
             <div className="flex justify-start text-md font-semibold pt-5">

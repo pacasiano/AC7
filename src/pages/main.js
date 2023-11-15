@@ -4,6 +4,7 @@ import bodypic from "../imgs/bodypic.png";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import '../App.css';
+import { Link } from "react-router-dom";
 
 function Main() {
     return (
@@ -14,7 +15,7 @@ function Main() {
                 <div className="absolute flex flex-col justify-start items-start text-left bottom-1/3 ml-16 lg:w-80 sm:w-60 w-52 -translate-x-5">
                     <div className="text-md">Welcome AC7 Dazzle White</div>
                     <div className="lg:text-5xl/tight md:text-3xl/tight sm:text-2xl/tight text-xl font-bold">Beauty is our Passion, and yours too.</div>
-                    <button className="bg-black opacity-80 mt-2 text-white px-3 py-1 px1 text-md rounded-md">Shop Now <FontAwesomeIcon className="font-thin text-sm" icon={faArrowRight} style={{color: "#fffff",}} /></button>
+                    <Link to={"/store"} className="bg-black opacity-80 mt-2 text-white px-3 py-1 px1 text-md rounded-md">Shop Now <FontAwesomeIcon className="font-thin text-sm" icon={faArrowRight} style={{color: "#fffff",}} /></Link>
                 </div>
             </div>
             <div className="flex justify-start flex-col lg:px-40 md:px-20 py-16">

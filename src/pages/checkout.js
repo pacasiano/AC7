@@ -131,11 +131,11 @@ function Checkout() {
               Payment Method
             </div>
             <div className="flex flex-row justify-start">
-                <input name="paymentMethod" id="gcash" value="gcash" checked={payment === 'gcash'} onChange={handleOptionChange}  type="radio"/>
+                <input name="paymentMethod" id="gcash" value="gcash" checked={payment === 'gcash'} onChange={handleOptionChange}  type="radio" required/>
                 <label for="gcash" className="transition duration-300 ease-out hover:bg-gray-50 hover:-translate-y-0.5 active:bg-gray-200 active:translate-y-0 pl-2 pr-6 py-1 rounded-md cursor-pointer group-checked:bg-gray-600">
                 Gcash</label>
                 
-                <input name="paymentMethod" id="cod" value="cod" checked={payment === 'cod'} onChange={handleOptionChange} type="radio"/>
+                <input name="paymentMethod" id="cod" value="cod" checked={payment === 'cod'} onChange={handleOptionChange} type="radio" required/>
                 <label for="cod" className="transition duration-300 ease-out hover:bg-gray-50 hover:-translate-y-0.5 active:bg-gray-200 active:translate-y-0 pl-2 py-1 rounded-md cursor-pointer checked:bg-gray500">
                 Cash on Delivery</label>
             </div>
@@ -147,7 +147,7 @@ function Checkout() {
                 <div className="flex flex-col">
                     <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Gcash Reference Number</span>
-                        <input onChange={handleGcashRefNumChange} name="gcashNumber" type="text" className="rounded-sm"/>
+                        <input onChange={handleGcashRefNumChange} name="gcashNumber" type="text" className="rounded-sm" required/>
                         {/* <input value={gcashRefNum}/> */}
                     </label>
                 </div>
@@ -163,6 +163,7 @@ function Checkout() {
                 onChange={handleSelectChange}
                 options={options}
                 className="w-56 text-center text-sm h-13 bg-gray-100"
+                required
               />
               <table className="w-full border-collapse">
                   <thead>
