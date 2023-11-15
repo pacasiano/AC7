@@ -11,7 +11,9 @@ import Orders from "../components/orders";
 import Users from "../components/users";
 import Shipping from "../components/shipping";
 import InventoryIn from "../components/InventoryIn";
+import AddItem from "../components/addItem";
 import InventoryOut from "../components/inventoryOut";
+import InventoryTransactions from "../components/inventoryTransactions";
 import { myContext } from "../context/inventoryContext";
 import { Link } from "react-router-dom";
 
@@ -77,6 +79,10 @@ export default function Admin() {
                                     return <InventoryIn />;
                                 case "inventoryOut":
                                     return <InventoryOut />;
+                                case "addItem":
+                                    return <AddItem />;
+                                case "inventoryTransactions":
+                                    return <InventoryTransactions />;
                                 default:
                                     return <Inventory />;
                             }
