@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { get } from "react-hook-form";
 
 export default function Settings() {
 
@@ -10,11 +9,21 @@ export default function Settings() {
     };
 
     const [isEditAccInfo, setEditAccInfo] = useState(false);
+    const [isSuccessAccInfo, setSuccessAccInfo] = useState(false);
+
+    setTimeout(() => {
+        setSuccessAccInfo(false);
+      }, 5000);
 
     const toggleEditAccInfo = () => {
         setEditAccInfo(!isEditAccInfo);
     }
     const [isEditPersonalInfo, setEditPersonalInfo] = useState(false);
+    const [isSuccessPersonalInfo, setSuccessPersonalInfo] = useState(false);
+
+    setTimeout(() => {
+        setSuccessPersonalInfo(false);
+    }, 5000);
 
     const toggleEditPersonalInfo = () => {
         setEditPersonalInfo(!isEditPersonalInfo);
@@ -60,14 +69,20 @@ export default function Settings() {
     const {email, username, password, first_name, middle_name, last_name, contact_info} = userData[0] || {};
 
     const [addresses, setAddresses] = useState([]);
+    const [addSuccess, setAddSuccess] = useState(false);
 
     useEffect(() => {
         fetch(`/api/address/${accountId}`)
         .then((res) => res.json())
         .then((address) => {
             setAddresses(address);
+            // setAddSuccess(true);
         });
     }, []);
+
+    setTimeout(() => {
+        setAddSuccess(false);
+    }, 5000);
 
     //when save is clicked, it should also send a get request to check if the username already exists
 
@@ -110,6 +125,8 @@ export default function Settings() {
         })
         .then(res => res.json)
         .then(data => {
+            setEditAccInfo(false);
+            setSuccessAccInfo(true);
             console.log(data)
         })
         .catch(err => console.error(err))
@@ -166,6 +183,8 @@ export default function Settings() {
         .then(res => res.json)
         .then(data => {
             console.log(data)
+            setEditPersonalInfo(false);
+            setSuccessPersonalInfo(true);
         })
         .catch(err => console.error(err))
     }
@@ -185,6 +204,9 @@ export default function Settings() {
                         {isEditAccInfo && <button onClick={editAccountInfo} className="bg-slate-800 text-white px-2 text-xs rounded" >Save</button>}
                     </div>
 
+                    {isSuccessAccInfo && <div className="pb-3 font-black text-green-600">
+                        Information successfully updated!
+                    </div>}
 
                     {!isEditAccInfo ? ( 
                     <>
@@ -232,6 +254,10 @@ export default function Settings() {
                         <button onClick={toggleEditPersonalInfo} className="bg-slate-800 text-white px-2 text-xs rounded">{isEditPersonalInfo ? 'Cancel' : 'Edit'}</button>
                         {isEditPersonalInfo && <button onClick={editPersonalInfo} className="bg-slate-800 text-white px-2 text-xs rounded" >Save</button>}
                     </div>
+
+                    {isSuccessPersonalInfo && <div className="pb-3 font-black text-green-600">
+                        Information successfully updated!
+                    </div>}
 
                     {!isEditPersonalInfo ? ( 
                     <>
@@ -284,6 +310,7 @@ export default function Settings() {
                 <div className="flex flex-col">
                     <div className="bg-gray-100 p-5 flex flex-row justify-between">
                         <div className="text-2xl font-bold">Address</div>
+                        {addSuccess && <div className="text-xl pt-1 font-bold text-green-600">Address Successfully Added!</div>}
                         <button onClick={toggleAdd} className="text-sm w-32 font-bold px-2 pt-1 bg-gray-800 text-white rounded-md">{isAdd ? 'Cancel' : 'Add Address'}</button>
                     </div>
 

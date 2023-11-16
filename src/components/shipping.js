@@ -1,12 +1,19 @@
 import React from "react";
 import "../App.css";
+import Select from "react-select";
 
 export default function Shipping() {
+
+    const options = [
+    { value: 'All', label: 'All' },
+    ];  
+
     return(
         <div className="h-screen px-8 pt-8">
             <div className="flex flex-col gap-5 ">
-                <div id="header" className="flex flex-row justify-start">
+                <div id="header" className="flex flex-row justify-between">
                     <span className="text-xl font-bold">Shipment</span>
+                    <Select options={options} className="w-96" />
                 </div>
                 <div className="flex flex-col gap-3">
                     <div className="flex flex-row justify-between bg-gray-200 w-full p-5">

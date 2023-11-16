@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import "../App.css";
 import Order from './ordersExpand';
+import Select from "react-select";
 
 export default function Orders() {
 
     // const today = new Date().toLocaleDateString();
 
     const [orders, setOrders] = useState([]);
+    const [selectedOrder, setSelectedOrder] = useState(null);
 
     useEffect(() => {
         fetch('/api/orders')
@@ -16,13 +18,31 @@ export default function Orders() {
             });
     }, []);
 
+    // Generate options based on products
+    const options = [
+        { value: 'All', label: 'All' },
+        ...orders.map((order) => ({
+        value: order.sale_id,
+        label: order.sale_id,
+        })),    
+    ];
+
+    // Filter products based on the selected value
+    // Filter users based on the selected value
+    const filteredOrders = selectedOrder
+    ? selectedOrder.value === 'All'
+        ? orders
+        : orders.filter((order) => order.sale_id === selectedOrder.value)
+    : orders;
+
     console.log(orders)
 
     return(
         <div className="h-screen px-8 pt-8">
             <div className="flex flex-col gap-5 ">
-                <div id="header" className="flex flex-row justify-start">
+                <div id="header" className="flex flex-row justify-between">
                     <span className="text-xl font-bold">Orders</span>
+                    <Select options={options} className="w-96" onChange={(selectedOption) => setSelectedOrder(selectedOption)} />
                 </div>
                 <div className="flex flex-col gap-3">
                     <div className="flex flex-row justify-between bg-gray-200 w-full p-5">
@@ -47,7 +67,7 @@ export default function Orders() {
                                 <th className="text-sm font-semibold border p-2 text-white">Actions</th>
                             </tr>
                         </thead>
-                        {orders.map((order) => (
+                        {filteredOrders.map((order) => (
                         <Order key={order.sale_id} order={order} />
                         ))}
                     </table>

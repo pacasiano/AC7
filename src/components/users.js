@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import "../App.css";
 import ReactModal from "react-modal";
 import {useForm} from "react-hook-form";
+import Select from "react-select";
 
 export default function Users() {
 
@@ -9,6 +10,7 @@ export default function Users() {
     const [isOpen, setIsOpen] = useState(false);
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const onSubmit = data => console.log(data);
+    const [selectedUser, setSelectedUser] = useState(null);
 
     const [users, setUsers] = useState([]);
 
@@ -20,11 +22,30 @@ export default function Users() {
             });
     }, []);
 
+    // Generate options based on products
+    const options = [
+        { value: 'All', label: 'All' },
+        ...users.map((user) => ({
+        value: user.account_id,
+        label: user.first_name+" "+user.last_name,
+        })),
+    ];
+
+    // Filter products based on the selected value
+    // Filter users based on the selected value
+    const filteredUsers = selectedUser
+    ? selectedUser.value === 'All'
+        ? users
+        : users.filter((user) => user.account_id === selectedUser.value)
+    : users;
+
+
     return(
         <div className="h-screen px-8 pt-8">
             <div className="flex flex-col gap-5 ">
-                <div id="header" className="flex flex-row justify-start">
+                <div id="header" className="flex flex-row justify-between">
                     <span className="text-xl font-bold">Accounts</span>
+                    <Select options={options} className="w-96" onChange={(selectedOption) => setSelectedUser(selectedOption)} />
                 </div>
                 <div className="flex flex-col gap-3">
                     <div className="flex flex-row justify-between bg-gray-200 w-full p-5">
@@ -103,7 +124,7 @@ export default function Users() {
                         </thead>
                         <tbody>
                             {
-                                users.map((user) => (
+                                filteredUsers.map((user) => (
                                     <tr className="bg-gray-300" key={user.account_id}>
                                         <td className="text-sm font-semibold border p-2">{user.account_id}</td>
                                         <td className="text-sm font-semibold border p-2">{user.first_name}</td>
