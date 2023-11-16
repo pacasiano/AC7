@@ -13,6 +13,7 @@ const profile = require('./routes/profile.js');
 const address = require('./routes/address.js');
 const account = require('./routes/account.js');
 const customer = require('./routes/customer.js')
+const order_item = require('./routes/order_item.js');
 
 app.use(express.urlencoded( { extended: true } ));
 
@@ -45,6 +46,8 @@ app.use('/api/address', address);
 app.use('/api/account', account);
 
 app.use('/api/customer', customer)
+
+app.use('/api/order_item', order_item);
 
 
 app.listen(8080, () => {

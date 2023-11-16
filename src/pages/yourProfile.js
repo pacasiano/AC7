@@ -249,7 +249,7 @@ export default function Settings() {
                         <span className="border-b-2">{last_name}</span>
                         </label>
                         <label className="flex flex-col max-w-sm">
-                        <span className="text-sm font-semibold">contact number</span>
+                        <span className="text-sm font-semibold">Contact number</span>
                         <span className="border-b-2">{contact_info}</span>
                         </label>
                     </div>
@@ -271,7 +271,7 @@ export default function Settings() {
                         <input onChange={handleEditLastName} name="lastname" className="rounded-sm w-full"/>
                         </label>
                         <label className="flex flex-col max-w-sm">
-                        <span className="text-sm font-semibold">contact number</span>
+                        <span className="text-sm font-semibold">Contact number</span>
                         <input onChange={handleEditContactNo} name="contactnumber" className="rounded-sm w-full"/>
                         </label>
                     </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function Order({ order }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -6,6 +6,16 @@ function Order({ order }) {
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
   };
+
+  const [order_items, setOrder_item] = useState([]);
+
+  useEffect(() => {
+    fetch(`/api/order_item/${order.sale_id}`) //fetch data 
+        .then((res) => res.json()) //convert json into js object
+        .then((data) => { //store the data in 'products' state variable
+          setOrder_item(data);
+        });
+}, []);
 
   return (
 
@@ -26,13 +36,20 @@ function Order({ order }) {
           <td colSpan={7}>
 
             {/* ito yung mag ulit */}
-            <div className="flex flex-row justify-evenly">
-              <div className="text-sm font-semibold p-2 text-black">Item Id</div>
-              <div className="text-sm font-semibold p-2 text-black">Quantity</div>
-              <div className="text-sm font-semibold p-2 text-black">Price</div>
-            </div>
+              <div className="flex flex-row justify-evenly">
+                <div className="text-sm font-semibold p-2 text-black">Product Id</div>
+                <div className="text-sm font-semibold p-2 text-black">Quantity</div>
+                <div className="text-sm font-semibold p-2 text-black">Price</div>
+              </div>
+            {order_items.map((order_item) => (
+              <div className="flex flex-row justify-evenly">
+                <div className="text-sm font-semibold p-2 text-black">{order_item.product_id}</div>
+                <div className="text-sm font-semibold p-2 text-black">{order_item.quantity}</div>
+                <div className="text-sm font-semibold p-2 text-black">{order_item.price}</div>
+              </div>
+            ))}
             {/* dito mag end */}
-
+            
           </td>
         </tr>
       )}
