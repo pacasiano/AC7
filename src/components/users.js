@@ -15,10 +15,10 @@ export default function Users() {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        fetch('/api/users')
+        fetch('/api/customer')
             .then((res) => res.json())
-            .then((users) => {
-                setUsers(users);
+            .then((data) => {
+                setUsers(data);
             });
     }, []);
 
@@ -39,6 +39,15 @@ export default function Users() {
         : users.filter((user) => user.account_id === selectedUser.value)
     : users;
 
+    const [employees, setEmployees] = useState([]);
+
+    useEffect(() => {
+        fetch('/api/employee')
+            .then((res) => res.json())
+            .then((data) => {
+                setEmployees(data);
+            });
+    }, []);
 
     return(
         <div className="h-screen px-8 pt-8">
@@ -154,17 +163,20 @@ export default function Users() {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr className="bg-gray-300">
-                                <td className="text-sm font-semibold border p-2">12341234</td>
-                                <td className="text-sm font-semibold border p-2">Juan</td>
-                                <td className="text-sm font-semibold border p-2">Dela Cruz</td>
-                                <td className="text-sm font-semibold border p-2">Owner</td>
-                                <td className="text-sm font-semibold border p-2">Active</td>
-                                <td className="text-sm font-semibold border p-2">junjun@gmail.com</td>
-                                <td className="flex flex-row gap-2 text-sm font-semibold border p-2 ">
-                                <button className="bg-green-500 text-white px-4 py-2 w-full rounded">EDIT</button>
-                                </td>
-                            </tr>
+                            {employees.map((employee) => (
+                                <tr className="bg-gray-300">
+                                    <td className="text-sm font-semibold border p-2">{employee.employee_id}</td>
+                                    <td className="text-sm font-semibold border p-2">{employee.first_name}</td>
+                                    <td className="text-sm font-semibold border p-2">{employee.last_name}</td>
+                                    <td className="text-sm font-semibold border p-2">{employee.position}</td>
+                                    <td className="text-sm font-semibold border p-2">{employee.emp_status}</td>
+                                    <td className="text-sm font-semibold border p-2">{employee.contact_info}</td>
+                                    <td className="flex flex-row gap-2 text-sm font-semibold border p-2 ">
+                                    <button className="bg-green-500 text-white px-4 py-2 w-full rounded">EDIT</button>
+                                    </td>
+                                </tr>
+                                ))
+                            }
                         </tbody>
                     </table>
                     ) }

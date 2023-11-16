@@ -1,6 +1,5 @@
 const express = require('express');
 const app = express();
-const users = require('./routes/users');
 const orders= require('./routes/orders');
 const products = require('./routes/product.js');
 const login = require('./routes/login');
@@ -14,14 +13,14 @@ const address = require('./routes/address.js');
 const account = require('./routes/account.js');
 const customer = require('./routes/customer.js')
 const order_item = require('./routes/order_item.js');
+const employee = require('./routes/employee');
 
 app.use(express.urlencoded( { extended: true } ));
 
-/*when localhost:8080/api/users is requested, 
-the users.js file from routes folder will run 
-which will return a JSON object containing the users from the users table.
+/*when localhost:8080/api/*file is requested, 
+the *file.js from routes folder will run 
+which will return a JSON object containing the data from the requested table.
 This JSON obj is what the React app will parse*/
-app.use('/api/users', users);
 
 app.use('/api/orders', orders);
 
@@ -48,6 +47,8 @@ app.use('/api/account', account);
 app.use('/api/customer', customer)
 
 app.use('/api/order_item', order_item);
+
+app.use('/api/employee', employee);
 
 
 app.listen(8080, () => {

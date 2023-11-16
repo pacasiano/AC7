@@ -13,6 +13,18 @@ const connection = mysql.createConnection({
     database: "ac7_database"    
 })
 
+//Get all customers
+router.get('/', (req, res) => {
+    const q = 'SELECT * FROM customer';
+    connection.query(q, function(error, results, fields) {
+        if (error) {console.error(err)}
+        else {
+            res.json(results); //returns an array of obj literals in JSON format, each obj literal is a row from users table
+        }
+    });
+});
+
+//Create a new customer
 router.post('/', (req, res) => {
     const {username} = req.cookies;
     console.log(username)
@@ -47,6 +59,7 @@ router.post('/', (req, res) => {
     })
 })
 
+//Edit a customer's info
 router.patch('/:id', (req, res) => {
     console.log("Edit Personal Info")
     const {first_name, middle_name, last_name, contact_info} = req.body;
