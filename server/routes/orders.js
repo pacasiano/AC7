@@ -17,7 +17,7 @@ router.get('/', (req, res) => {
             'FROM sale INNER JOIN sale_item USING (sale_id) ' +
             'INNER JOIN shipment USING (sale_id) ' +
             'INNER JOIN customer USING (account_id) ' +
-            'GROUP BY sale_id, customer_id' +
+            'GROUP BY sale_id, customer_id ' +
             'ORDER BY sale.sale_date DESC';
     connection.query(q, function(error, results, fields) {
         if (error) throw error;

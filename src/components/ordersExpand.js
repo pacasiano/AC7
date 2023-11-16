@@ -32,22 +32,28 @@ function Order({ order }) {
         </td>
       </tr>
       {isExpanded && (
-        <tr className="bg-slate-100 border-collapse border">
+        <tr className="bg-slate-100">
           <td colSpan={7}>
 
             {/* ito yung mag ulit */}
-              <div className="flex flex-row justify-evenly">
-                <div className="text-sm font-semibold p-2 text-black">Product Id</div>
-                <div className="text-sm font-semibold p-2 text-black">Quantity</div>
-                <div className="text-sm font-semibold p-2 text-black">Price</div>
-              </div>
-            {order_items.map((order_item) => (
-              <div className="flex flex-row justify-evenly">
-                <div className="text-sm font-semibold p-2 text-black">{order_item.product_id}</div>
-                <div className="text-sm font-semibold p-2 text-black">{order_item.quantity}</div>
-                <div className="text-sm font-semibold p-2 text-black">{order_item.price}</div>
-              </div>
-            ))}
+            <table className="w-full">
+              <thead>
+                <tr className="">
+                  <th className="text-sm font-semibold p-2 text-black w-1/3">Product Id</th>
+                  <th className="text-sm font-semibold p-2 text-black w-1/3">Quantity</th>
+                  <th className="text-sm font-semibold p-2 text-black w-1/3">Price</th>
+                </tr>
+              </thead>
+              <tbody>
+              {order_items.map((order_item) => (
+                <tr className="text-middle border-t border-white">
+                  <th className="text-sm font-semibold p-2 text-black">{order_item.product_id}</th>
+                  <th className="text-sm font-semibold p-2 text-black">{order_item.quantity}</th>
+                  <th className="text-sm font-semibold p-2 text-black">{order_item.price}</th>
+                </tr>
+              ))}
+              </tbody>
+            </table>
             {/* dito mag end */}
             
           </td>
