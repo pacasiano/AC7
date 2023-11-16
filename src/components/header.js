@@ -11,6 +11,7 @@ import { menuDropdown } from "./menuDropdown";
 import { userDropdown } from "./userDropdown";
 import Search from "./searchbar";
 import '../App.css';
+import Select from 'react-select';
 
 function Header() {
 
@@ -55,8 +56,9 @@ function Header() {
                 </div>
                     
                 <div className="flex jusitfy-evenly gap-2 pr-4 md:gap-4 md:pr-7 -ml-[90%]">
-                    <div className="flex items-center md:visible collapse h-full">
+                    <div className="flex items-center md:visible collapse h-full w-56">
                         <Search/>
+                        {/* <Select/> */}
                     </div>
                     {/* <form id="myForm" className="flex items-center text-xl m-0" action="/api/cart" method="POST">
                         <CustomLink to="/api/cart/5"><FontAwesomeIcon icon={faCartShopping} style={{color: "#000000",}} onClick={() => {document.getElementById("myForm").submit();}} /></CustomLink>

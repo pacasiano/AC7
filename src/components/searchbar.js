@@ -10,13 +10,24 @@ function Search() {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [products, setProducts] = useState([]);
 
-  const someDataArray = useMemo(() => [
+  useEffect(() => {
+    fetch('/api/products')
+    .then((res) => res.json())
+    .then((products) => {
+        setProducts(products);
+    });
+}, []);
+
+const someDataArray = useMemo(() => [
     { id: 1, name: 'Apple' },
     { id: 2, name: 'Banane' },
     { id: 3, name: 'Cherry' },
-    // ...
-  ], []);
+    // ...otherData
+    ...products.map((product) => ({ id: product.id, name: product.name })),
+], [products]);
+
 
   useEffect(() => {
     if (searchTerm === '') {
@@ -43,8 +54,8 @@ function Search() {
   return (
         <>
         <div className="relative">
-          <div className="absolute inset-y-[8px] left-1 items-center text-md m-0 hover:cursor-pointer"><button onClick={(e) => setSearchTerm(e.target.value)}><FontAwesomeIcon icon={faMagnifyingGlass} style={{ color: "#000000", }} /></button></div>
-          <input type="text" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="flex justify-center items-center rounded-md caret-black pl-6 my-1 w-full h-8 text-base overflow-clip hover:shadow-xl focus:shadow-xl focus:outline-none shadow-sm" />
+          <div className="absolute inset-y-[8px] left-2 items-center text-md m-0 hover:cursor-pointer"><button onClick={(e) => setSearchTerm(e.target.value)}><FontAwesomeIcon icon={faMagnifyingGlass} style={{ color: "#000000", }} /></button></div>
+          <input type="text" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="flex justify-center items-center rounded-md caret-black pl-8 my-1 w-full h-8 text-base overflow-clip hover:shadow-xl focus:shadow-xl focus:outline-none shadow-sm" />
             <div id="searchResult" className={`absolute w-full translate-y-0 bg-white py-2 px-5 drop-shadow-xl rounded-xl ${searchTerm.length === 0 ? 'hidden' : ''}`}>
               {isLoading ? (
                 <div className="flex items-center text-blue-900">

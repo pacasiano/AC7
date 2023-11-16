@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import { useState } from 'react';
 import Item1 from "../imgs/Item1.png";
 import "../App.css";
 
 function Product() {
-  var name = "Beauty Pill";
-  var price = 100;
 
+  
+  const [price, setPrice] = useState(10);
+  const [itemName, setItemName] = useState("Item 1");
+  const [description, setDescription] = useState("This is a description");
   const [quantity, setQuantity] = useState(1);
   const [total, setTotal] = useState(price);
 
@@ -32,20 +34,15 @@ function Product() {
           />
           <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6  border-blue-600">
             <h1 className="text-gray-900 text-3xl title-font pb-3 font-medium mb-1">
-              {name}
+              {itemName}
             </h1>
             <p className="leading-relaxed">
-              Fam locavore kickstarter distillery. Mixtape chillwave tumeric
-              sriracha taximy chia microdosing tilde DIY. XOXO fam indxgo
-              juiceramps cornhole raw denim forage brooklyn. Everyday carry +1
-              seitan poutine tumeric. Gastropub blue bottle austin listicle
-              pour-over, neutra jean shorts keytar banjo tattooed umami
-              cardigan.
+              {description}
             </p>
             <div className="flex items-center pb-5 border-b-2 border-gray-200 mb-5"></div>
             <div className="flex flex-row justify-around">
               <span className="title-font font-medium text-2xl text-gray-900">
-                ${total}
+                ${price}
               </span>
               <span className="flex flex-row gap-5">
                 <button
