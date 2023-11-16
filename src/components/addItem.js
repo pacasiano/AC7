@@ -8,8 +8,9 @@ export default function AddItem() {
 
   // category options
   const options = [
-    {value: "Category 1", label: "Category 1"},
-    {value: "Category 2", label: "Category 2"},
+    {value: "Skin care", label: "Skin care"},
+    {value: "Hair care", label: "Hair care"},
+    {value: "Body care", label: "Body care"}
 ];
 
   return (

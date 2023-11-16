@@ -189,6 +189,17 @@ export default function Settings() {
         .catch(err => console.error(err))
     }
 
+    function deleteAddress(address_id) {
+        fetch(`/api/address/${address_id}`, {
+            method: "DELETE"
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            window.location.reload();
+        })
+    }
+
 
   return(
     <div className="w-full h-screen pt-16">
@@ -356,7 +367,7 @@ export default function Settings() {
                                 <span className="text-md font-semibold">{address.name}</span>
                                 {/* dito yung address id para ma delete, or ano pa need mo */}
                                 <input type="text" value={""} hidden/>
-                                <button type="submit" className="text-xs font-normal bg-slate-800 px-2 py-1 rounded-md text-white">Delete</button>
+                                <button onClick={() => deleteAddress(address.address_id)} type="submit" className="text-xs font-normal bg-slate-800 px-2 py-1 rounded-md text-white">Delete</button>
                             </div>
                             <table className="w-full border-collapse">
                                 <thead>
@@ -370,7 +381,7 @@ export default function Settings() {
                                 </thead>
                                 <tbody>
                                     <tr className="">
-                                        {/* plug the valeus here */}
+                                        {/* plug the values here */}
                                         <th className="text-sm font-medium w-1/5">{address.barangay}</th>
                                         <th className="text-sm font-medium w-1/5">{address.street}</th>
                                         <th className="text-sm font-medium w-1/5">{address.province}</th>

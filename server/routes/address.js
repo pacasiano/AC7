@@ -29,10 +29,21 @@ router.post('/:id', (req, res) => {
 
 router.get('/:id', (req, res) => {
     const {id : account_id} = req.params;
-    const q = 'SELECT name, city, zip_code, barangay, province, street FROM address ' + 
+    const q = 'SELECT * FROM address ' + 
                 `WHERE customer_id = (SELECT customer_id FROM customer WHERE account_id = ${account_id})`;
     connection.query(q, (err, results) => {
         res.json(results)
+    })
+})
+
+router.delete('/:id', (req, res) => {
+    const {id: address_id} = req.params;
+    const q1 = `DELETE FROM address WHERE address_id = ${address_id}`;
+    connection.query(q1, (err, results) => {
+        if(err) {console.error(err)}
+        else {
+            res.json({message: `Successfully deleted Address with ID of ${address_id}👍`})
+        }
     })
 })
 
