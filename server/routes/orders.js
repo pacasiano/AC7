@@ -14,8 +14,8 @@ router.get('/', (req, res) => {
     
     let q = 'SELECT sale_id, account_id, CONCAT(first_name, \' \', last_name) AS full_name, DATE_FORMAT(sale_date, \'%M %d, %Y - %r\') AS sale_date, ' +
             'sale_status, SUM(price * quantity) AS price ' +
-            'FROM sale INNER JOIN sale_item USING (sale_id) ' +
-            'INNER JOIN shipment USING (sale_id) ' +
+            'FROM sale LEFT JOIN sale_item USING (sale_id) ' +
+            'LEFT JOIN shipment USING (sale_id) ' +
             'INNER JOIN customer USING (account_id) ' +
             'GROUP BY sale_id, customer_id ' +
             'ORDER BY sale.sale_date DESC';
