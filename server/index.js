@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const users = require('./routes/users');
 const orders= require('./routes/orders');
-const products = require('./routes/products');
+const products = require('./routes/product.js');
 const login = require('./routes/login');
 const item = require('./routes/item');
 const cart = require('./routes/cart');
@@ -25,7 +25,7 @@ app.use('/api/users', users);
 
 app.use('/api/orders', orders);
 
-app.use('/api/products', products);
+app.use('/api/product', products);
 
 app.use('/api/login', login);
 

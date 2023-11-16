@@ -12,7 +12,7 @@ export default function Inventory() {
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
-        fetch('/api/products') //fetch data 
+        fetch('/api/product') //fetch data 
             .then((res) => res.json()) //convert json into js object
             .then((products) => { //store the data in 'products' state variable
                 setProducts(products);

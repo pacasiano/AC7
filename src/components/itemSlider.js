@@ -7,7 +7,7 @@ function ItemSlider() {
     const [products, setProducts] = useState([]);
     
     useEffect(() => {
-        fetch('/api/products')
+        fetch('/api/product')
         .then((res) => res.json())
         .then((products) => {
             setProducts(products);

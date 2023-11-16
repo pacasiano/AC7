@@ -107,7 +107,7 @@ function Items({ selectedProducts, setSelectedProducts }) {
   const [selectedOption, setSelectedOption] = useState(null);
 
   useEffect(() => {
-    fetch("/api/products")
+    fetch("/api/product")
       .then((res) => res.json())
       .then((products) => {
         setProducts(products);

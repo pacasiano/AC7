@@ -24,7 +24,17 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    
+    const {product_name, description, price, category, threshold} = req.body;
+    console.log('Adding new product...')
+    console.log(req.body)
+    const q1 = `INSERT INTO product SET name = '${product_name}', description = '${description}', ` +
+                `price = ${price}, category = '${category}', threshold = ${threshold}, quantity = 0`;
+    connection.query(q1, (err, results) => {
+        if (err) {console.error(err)}
+        else {
+            res.send('Good boy!')
+        }
+    })
 })
 
 router.post('/:id', (req, res) => {
