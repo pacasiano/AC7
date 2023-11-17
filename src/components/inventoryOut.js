@@ -7,22 +7,35 @@ export default function InventoryOut() {
   const [numbersToBeDelivered, setNumbersToBeDelivered] = useState(1);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [employees, setEmployees] = useState([]);
+  const [employee, setEmployee] = useState("obe");
+  const [productsLength, setProductsLength] = useState([]);
   const { setPage } = useContext(myContext);
 
   useEffect(() => {
-    fetch("/api/employees")
+    fetch("/api/employee")
       .then((res) => res.json())
       .then((employees) => {
         setEmployees(employees);
+        console.log(employees);
       });
   }, []);
 
-  const options = employees.map((employee) => ({
-    value: `${employee.name}`,
-    label: `${employee.name}`,
-  }));
+  useEffect(() => {
+    fetch('/api/product')
+      .then((res) => res.json())
+      .then((products) => {
+        setProductsLength(products.length);
+        console.log(products.length);
+      });
+  }, []);
+
 
   const options2 = [
+    // interates values from 1 to productsLength
+    ...Array.from({ length: productsLength }, (_, index) => ({
+      value: index + 1,
+      label: index + 1,
+    })),
   ];
 
   return (
@@ -55,7 +68,7 @@ export default function InventoryOut() {
             <tbody>
               <tr className="bg-gray-300">
                 <td className="text-sm font-semibold border p-2">
-                  <Select options={options} name="employee_name" className="w-full text-center" required />
+                  <input value={employee} name="employee_name" className="w-full text-center h-10 " readonly required/>
                 </td>
                 <td className="text-sm font-semibold border p-2">
                   <input name="comments" type="text" className="w-full h-10 text-center" />
@@ -77,7 +90,7 @@ export default function InventoryOut() {
               <thead className="bg-gray-400">
                 <tr>
                   <th className="text-sm font-semibold border p-2 text-white">Item Name</th>
-                  <th className="text-sm font-semibold border p-2 text-white">Comments</th>
+                  <th className="text-sm font-semibold border p-2 w-1/2 text-white">Comments</th>
                   <th className="text-sm w-44 font-semibold border p-2 text-white">Quantity</th>
                 </tr>
               </thead>
