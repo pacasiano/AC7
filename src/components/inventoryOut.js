@@ -78,6 +78,7 @@ export default function InventoryOut() {
               <thead className="bg-gray-400">
                 <tr>
                   <th className="text-sm font-semibold border p-2 text-white">Item Name</th>
+                  <th className="text-sm font-semibold border p-2 text-white">Comments</th>
                   <th className="text-sm w-44 font-semibold border p-2 text-white">Quantity</th>
                 </tr>
               </thead>
@@ -143,6 +144,9 @@ function Items({ selectedProducts, setSelectedProducts }) {
             onChange={handleProductChange}
             required
           />
+        </td>
+        <td className="text-sm font-semibold border p-2">
+          <input name="comments" type="text" className="h-10 w-full text-center"/>
         </td>
         <td className="text-sm font-semibold border p-2">
           <input name="quantity" type="number" className="h-10 w-full text-center pl-1" required></input>
