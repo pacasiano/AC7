@@ -77,7 +77,7 @@ function App() {
               <Route path="orders" element={<Orders />} />
               <Route path="product" element={<Product />} />
               <Route path="checkout" element={<Checkout />} />
-              <Route path="order" element={<IndivOrder />} />
+              <Route path="order/:sale_id" element={<IndivOrder />} />
               <Route path="user/profile" element={<Profile />} />
             </Route>
             <Route path="order/confirmation" element={<OrderConfirmation />} />

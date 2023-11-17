@@ -14,6 +14,9 @@ const account = require('./routes/account.js');
 const customer = require('./routes/customer.js')
 const order_item = require('./routes/order_item.js');
 const employee = require('./routes/employee');
+const shipping = require('./routes/shipment.js');
+
+
 
 app.use(express.urlencoded( { extended: true } ));
 
@@ -49,6 +52,9 @@ app.use('/api/customer', customer)
 app.use('/api/order_item', order_item);
 
 app.use('/api/employee', employee);
+
+app.use('/api/shipment', shipping);
+
 
 
 app.listen(8080, () => {
