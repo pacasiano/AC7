@@ -23,7 +23,7 @@ export default function Orders() {
         { value: 'All', label: 'All' },
         ...orders.map((order) => ({
         value: order.sale_id,
-        label: order.sale_id,
+        label: `${order.sale_id} - ${order.full_name}`,
         })),    
     ];
 
