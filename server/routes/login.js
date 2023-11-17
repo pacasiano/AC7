@@ -21,6 +21,7 @@ router.post('/', (req, res) => {
         console.log('Receieved username: ' + username)
     }
     catch (err) {
+        // res.json("Incorrect")
         console.log(err)
     }
 

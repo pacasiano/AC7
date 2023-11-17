@@ -38,7 +38,7 @@ export default function Orders() {
     console.log(orders)
 
     return(
-        <div className="h-screen px-8 pt-8">
+        <div className="h-screen  px-8 pt-8">
             <div className="flex flex-col gap-5 ">
                 <div id="header" className="flex flex-row justify-between">
                     <span className="text-xl font-bold">Orders</span>
@@ -50,28 +50,29 @@ export default function Orders() {
                             <span className="text-md font-bold">Order List</span>
                         </div>
                         <div className="flex flex-row gap-2">
-                            <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">View All</span></button>
+                            {/* <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">View All</span></button> */}
                         </div>
                     </div>
-                    <table className="w-full border-collapse border">
-                        <thead>
-                            <tr className="bg-gray-400">
-                                <th className="text-sm font-semibold border p-2 text-white">Order ID</th>
-                                <th className="text-sm font-semibold border p-2 text-white">User ID</th>
-                                {/* <th className="text-sm font-semibold border p-2 text-white">Product ID</th> */}
-                                <th className="text-sm font-semibold border p-2 text-white">Full Name</th>
-                                <th className="text-sm font-semibold border p-2 text-white">Date</th>
-                                <th className="text-sm font-semibold border p-2 text-white">Status</th>
-                                {/* <th className="text-sm font-semibold border p-2 text-white">Quantity</th> */}
-                                <th className="text-sm font-semibold border p-2 text-white">Total</th>
-                                <th className="text-sm font-semibold border p-2 text-white">Actions</th>
-                            </tr>
-                        </thead>
-                        {filteredOrders.map((order) => (
-                        <Order key={order.sale_id} order={order} />
-                        ))}
-                    </table>
-
+                    <div className="max-h-[560px] overflow-auto">
+                        <table className="w-full border-collapse border">
+                            <thead>
+                                <tr className="bg-gray-400 border">
+                                    <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Order ID</th>
+                                    <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">User ID</th>
+                                    {/* <th className="text-sm font-semibold border p-2 text-white">Product ID</th> */}
+                                    <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Full Name</th>
+                                    <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Date</th>
+                                    <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Status</th>
+                                    {/* <th className="text-sm font-semibold border p-2 text-white">Quantity</th> */}
+                                    <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Total</th>
+                                    <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Actions</th>
+                                </tr>
+                            </thead>
+                            {filteredOrders.map((order) => (
+                            <Order key={order.sale_id} order={order} />
+                            ))}
+                        </table>
+                    </div>
                 </div>
             </div>   
         </div>

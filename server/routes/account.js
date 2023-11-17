@@ -3,10 +3,10 @@ const mysql = require('mysql2')
 const router = express.Router();
 
 const connection = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "whatamIdoing332",
-    database: "ac7_database"
+    host: 'localhost',
+    user: 'root',
+    password: 'whatamIdoing332',
+    database: 'ac7_database'
 })
 
 router.use(express.json())
@@ -56,6 +56,19 @@ router.get('/:id', (req, res) => {
         }
     })
 })
+
+// Get all usernames for availability checking
+router.get('/', (req, res) => {
+    const q = 'SELECT username FROM account';
+    connection.query(q, (err, results) => {
+        if (err) {
+            console.error(err);
+        } else {
+            res.json(results);
+            // console.log(results)
+        }
+    });
+});
 
 //Edit account information
 router.patch('/:id', (req, res) => {
