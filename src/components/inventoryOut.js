@@ -23,7 +23,6 @@ export default function InventoryOut() {
   }));
 
   const options2 = [
-   
   ];
 
   return (
