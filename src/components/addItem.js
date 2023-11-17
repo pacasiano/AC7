@@ -13,6 +13,13 @@ export default function AddItem() {
     {value: "Body care", label: "Body care"}
 ];
 
+const customStyles = {
+    control: base => ({
+      ...base,
+      height: 81,
+    })
+  };
+
   return (
     <div className="px-8 py-8">
       <div className="flex flex-col gap-5">
@@ -38,7 +45,7 @@ export default function AddItem() {
                     <th className="text-md font-bold border p-2 text-white w-1/5" required>
                         Price
                     </th>
-                    <th className="text-md font-bold border p-2 text-white w-1/5" required>
+                    <th className="text-md font-bold border p-2 text-white w-1/4" required>
                         Category
                     </th>
                     <th className="text-md font-bold border p-2 text-white w-1/5" required>
@@ -49,19 +56,19 @@ export default function AddItem() {
                 <tbody>
                     <tr className="bg-gray-300">
                     <td className="text-sm font-semibold border p-2">
-                        <input name="product_name" className="w-full h-10 text-center" required />
+                        <input name="product_name" className="w-full h-20 text-center" required />
                     </td>
                     <td className="text-sm font-semibold border p-2">
-                        <input name="description" type="text" className="w-full h-10 text-center" />
+                        <input name="description" type="text" className="w-full h-20 text-center" />
                     </td>
                     <td className="text-sm font-semibold border p-2">
-                        <input name="price" type="number" className="w-full h-10 text-center" required></input>
+                        <input name="price" type="number" className="w-full h-20 text-center" required></input>
                     </td>
                     <td className="text-sm font-semibold border p-2">
-                        <Select options={options} name="category" className=" w-full  h-10 text-center" required />
+                        <Select options={options} isMulti name="category" styles={customStyles} className=" w-full h-full text-center" required />
                     </td>
                     <td className="text-sm font-semibold border p-2">
-                        <input name="threshold" type="number" className=" w-full  h-10 text-center" required />
+                        <input name="threshold" type="number" className=" w-full  h-20 text-center" required />
                     </td>
                     </tr>
                 </tbody>

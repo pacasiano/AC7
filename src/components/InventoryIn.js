@@ -9,6 +9,7 @@ export default function InventoryIn() {
     const [numbersToBeDelivered, setNumbersToBeDelivered] = useState(1);
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [suppliers, setSuppliers] = useState([]);
+    const [productsLength, setProductsLength] = useState([]);
     const { setPage } = useContext(myContext);
 
     useEffect(() => {
@@ -24,18 +25,24 @@ export default function InventoryIn() {
         {value: `${supplier.name}`, label: `${supplier.name}`}
     ))
 
+
+    useEffect(() => {
+        fetch('/api/product')
+        .then((res) => res.json())
+        .then((products) => {
+            setProductsLength(products.length);
+            console.log(products.length);
+        });
+    }, []);
+
+
     const options2 = [
-        {value: "1", label: "1 Item"},
-        {value: "2", label: "2 Items"},
-        {value: "3", label: "3 Items"},
-        {value: "4", label: "4 Items"},
-        {value: "5", label: "5 Items"},
-        {value: "6", label: "6 Items"},
-        {value: "7", label: "7 Items"},
-        {value: "8", label: "8 Items"},
-        {value: "9", label: "9 Items"},
-        {value: "10", label: "10 Items"},
-    ];
+        // interates values from 1 to productsLength
+        ...Array.from({ length: productsLength }, (_, index) => ({
+          value: index + 1,
+          label: index + 1,
+        })),
+      ];
 
     return(
         <div className=" px-8 py-8 ">
