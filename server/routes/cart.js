@@ -33,6 +33,7 @@ router.get('/:id', (req, res) => {
     });
 });
 
+//Update quantity when incremented or decremented in cart
 router.post('/:a_id/:p_id', (req, res) => {
     const {a_id: account_id, p_id: product_id} = req.params;
     const {action} = req.body;
@@ -45,6 +46,7 @@ router.post('/:a_id/:p_id', (req, res) => {
         sign = '-';
     }
 
+
     const q1 = `UPDATE sale_item INNER JOIN sale USING (sale_id) SET quantity = quantity ${sign} 1 ` +
                 `WHERE account_id = ${account_id} ` +
                 `AND sale_status = 'in progress' ` +
@@ -53,7 +55,28 @@ router.post('/:a_id/:p_id', (req, res) => {
         if (err) { console.error(err) }
         else { console.log(`${sign} for product with ID of ${product_id} is successful!`) }
     })
+
+    //Check if the sale_item associated with the product_id has a quantity of 0
+    const q2 = `SELECT quantity FROM sale_item INNER JOIN sale USING (sale_id) ` + 
+                `WHERE account_id = ${account_id} AND sale_status = 'in progress' AND product_id = ${product_id}`;
+    connection.query(q2, (err, results) => {
+        if (err) { console.error(err) }
+        else {
+            const {quantity} = results[0];
+            
+            // If quantity = 0, we remove the sale_item
+            if (quantity === 0) {
+                const q3 = 'DELETE sale_item FROM sale_item INNER JOIN sale USING (sale_id)' +
+                ` WHERE account_id = ${account_id} AND product_id = ${product_id}`;
+                connection.query(q3, (err, results) => {
+                    if (err) { console.error(err) } 
+                })
+            }
+        }
+    })
+
     res.redirect('http://localhost:3000/AC7/cart')
+
 })
 
 module.exports = router;
