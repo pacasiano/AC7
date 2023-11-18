@@ -57,7 +57,7 @@ function Checkout() {
     };
 
     // Gcash reference number
-    const [gcashRefNum, setGcashRefNum] = useState();
+    const [gcashRefNum, setGcashRefNum] = useState(null);
 
     const handleGcashRefNumChange = (event) => {
       setGcashRefNum(event.target.value);
@@ -88,14 +88,18 @@ function Checkout() {
     ))
   
   // Selected address
-  const [selectedOption, setSelectedOption] = useState("Address 1");
+  const [selectedOption, setSelectedOption] = useState(null);
 
   const handleSelectChange = (selectedOption) => {
     setSelectedOption(selectedOption);
   };
 
+  const [emptyFields, setEmptyFields] = useState(false);
+
   function sendPostReq(e) {
     e.preventDefault();
+
+    if (items.length > 0 && selectedOption !== null && ((payment === "cod") || (payment === 'gcash' && gcashRefNum !== null))) {
     const reqData = {
       account_id: accountId,
       items_purchased: items,
@@ -119,10 +123,18 @@ function Checkout() {
       .catch((err) => {
         console.error("Error: ", err)
       })
+    }else{
+      setEmptyFields(true);
+      setTimeout(() => {
+        setEmptyFields(false);
+      }, 2000);
+    }
   }
 
 
   return (
+    <>
+    {items.length > 0 ? 
     <div className="Checkout h-screen pt-16">
       <form onSubmit={sendPostReq} id="billingInfo" className="flex flex-col lg:flex-row lg:items-start items-center lg:gap-0 gap-5 justify-evenly py-20">
         <div className="flex flex-col lg:w-1/2 w-11/12 gap-5 ">
@@ -131,11 +143,11 @@ function Checkout() {
               Payment Method
             </div>
             <div className="flex flex-row justify-start">
-                <input name="paymentMethod" id="gcash" value="gcash" checked={payment === 'gcash'} onChange={handleOptionChange}  type="radio" required/>
+                <input name="paymentMethod" id="gcash" value="gcash" checked={payment === 'gcash'} onChange={handleOptionChange}  type="radio" />
                 <label for="gcash" className="transition duration-300 ease-out hover:bg-gray-50 hover:-translate-y-0.5 active:bg-gray-200 active:translate-y-0 pl-2 pr-6 py-1 rounded-md cursor-pointer group-checked:bg-gray-600">
                 Gcash</label>
                 
-                <input name="paymentMethod" id="cod" value="cod" checked={payment === 'cod'} onChange={handleOptionChange} type="radio" required/>
+                <input name="paymentMethod" id="cod" value="cod" checked={payment === 'cod'} onChange={handleOptionChange} type="radio" />
                 <label for="cod" className="transition duration-300 ease-out hover:bg-gray-50 hover:-translate-y-0.5 active:bg-gray-200 active:translate-y-0 pl-2 py-1 rounded-md cursor-pointer checked:bg-gray500">
                 Cash on Delivery</label>
             </div>
@@ -147,7 +159,7 @@ function Checkout() {
                 <div className="flex flex-col">
                     <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Gcash Reference Number</span>
-                        <input onChange={handleGcashRefNumChange} name="gcashNumber" type="text" className="rounded-sm" required/>
+                        <input onChange={handleGcashRefNumChange} name="gcashNumber" type="text" className={`${(gcashRefNum === null && emptyFields) && "border border-red-500"} rounded-md`} />
                         {/* <input value={gcashRefNum}/> */}
                     </label>
                 </div>
@@ -162,41 +174,32 @@ function Checkout() {
                 value={selectedOption}
                 onChange={handleSelectChange}
                 options={options}
-                className="w-56 text-center text-sm h-13 bg-gray-100"
-                required
+                className={`${(selectedOption === null && emptyFields) && "border border-red-500"} w-56 text-center text-sm h-13 bg-gray-100`}
+                
               />
-              <table className="w-full border-collapse">
-                  <thead>
-                      <tr className="border-b-2">
-                          <td className="text-sm font-semibold">Barangay</td>
-                          <td className="text-sm font-semibold">Street</td>
-                          <td className="text-sm font-semibold">Province</td>
-                          <td className="text-sm font-semibold">City</td>
-                          <td className="text-sm font-semibold">Zip Code</td>
-                      </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="">
-                      <td className="text-sm font-medium barangay-value">
-                      {selectedOption?.barangay}
-                      </td>
-                      <td className="text-sm font-medium street-value">
-                      {selectedOption?.street}
-                      </td>
-                      <td className="text-sm font-medium province-value">
-                      {selectedOption?.street}
-                      </td>
-                      <td className="text-sm font-medium city-value">
-                      {selectedOption?.city}
-                      </td>
-                      <td className="text-sm font-medium zip-code-value">
-                      {selectedOption?.zipCode}
-                      </td>
-                    </tr>
-                  </tbody>
-              </table>
+            <div>
+              <div className="flex flex-row gap-5">
+                <div className="text-md font-semibold w-1/6">Barangay:</div>
+                <span className="text-md">{selectedOption?.barangay}</span>
+              </div>
+              <div className="flex flex-row gap-5">
+                <div className="text-md font-semibold w-1/6">Street:</div>
+                <span className="text-md">{selectedOption?.street}</span>
+              </div>
+              <div className="flex flex-row gap-5">
+                <div className="text-md font-semibold w-1/6">Province:</div>
+                <span className="text-md">{selectedOption?.province}</span>
+              </div>
+              <div className="flex flex-row gap-5">
+                <div className="text-md font-semibold w-1/6">City:</div>
+                <span className="text-md">{selectedOption?.city}</span>
+              </div>
+              <div className="flex flex-row gap-5">
+                <div className="text-md font-semibold w-1/6">Zip Code:</div>
+                <span className="text-md">{selectedOption?.zipCode}</span>
+              </div>
+            </div>   
             </div>
-            
           </div>
         </div>
  
@@ -214,9 +217,12 @@ function Checkout() {
             <div className="flex justify-end text-xl font-semibold">
               &#x20B1;{`${totalPayment.toFixed(2)}`}
             </div>
+            {emptyFields ? <div className=" animate-bounce2 text-red-500 font-medium text-md text-center mb-2">
+              Please fill out all the fields
+            </div> : <div className="mb-7"></div>}
                 {/* <Link to="/order/confirmation">
                 </Link> */}
-                <button type='submit' className="w-full bg-black text-white p-4 mt-7 text-xl">
+                <button type='submit' className={`${emptyFields && "animate-wiggle"} w-full bg-black text-white p-4 text-xl`}>
                   Pay
                 </button>
                 {/* <button onClick={sendPostReq} className="w-full bg-black text-white p-4 mt-7 text-xl">
@@ -236,8 +242,22 @@ function Checkout() {
       </form>
 
     </div>
-  );
-}
+    :
+    <div className="h-screen flex flex-col justify-center items-center">
+      <div className="flex justify-center text-xl font-semibold">
+        You currently do not have any Products in your shopping cart
+      </div>
+      <div className="flex justify-center pt-5">
+        <Link to="/store">
+          <button className="bg-black rounded-xl w-60 text-white p-4 text-xl">
+            Go to Store
+          </button>
+        </Link>
+      </div>
+    </div>
+    }
+    </>
+  );}
 
 function CustomItem({price, value, qty}){
     return <li className={"text-sm font-semibold pb-1"}>{qty}<span className={"pl-3"}>{value}</span><span className={"text-xs font-light"}> - Php{price}</span></li>;

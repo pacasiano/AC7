@@ -64,38 +64,39 @@ export default function Inventory() {
               <button onClick={() => setPage("addItem")}>
                 <span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">Add Item</span>
               </button>
-              <button>
+              {/* <button>
                 <span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">View All</span>
-              </button>
+              </button> */}
             </div>
           </div>
-
-          <table className="w-full border-collapse border">
-            <thead>
-              <tr className="bg-gray-400">
-                <th className="text-sm font-semibold border p-2 text-white">Product ID</th>
-                <th className="text-sm font-semibold border p-2 text-white">Name</th>
-                <th className="text-sm font-semibold border p-2 text-white">Description</th>
-                <th className="text-sm font-semibold border p-2 text-white">Category</th>
-                <th className="text-sm font-semibold border p-2 text-white">Price</th>
-                <th className="text-sm font-semibold border p-2 text-white">Threshold</th>
-                <th className="text-sm font-semibold border p-2 text-white">Quantity</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredProducts.map((product) => (
-                <tr className="bg-gray-300" key={product.product_id}>
-                  <td className="text-sm font-semibold border p-2">{product.product_id}</td>
-                  <td className="text-sm font-semibold border p-2">{product.name}</td>
-                  <td className="text-sm font-semibold border p-2">{product.description}</td>
-                  <td className="text-sm font-semibold border p-2">{product.category}</td>
-                  <td className="text-sm font-semibold border p-2">&#x20B1;{product.price}</td>
-                  <td className="text-sm font-semibold border p-2">{product.threshold}</td>
-                  <td className="text-sm font-semibold border p-2">{product.quantity}</td>
+          <div className="max-h-[560px] overflow-auto">
+            <table className="w-full border-collapse border">
+              <thead>
+                <tr className="bg-gray-400">
+                  <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Product ID</th>
+                  <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Name</th>
+                  <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Description</th>
+                  <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Category</th>
+                  <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Price</th>
+                  <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Threshold</th>
+                  <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Quantity</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {filteredProducts.map((product) => (
+                  <tr className="bg-gray-300" key={product.product_id}>
+                    <td className="text-sm font-semibold border p-2">{product.product_id}</td>
+                    <td className="text-sm font-semibold border p-2">{product.name}</td>
+                    <td className="text-sm font-semibold border p-2">{product.description}</td>
+                    <td className="text-sm font-semibold border p-2">{product.category}</td>
+                    <td className="text-sm font-semibold border p-2">&#x20B1;{product.price}</td>
+                    <td className="text-sm font-semibold border p-2">{product.threshold}</td>
+                    <td className="text-sm font-semibold border p-2">{product.quantity}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

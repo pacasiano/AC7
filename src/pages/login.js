@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../App.css";
 import navlogo from "../imgs/navlogo.png";
 import { Link } from "react-router-dom";
@@ -8,10 +8,15 @@ function Landing() {
   // should be true when password or username is incorrect
   const [incorrect, setIncorrect] = useState(false);
   
-  // will automatically set the incorrect state to false after 20 seconds
-  setTimeout(() => {
-    setIncorrect(false);
-  }, 20000);
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setIncorrect(false);
+    }, 2000);
+
+    // Clear the timeout if component unmounts or if incorrect becomes false before the timeout
+    return () => clearTimeout(timeoutId);
+  }, [incorrect]);
+
 
   return (
     <section className="bg-gray-50 w-full h-full">
@@ -32,12 +37,11 @@ function Landing() {
               Login to Account
             </h1>
             <form className="space-y-6" action="/api/login" method="POST">
-              <div>
-                <label for="username"
-                  className="block mb-2 text-sm font-medium text-gray-900"
-                >
-                  Your username
-                </label>
+            <div className="absolute translate-x-[75px] -translate-y-3">
+            {incorrect && <div className="text-red-500 font-semibold text-center animate-bounce2">Invalid username or password!</div>}
+            </div>
+              <div className={`${incorrect && "pt-4"}`}>
+                <label for="username" className="block mb-2 text-sm font-medium text-gray-900">Your username</label>
                 <input
                   type="text"
                   name="username"
@@ -58,14 +62,8 @@ function Landing() {
                   required=""
                 />
               </div>
-
-              {incorrect && 
-              <div className="flex text-center justify-center -translate-y-3">
-                <span className="font-bold text-red-700">Wrong username or password!</span>
-              </div>}
-
               <button type="submit"
-                className="w-full text-gray-700 bg-gray-200 hover:bg-gray-300 hover:text-gray-50 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                className={` ${incorrect === true ? "animate-wiggle " : ""} w-full text-gray-700 bg-gray-200 hover:bg-gray-300 hover:text-gray-50 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center`}
               >
                 Login to account
               </button>

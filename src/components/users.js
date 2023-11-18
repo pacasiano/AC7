@@ -114,21 +114,22 @@ export default function Users() {
                                     </form>
                                 </div>
                             </ReactModal>  
-                            <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">View All</span></button>
+                            {/* <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">View All</span></button> */}
                         </div>
                     </div>
                     {account==="customer" ? (
+                    <div className="max-h-[560px] overflow-auto">
                     <table className="w-full border-collapse border">
                         <thead>
                             <tr className="bg-gray-400">
-                                <th className="text-sm font-semibold border p-2 text-white">Account ID</th>
-                                <th className="text-sm font-semibold border p-2 text-white">First Name</th>
-                                <th className="text-sm font-semibold border p-2 text-white">Last Name</th>
+                                <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Account ID</th>
+                                <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">First Name</th>
+                                <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Last Name</th>
                                 {/* <th className="text-sm font-semibold border p-2 text-white">Address</th> */}
-                                <th className="text-sm font-semibold border p-2 text-white">Contact</th>
-                                <th className="text-sm font-semibold border p-2 text-white">Email</th>
-                                <th className="text-sm font-semibold border p-2 text-white">Reputation</th>
-                                <th className="text-sm font-semibold border p-2 text-white">Actions</th>
+                                <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Contact</th>
+                                <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Email</th>
+                                <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Reputation</th>
+                                <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -149,17 +150,19 @@ export default function Users() {
                             }
                         </tbody>
                     </table>
+                    </div>
                     ) : (
+                    <div className="max-h-[560px] overflow-auto">
                     <table className="w-full border-collapse border">
                         <thead>
                             <tr className="bg-gray-400">
-                                <th className="text-sm font-semibold border p-2 text-white">Employee ID</th>
-                                <th className="text-sm font-semibold border p-2 text-white">First Name</th>
-                                <th className="text-sm font-semibold border p-2 text-white">Last Name</th>
-                                <th className="text-sm font-semibold border p-2 text-white">Position</th>
-                                <th className="text-sm font-semibold border p-2 text-white">Emp_Status</th>
-                                <th className="text-sm font-semibold border p-2 text-white">Contact Info</th>
-                                <th className="text-sm font-semibold border p-2 text-white">Actions</th>
+                                <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Employee ID</th>
+                                <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">First Name</th>
+                                <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Last Name</th>
+                                <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Position</th>
+                                <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Emp_Status</th>
+                                <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Contact Info</th>
+                                <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -179,6 +182,7 @@ export default function Users() {
                             }
                         </tbody>
                     </table>
+                    </div>
                     )}
                 </div>
             </div> 

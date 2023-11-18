@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import "../App.css";
 import { Link } from "react-router-dom";
-import OnGoing from "../components/orderCard";
-import Comp from "../components/orderCardcomp";
+import {Complete, OnGoing} from "../components/orderCard";
+
 
 
 function Orders() {
@@ -14,15 +14,17 @@ function Orders() {
             <div className="flex flex-row gap-4 w-full">
               <div className="flex flex-col w-1/3 gap-5">
                 <div className="bg-gray-100 p-3">
-                  <button className="text-xl font-bold text-center">Orders</button>
+                  <button className="text-xl font-bold text-center">Ongoing</button>
                 </div>
-                  <OnGoing/>
+                <OnGoing/>
+
               </div>
               <div className="flex flex-col w-1/3 gap-5">
                 <div className="bg-gray-100 p-3">
-                  <button className="text-xl font-bold text-center">Completed</button>
+                  <button className="text-xl font-bold text-center">Completed</button>|
                 </div>
-                  <Comp/>
+                <Complete/>
+
                 
               </div>
               <div className="flex flex-col w-1/3 gap-5">

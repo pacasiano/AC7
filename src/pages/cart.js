@@ -30,6 +30,20 @@ function Cart() {
     }
   }
 
+  const [emptyCart, setEmptyCart] = useState(false);
+
+  function submitOrder() {
+    if (items.length === 0) {
+      setEmptyCart(true);
+      setTimeout(() => {
+        setEmptyCart(false);
+      }, 2000);
+    }else {
+      window.location.href = "/AC7/checkout";
+    }
+  }
+  
+
   const accountId = getAcctIdFromCookie(cookie);
 
   const [items, setItems] = useState([]);
@@ -70,8 +84,8 @@ function Cart() {
           </div>
           <div className="bg-gray-100 p-5">
 
-            {items.length === 0 ? (
-              <div className="font-light text-center">
+            {items.length === 0 ? ( 
+              <div className={`${emptyCart ? "animate-bounce2 text-red-500 font-semibold transition-all" : "font-light" } text-center`}>
                 You currently do not have any Products in your shopping cart
               </div>
             ) : (
@@ -89,16 +103,12 @@ function Cart() {
             <div className="flex justify-end text-xl font-semibold">
               {`₱${orderSubtotal.toFixed(2)}`}
             </div>
-            
-            <Link to={items.length > 0 ? "/checkout" : "#"}>
               <button 
-                className={`w-full p-4 mt-7 text-xl ${items.length > 0 ? 'bg-black text-white' : 'bg-gray-500 text-gray-300'}`} 
-                disabled={items.length === 0}
+                className={`w-full p-4 mt-7 text-xl ${emptyCart && 'animate-wiggle'} bg-gray-800 text-gray-50`} 
+                onClick={submitOrder}
               >
                 Check out
-              </button>
-            </Link>
-            
+              </button>  
           </div>
           <div>
             <div className="flex justify-start text-md font-semibold pt-5">
