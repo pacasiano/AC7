@@ -106,6 +106,24 @@ CREATE TABLE IF NOT EXISTS product (
     PRIMARY KEY (product_id)
 );
 
+CREATE TABLE IF NOT EXISTS inventory_out (
+    inventory_out_ref_num BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    employee_id BIGINT UNSIGNED NOT NULL,
+    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    comment VARCHAR(255) NOT NULL, -- general reason for stocking out - what's the event? annual damage check or smtg?
+    PRIMARY KEY (inventory_out_ref_num),
+    FOREIGN KEY (employee_id) REFERENCES employee(employee_id)
+);
+
+CREATE TABLE IF NOT EXISTS inventory_out_item (
+    inventory_out_ref_num BIGINT UNSIGNED NOT NULL,
+    product_id BIGINT UNSIGNED NOT NULL,
+    quantity INT UNSIGNED NOT NULL,
+    comment VARCHAR(255) NOT NULL,
+    FOREIGN KEY (inventory_out_ref_num) REFERENCES inventory_out(inventory_out_ref_num),
+    FOREIGN KEY (product_id) REFERENCES product(product_id)
+);
+
 CREATE TABLE IF NOT EXISTS inventory_in_item (
     inventory_in_id BIGINT UNSIGNED NOT NULL,
     product_id BIGINT UNSIGNED NOT NULL,

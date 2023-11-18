@@ -4,19 +4,43 @@ import "../App.css";
 import { myContext } from "../context/inventoryContext";
 
 export default function InventoryOut() {
+
+  //GET ACCOUNT_ID COOKIE
+  const cookie = document.cookie;
+  function getAcctIdFromCookie (cookieStr) {
+    //if browser has more than one cookie, the if statement will run
+    if (cookieStr.indexOf(';') > 0) {
+        //document.cookie is a string. We use .split() to convert it to an array with each cookie being an element
+        const cookiesArray = cookieStr.split(';');
+        for(let i = 0; i < cookiesArray.length; i++) {
+            if (cookiesArray[i].indexOf('account_id') > 0) {
+                //find the cookie with 'account_id' substring
+                const id = cookiesArray[i].replace('account_id=', '').trim();
+                // console.log(id)
+                return id;
+            }
+        }
+    }
+    else {
+        const id = cookie.slice(cookie.indexOf('=')+1);
+        // console.log(id)
+        return id;
+    }
+  }
+
+  const accountId = getAcctIdFromCookie(cookie);
+
   const [numbersToBeDelivered, setNumbersToBeDelivered] = useState(1);
   const [selectedProducts, setSelectedProducts] = useState([]);
-  const [employees, setEmployees] = useState([]);
   const [employee, setEmployee] = useState("obe");
   const [productsLength, setProductsLength] = useState([]);
   const { setPage } = useContext(myContext);
 
   useEffect(() => {
-    fetch("/api/employee")
+    fetch(`/api/employee/${accountId}`)
       .then((res) => res.json())
-      .then((employees) => {
-        setEmployees(employees);
-        console.log(employees);
+      .then((employee) => {
+        setEmployee(`${employee[0].first_name} ${employee[0].last_name}`);
       });
   }, []);
 
@@ -25,18 +49,26 @@ export default function InventoryOut() {
       .then((res) => res.json())
       .then((products) => {
         setProductsLength(products.length);
-        console.log(products.length);
       });
   }, []);
 
 
   const options2 = [
-    // interates values from 1 to productsLength
+    // iterates values from 1 to productsLength
     ...Array.from({ length: productsLength }, (_, index) => ({
       value: index + 1,
       label: index + 1,
     })),
   ];
+
+  const [general_comment, setGen_comment] = useState('');
+  useEffect(() => {
+    setGen_comment(general_comment);
+  }, [general_comment]);
+  
+  function handleGeneralComment(event) {
+    setGen_comment(event.target.value)
+  }    
 
   return (
     <div className=" px-8 py-8 ">
@@ -51,6 +83,7 @@ export default function InventoryOut() {
           </button>
         </div>
         <form action="/api/inventory_out" method="POST" className="flex flex-col gap-3">
+          <input value={accountId} name="account_id" className="hidden"></input>
           <table className="w-full border-collapse border">
             <thead>
               <tr className="bg-gray-400">
@@ -71,15 +104,10 @@ export default function InventoryOut() {
                   <input value={employee} name="employee_name" className="w-full text-center h-10 " readonly required/>
                 </td>
                 <td className="text-sm font-semibold border p-2">
-                  <input name="comments" type="text" className="w-full h-10 text-center" />
+                  <input onChange={handleGeneralComment} name="comments" type="text" className="w-full h-10 text-center" />
                 </td>
                 <td className="text-sm font-semibold border p-2">
-                  <Select
-                    options={options2}
-                    onChange={(opt) => setNumbersToBeDelivered(opt.value)}
-                    className=" w-full text-center"
-                    required
-                  />
+                  <Select options={options2} onChange={(opt) => setNumbersToBeDelivered(opt.value)} className=" w-full text-center" required/>
                 </td>
               </tr>
             </tbody>

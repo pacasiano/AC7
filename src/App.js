@@ -16,6 +16,7 @@ import IndivOrder from "./components/indivOrder";
 import Profile from "./pages/yourProfile";
 import OrderConfirmation from "./components/orderConfirmation";
 import InventoryInConfirmation from "./components/inventoryInConfirmation";
+import InventoryOutConfirmation from "./components/inventoryOutConfirmation";
 import Signup2 from "./pages/sign-up2";
 import Error404 from "./pages/Error404";
 import './App.css';
@@ -91,6 +92,7 @@ function App() {
           <Route index element={<Admin />} />
           <Route path="admin" element={<Admin />} />
           <Route path="inventory-in/confirmation" element={<InventoryInConfirmation />} />
+          <Route path="inventory-out/confirmation" element={<InventoryOutConfirmation />} />
           <Route path="*" element={<Error404 />} />
         </Routes>
       ) : (
