@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import "../App.css";
 import Item1 from "../imgs/Item1.png";
 import { Link } from "react-router-dom";
-import PropPass from "../components/indivOrder"
-
 
 const cookie = document.cookie;
 
@@ -39,12 +37,13 @@ function Complete() {
                 setOrders(orders);
             });
     }, []);
+
    console.log(orders);
     
     const orderCards = orders.map((order) => {
-        if(order.sale_status=="complete"){
+        if(order.sale_status==="complete"){
             return ( 
-                <Link to={`/order/${order.sale_id}`} key={order.sale_id} className="bg-gray-100 p-5 hover:-translate-y-1 hover:shadow-xl hover:cursor-pointer">
+                <Link to={`/orders/${order.sale_id}`} key={order.sale_id} className="bg-gray-100 p-5 hover:-translate-y-1 hover:shadow-xl hover:cursor-pointer">
                     <div className="flex flex-col">
                         <div className="flex flex-row gap-4">
                             <div className="flex">
@@ -86,7 +85,7 @@ function OnGoing() {
     const orderCards = orders.map((order) => {
         if (order.sale_status === "in progress") {
             return (
-                <Link to={`/order/${order.sale_id}`} key={order.sale_id} className="bg-gray-100 p-5 hover:-translate-y-1 hover:shadow-xl hover:cursor-pointer">
+                <Link to={`/orders/${order.sale_id}`} key={order.sale_id} className="bg-gray-100 p-5 hover:-translate-y-1 hover:shadow-xl hover:cursor-pointer">
                     <div className="flex flex-col">
                         <div className="flex flex-row gap-4">
                             <div className="flex">

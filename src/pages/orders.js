@@ -14,22 +14,21 @@ function Orders() {
             <div className="flex flex-row gap-4 w-full">
               <div className="flex flex-col w-1/3 gap-5">
                 <div className="bg-gray-100 p-3">
-                  <button className="text-xl font-bold text-center">Ongoing</button>
+                  <div className="text-xl font-bold text-start">Ongoing</div>
                 </div>
                 <OnGoing/>
 
               </div>
               <div className="flex flex-col w-1/3 gap-5">
                 <div className="bg-gray-100 p-3">
-                  <button className="text-xl font-bold text-center">Completed</button>|
+                  <div className="text-xl font-bold text-start">Completed</div>
                 </div>
                 <Complete/>
-
                 
               </div>
               <div className="flex flex-col w-1/3 gap-5">
                 <div className="bg-gray-100 p-3 ">
-                  <button className="text-xl font-bold text-center">Cancelled</button>
+                  <div className="text-xl font-bold text-start">Cancelled</div>
                 </div>
                 
               </div>
