@@ -236,9 +236,9 @@ VALUES(1, 'Secret Hideout', 'Gotham', '123', 'Barangay 10', 'NA', '26 street'),
 
 INSERT INTO product(name, description, price, category, threshold, quantity)
 VALUES
-('Whitening Body Lotion', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis nunc eget turpis scelerisque, id ultrices justo ornare.', 100, 'Cosmetics', 20, 50),
-('Bleaching Whipped Cream', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis nunc eget turpis scelerisque, id ultrices justo ornare.', 150, 'Cosmetics', 20, 50),
-('Kojic Soap', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis nunc eget turpis scelerisque, id ultrices justo ornare.', 50, 'Cosmetics', 20, 50);
+('Whitening Body Lotion', 'Brightens and evens skin tone, leaving you with a luminous, radiant complexion', 100, 'Cosmetics', 20, 50),
+('Bleaching Whipped Cream', 'Experience opulence in skincare with Bleaching Whipped Cream, a decadent secret for a luminous, flawless glow', 150, 'Cosmetics', 20, 50),
+('Kojic Soap', 'Uncover the allure of radiant skin with Kojic Soap, a refined indulgence for complexion perfection', 50, 'Cosmetics', 20, 50);
 
 INSERT INTO sale(account_id, sale_status)
 VALUES (1, 'in progress'),

@@ -8,7 +8,6 @@ import CartItem from "../components/cartItem";
 function Cart() {
 
   //GET ACCOUNT_ID COOKIE
-  const cookie = document.cookie;
   function getAcctIdFromCookie (cookieStr) {
     //if browser has more than one cookie, the if statement will run
     if (cookieStr.indexOf(';') > 0) {
@@ -30,6 +29,9 @@ function Cart() {
     }
   }
 
+  const cookie = document.cookie;
+  const accountId = getAcctIdFromCookie(cookie);
+
   const [emptyCart, setEmptyCart] = useState(false);
 
   function submitOrder() {
@@ -44,7 +46,6 @@ function Cart() {
   }
   
 
-  const accountId = getAcctIdFromCookie(cookie);
 
   const [items, setItems] = useState([]);
 

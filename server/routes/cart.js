@@ -11,6 +11,8 @@ let connection = mysql.createConnection({
     database: 'ac7_database'
 });
 
+router.use(express.json());
+
 
 router.get('/:id', (req, res) => {
 
@@ -30,5 +32,27 @@ router.get('/:id', (req, res) => {
         res.json(results);
     });
 });
+
+router.post('/:a_id/:p_id', (req, res) => {
+    const {a_id: account_id, p_id: product_id} = req.params;
+    const {action} = req.body;
+    let sign = '-';
+    
+    if (action === 'increment') {
+        sign = '+';
+    }
+    else if (action === 'decrement') {
+        sign = '-';
+    }
+
+    const q1 = `UPDATE sale_item INNER JOIN sale USING (sale_id) SET quantity = quantity ${sign} 1 ` +
+                `WHERE account_id = ${account_id} ` +
+                `AND sale_status = 'in progress' ` +
+                `AND product_id = ${product_id}`;
+    connection.query(q1, (err, results) => {
+        if (err) { console.error(err) }
+        else { console.log(`${sign} for product with ID of ${product_id} is successful!`) }
+    })
+})
 
 module.exports = router;

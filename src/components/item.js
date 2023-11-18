@@ -5,35 +5,6 @@ import "../App.css";
 
 function Item(props) {
 
-  //sends the cookies which contains the account_id of the account that logged in
-  const [cookies, setCookies] = useState(document.cookie);
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    const formData = new FormData(event.target);
-
-    try {
-      const response = await fetch('/api/item', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Cookie': cookies, // Include cookies in the headers
-        },
-      });
-
-      if (response.ok) {
-        // Handle a successful response from the server
-        console.log('Form submitted successfully.');
-      } else {
-        // Handle errors here
-        console.error('Error:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
-
   return (
     <form action="/api/item" method="POST">
       <div className="item shadow-md rounded-md">
