@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import Select from "react-select";
 import "../App.css";
-import { myContext } from "../context/inventoryContext";
+import { myContext } from "../context/adminContext";
 
 export default function InventoryOut() {
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { myContext } from "../context/inventoryContext";
+import { myContext } from "../context/adminContext";
 import "../App.css";
 import Select from "react-select";
 
