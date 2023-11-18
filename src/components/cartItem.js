@@ -40,15 +40,15 @@ function CartItem({item}) {
       let totalCalc = parseInt(total) + parseInt(price); 
       setTotal(totalCalc.toFixed(2));
 
-      fetch(`/api/cart/${accountId}/${product_id}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          action: 'increment'
-        })
-      })
+      // fetch(`/api/cart/${accountId}/${product_id}`, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify({
+      //     action: 'increment'
+      //   })
+      // })
     };
   
     const decrementQuantity = () => {
@@ -58,18 +58,20 @@ function CartItem({item}) {
         setTotal(totalCalc.toFixed(2));
       }
 
-      fetch(`/api/cart/${accountId}/${product_id}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          action: 'decrement'
-        })
-      })
+      // fetch(`/api/cart/${accountId}/${product_id}`, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify({
+      //     action: 'decrement'
+      //   })
+      // })
     };
     //use useEffect to monitor change in hookQty. After some delay, record the qty in db
     //to remove an item, wrap the item in a form with method=DELETE
+
+    const [qtyAction, setQtyAction] = useState('')
   
     return (
         <table className="table-fixed w-full">
@@ -102,17 +104,18 @@ function CartItem({item}) {
                 </form>
               </td>
               <td className="pb-1 ">
-                <div className="flex flex-row gap-5 justify-center"> 
-                  <button onClick={decrementQuantity} className="flex justify-center m-0 mt-1 p-1 text-xl hover:font-extrabold ">
+                <form action={`/api/cart/${accountId}/${product_id}`} method="POST" className="flex flex-row gap-5 justify-center"> 
+                  <button onClick={() => {decrementQuantity(); setQtyAction('decrement')}} className="flex justify-center m-0 mt-1 p-1 text-xl hover:font-extrabold ">
                     -
                   </button>
                     <div className="flex justify-center m-0 pt-2 text-xl font-light ">
                       {hookQty}
                     </div>
-                  <button onClick={incrementQuantity} className="flex justify-center m-0 mt-1 p-1 text-xl hover:font-extrabold ">
+                  <button onClick={() => {incrementQuantity(); setQtyAction('increment')}} className="flex justify-center m-0 mt-1 p-1 text-xl hover:font-extrabold ">
                       +
                   </button>
-                </div>
+                  <input value={qtyAction} name="action" className="hidden"></input>
+                </form>
               </td>
               <td className="text-xl font-medium ">
                 <div className="flex justify-center">

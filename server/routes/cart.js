@@ -53,6 +53,7 @@ router.post('/:a_id/:p_id', (req, res) => {
         if (err) { console.error(err) }
         else { console.log(`${sign} for product with ID of ${product_id} is successful!`) }
     })
+    res.redirect('http://localhost:3000/AC7/cart')
 })
 
 module.exports = router;
