@@ -260,7 +260,7 @@ function Checkout() {
   );}
 
 function CustomItem({price, value, qty}){
-    return <li className={"text-sm font-semibold pb-1"}>{qty}<span className={"pl-3"}>{value}</span><span className={"text-xs font-light"}> - Php{price}</span></li>;
+  return <div className={"text-sm font-semibold pb-1 pl-5"}><span className='font-medium'>Php</span> {price}<span className={"text-md font-semibold pl-3"}>{qty}</span><span className='font-light'>x</span><span className={"pl-3 font-medium"}>{value}</span></div>;
 }
 
 export default Checkout;
