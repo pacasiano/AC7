@@ -214,7 +214,8 @@ VALUES ('boywonder1', 'gothamsavior42', 'customer'),
 ('shapeshiftpro', 'greengorillabanana', 'customer'),
 ('darksorceress', 'azarathrising99', 'customer'),
 ('obvictoriano', 'adduislife', 'customer'),
-('obet', 'iluvmen', 'employee'); 
+('obet', 'iluvmen', 'employee'),
+('daboss', 'gigachad', 'employee'); 
 
 INSERT INTO customer(account_id, first_name, middle_name, last_name, contact_info, email) 
 VALUES (1, 'Dick', 'Robin', 'Grayson', '123-4567', 'robin@titans.net'),
@@ -224,7 +225,7 @@ VALUES (1, 'Dick', 'Robin', 'Grayson', '123-4567', 'robin@titans.net'),
 (5, 'Oneil', NULL, 'Victoriano', '888-8888', 'obvictoriano@addu.edu.ph');
 
 INSERT INTO employee(account_id, first_name, middle_name, last_name, position, emp_status, contact_info)
-VALUES (6, 'obet', NULL, 'dohsgit', 'Employee', 'active', '333-4233');
+VALUES (6, 'obet', NULL, 'dohsgit', 'Employee', 'active', '333-4233'), (7, 'chad', NULL, 'nibba', 'Boss', 'active', '8-7000');
 
 INSERT INTO address(customer_id, name, city, zip_code, barangay, province, street) 
 VALUES(1, 'Secret Hideout', 'Gotham', '123', 'Barangay 10', 'NA', '26 street'),
