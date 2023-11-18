@@ -68,9 +68,9 @@ export default function Users() {
                 <div id="header" className="flex flex-row justify-between">
                     <span className="text-xl font-bold">Accounts</span>
                     {account === "customer" ?
-                    <Select options={options} className="w-96" onChange={(e) => setSelectedUser(e)} />
+                    <Select options={options} className="w-96" onChange={(e) => setSelectedUser(e)} isSearchable={true} />
                     :
-                    <Select options={options2} className="w-96" onChange={(e) => setSelectedEmployee(e)} />
+                    <Select options={options2} className="w-96" onChange={(e) => setSelectedEmployee(e)} isSearchable={true}/>
                     }   
                 </div>
                 <div className="flex flex-col gap-3">

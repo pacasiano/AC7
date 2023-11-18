@@ -3,7 +3,6 @@ import "../App.css";
 import navlogo from "../imgs/navlogo.png";
 import { Link } from "react-router-dom";
 import { passwordStrength } from 'check-password-strength'
-import { set } from "react-hook-form";
 
 function Landing() {
   
