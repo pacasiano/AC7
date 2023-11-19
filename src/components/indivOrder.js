@@ -67,7 +67,7 @@ function ProductItem() {
             </td>
             <td className="w-1/4">
               <div className="flex flex-col justify-center items-center translate-x-3">
-                <div className="text-xl font-semibold pb-1">{order.name}</div>
+                <div className="text-xl self-start font-semibold pb-1">{order.name}</div>
                 <div className="font-normal self-start text-sm">₱ {order.price}</div>
               </div>
             </td>

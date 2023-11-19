@@ -131,6 +131,22 @@ function Checkout() {
     }
   }
 
+  const customStyles = {
+    control: base => ({
+      ...base,
+      height: "2rem",
+      fontSize: '15px',  // Use fontSize instead of text
+      fontWeight: 'bold',   // Set fontWeight to 'bold'
+      background: "#F3F4F6",
+      border: "1px solid #e2e8f0",
+      active: "border: none",
+      boxShadow: "none",
+      "&:hover": {
+        border: "1px solid black",
+        boxShadow: "none"
+      }
+    })
+  };
 
   return (
     <>
@@ -139,10 +155,10 @@ function Checkout() {
       <form onSubmit={sendPostReq} id="billingInfo" className="flex flex-col lg:flex-row lg:items-start items-center lg:gap-0 gap-5 justify-evenly py-20">
         <div className="flex flex-col lg:w-1/2 w-11/12 gap-5 ">
           <div className="bg-gray-100 p-5">
-            <div className="flex flex-row justify-start pb-4 text-xl font-semibold">
+            <div className="flex flex-row justify-start pb-2 text-xl font-semibold">
               Payment Method
             </div>
-            <div className="flex flex-row justify-start">
+            <div className="flex flex-row justify-start pl-2">
                 <input name="paymentMethod" id="gcash" value="gcash" checked={payment === 'gcash'} onChange={handleOptionChange}  type="radio" />
                 <label for="gcash" className="transition duration-300 ease-out hover:bg-gray-50 hover:-translate-y-0.5 active:bg-gray-200 active:translate-y-0 pl-2 pr-6 py-1 rounded-md cursor-pointer group-checked:bg-gray-600">
                 Gcash</label>
@@ -156,7 +172,7 @@ function Checkout() {
                 <div className="flex flex-row justify-start pb-3 pt-2 text-xl font-semibold">
                     Billing Information
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col pl-2">
                     <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Gcash Reference Number</span>
                         <input onChange={handleGcashRefNumChange} name="gcashNumber" type="text" className={`${(gcashRefNum === null && emptyFields) && "border border-red-500"} rounded-md`} />
@@ -168,37 +184,42 @@ function Checkout() {
             <div className="flex flex-row justify-start py-4 text-xl font-semibold">
                 Shipping Information
             </div>
-            {/* will edit pa the css of this part kasi medjo pangit */}
-            <div className="flex flex-col gap-4 justify-start">
+            <div className="flex flex-col gap-3 justify-start pl-2">
+              <div className="flex flex-row justify-start items-center">
+                <div className="text-md font-md pr-16">Name:</div>
               <Select
                 value={selectedOption}
                 onChange={handleSelectChange}
                 options={options}
-                className={`${(selectedOption === null && emptyFields) && "border border-red-500"} w-56 text-center text-sm h-13 bg-gray-100`}
+                className={`${(selectedOption === null && emptyFields) && "border border-red-500"} ml-2 w-48 text-center text-sm bg-gray-100`}
+                styles={customStyles}
                 
               />
+              </div>
+              
             <div>
               <div className="flex flex-row gap-5">
-                <div className="text-md font-semibold w-1/6">Barangay:</div>
-                <span className="text-md">{selectedOption?.barangay}</span>
+                <div className="text-md font-md w-1/6">Barangay:</div>
+                <span className="text-md font-semibold">{selectedOption?.barangay}</span>
               </div>
               <div className="flex flex-row gap-5">
-                <div className="text-md font-semibold w-1/6">Street:</div>
-                <span className="text-md">{selectedOption?.street}</span>
+                <div className="text-md font-md w-1/6">Street:</div>
+                <span className="text-md font-semibold">{selectedOption?.street}</span>
               </div>
               <div className="flex flex-row gap-5">
-                <div className="text-md font-semibold w-1/6">Province:</div>
-                <span className="text-md">{selectedOption?.province}</span>
+                <div className="text-md font-md w-1/6">Province:</div>
+                <span className="text-md font-semibold">{selectedOption?.province}</span>
               </div>
               <div className="flex flex-row gap-5">
-                <div className="text-md font-semibold w-1/6">City:</div>
-                <span className="text-md">{selectedOption?.city}</span>
+                <div className="text-md font-md w-1/6">City:</div>
+                <span className="text-md font-semibold">{selectedOption?.city}</span>
               </div>
               <div className="flex flex-row gap-5">
-                <div className="text-md font-semibold w-1/6">Zip Code:</div>
-                <span className="text-md">{selectedOption?.zipCode}</span>
+                <div className="text-md font-md w-1/6">Zip Code:</div>
+                <span className="text-md font-semibold">{selectedOption?.zipCode}</span>
               </div>
             </div>   
+            <div className="text-xs whitespace-nowrap">Not the Address you're looking for? <Link to={"/user/profile"} className="text-xs font-bold text-blue-500">Add Here!</Link></div>
             </div>
           </div>
         </div>
@@ -212,6 +233,16 @@ function Checkout() {
                   return <CustomItem price={item.price} value={item.name} qty={item.quantity}></CustomItem>
                 })}
               </ul>
+              <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2">
+                  <div className="flex justify-start text-md font-semibold">Shipping Fee</div>
+                  <div className="pl-3 text-xs font-semibold whitespace-nowrap">Php 0.00</div>
+                </div>
+                <div className="pb-5 flex flex-col gap-2">
+                  <div className="flex justify-start text-md font-semibold">Tax</div>
+                  <div className="pl-3 text-xs font-semibold whitespace-nowrap">Php 0.00</div>
+                </div>
+              </div>
               <div className="text-xs font-light">Total:</div>
             </div>
             <div className="flex justify-end text-xl font-semibold">
@@ -260,7 +291,7 @@ function Checkout() {
   );}
 
 function CustomItem({price, value, qty}){
-  return <div className={"text-sm font-semibold pb-1 pl-5"}><span className='font-medium'>Php</span> {price}<span className={"text-md font-semibold pl-3"}>{qty}</span><span className='font-light'>x</span><span className={"pl-3 font-medium"}>{value}</span></div>;
+  return <div className={"text-sm font-semibold pb-1"}><span className='font-medium'>Php</span> {price}<span className={"text-md font-semibold pl-3"}>{qty}</span><span className='font-light'>x</span><span className={"pl-3 font-medium"}>{value}</span></div>;
 }
 
 export default Checkout;

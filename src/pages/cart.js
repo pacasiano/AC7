@@ -62,6 +62,25 @@ function Cart() {
     orderSubtotal += parseFloat(item.price) * item.quantity;
   })
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulating an asynchronous operation (e.g., fetching data)
+    const fetchData = async () => {
+      // Perform your asynchronous operation here
+
+      // For example, use setTimeout to simulate a delay
+      setTimeout(() => {
+        // Once the data is fetched or the operation is done, set loading to false
+        setLoading(false);
+      }, 2000); // Adjust the time as needed
+    };
+
+    // Call the asynchronous function
+    fetchData();
+  }, []);
+  
+
   return (
     <div className="Cart h-screen pt-16">
       <div className="flex flex-col lg:flex-row lg:items-start items-center lg:gap-0 gap-5 justify-evenly py-16">
@@ -86,9 +105,19 @@ function Cart() {
           <div className="bg-gray-100 p-5">
 
             {items.length === 0 ? ( 
-              <div className={`${emptyCart ? "animate-bounce2 text-red-500 font-semibold transition-all" : "font-light" } text-center`}>
-                You currently do not have any Products in your shopping cart
+              <>
+              {loading ? (
+                <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-black border-t-black border-b-0 border-r-0 border-l-0"></div>
+                <span className="ml-3">Loading...</span>
               </div>
+              ) : (
+                // Content to display when loading is false
+                <div className={`${emptyCart ? "animate-bounce2 text-red-500 font-semibold transition-all" : "font-light" } text-center`}>
+                  You currently do not have any Products in your shopping cart
+                </div>
+              )}
+              </>
             ) : (
               items.map((item) => <CartItem key={item.id} item={item} />)
             )}
