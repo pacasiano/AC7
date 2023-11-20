@@ -200,6 +200,54 @@ export default function Settings() {
         })
     }
 
+
+    const [newAddressName, setNewAddressName] = useState('')
+    function newAddressNameHandler(event) {
+        setNewAddressName(event.target.value)
+    }
+
+    const [newAddressBarangay, setNewAddressBarangay] = useState('')
+    function newAddressBarangayHandler(event) {
+        setNewAddressBarangay(event.target.value)
+    }
+
+    const [newAddressStreet, setNewAddressStreet] = useState('')
+    function newAddressStreetHandler(event) {
+        setNewAddressStreet(event.target.value)
+    }
+
+    const [newAddressProvince, setNewAddressProvince] = useState('')
+    function newAddressProvinceHandler(event) {
+        setNewAddressProvince(event.target.value)
+    }
+
+    const [newAddressCity, setNewAddressCity] = useState('')
+    function newAddressCityHandler(event) {
+        setNewAddressCity(event.target.value)
+    }
+
+    const [newAddressZipCode, setNewAddressZipCode] = useState('')
+    function newAddressZipCodeHandler(event) {
+        setNewAddressZipCode(event.target.value)
+    }
+
+    function submitNewAddressForm() {
+        fetch(`/api/address/${accountId}`, {
+            method: "POST",
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: newAddressName,
+                barangay: newAddressBarangay,
+                street: newAddressStreet,
+                province: newAddressProvince,
+                city: newAddressCity,
+                zip_code: newAddressZipCode
+            })
+        })        
+    }
+
     // should be true when password or username is incorrect
   const [incorrect, setIncorrect] = useState(false);
   
@@ -339,30 +387,30 @@ export default function Settings() {
 
                     {/* ito yung form to add a new address */}
                     {isAdd && (
-                        <form action={`/api/address/${accountId}`} method="POST" className="bg-gray-100 flex flex-row border-t-2 justify-evenly p-5 gap-5 text-sm">
+                        <form onSubmit={submitNewAddressForm} className="bg-gray-100 flex flex-row border-t-2 justify-evenly p-5 gap-5 text-sm">
                             <div className="flex flex-col">
                                 <span for="name" className="flex justify-start font-bold">Name</span>
-                                <input id="name" name="name" className="w-full  pl-1 rounded-md " maxlength={25}></input>
+                                <input id="name" onChange={newAddressNameHandler} className="w-full  pl-1 rounded-md " maxLength={25}></input>
                             </div>
                             <div className="flex flex-col">
                                 <span for="barangay" className="flex justify-start font-bold">Barangay</span>
-                                <input id="barangay" name="barangay" className="w-full  pl-1 rounded-md " maxlength={25}></input>
+                                <input id="barangay" onChange={newAddressBarangayHandler} className="w-full  pl-1 rounded-md " maxLength={25}></input>
                             </div>
                             <div className="flex flex-col">
                                 <span for="street" className="flex justify-start font-bold">Street</span>
-                                <input id="street" name="street" className="w-full  pl-1 rounded-md " maxlength={25}></input>
+                                <input id="street" onChange={newAddressStreetHandler} className="w-full  pl-1 rounded-md " maxLength={25}></input>
                             </div>
                             <div className="flex flex-col">
                                 <span for="province" className="flex justify-start font-bold">Province</span>
-                                <input id="province" name="province" className="w-full  pl-1 rounded-md " maxlength={25}></input>
+                                <input id="province" onChange={newAddressProvinceHandler} className="w-full  pl-1 rounded-md " maxLength={25}></input>
                             </div>
                             <div className="flex flex-col">
                                 <span for="city" className="flex justify-start font-bold">City</span>
-                                <input id="city" name="city" className="w-full  pl-1 rounded-md " maxlength={25}></input>
+                                <input id="city" onChange={newAddressCityHandler} className="w-full  pl-1 rounded-md " maxLength={25}></input>
                             </div>
                             <div className="flex flex-col">
                                 <span for="zipcode" className="flex justify-start font-bold">Zip-Code</span>
-                                <input id="zipcode" name="zip_code" className="w-full  pl-1 rounded-md "></input>
+                                <input id="zipcode" onChange={newAddressZipCodeHandler} className="w-full  pl-1 rounded-md "></input>
                             </div>
                             <button className={`${incorrect && "animate-wiggle"} w-24 text-white h-full bg-green-500 px-2 py-1 font-bold rounded-md `}>Add</button>
                         </form>

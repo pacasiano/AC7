@@ -17,6 +17,29 @@ function Landing() {
     return () => clearTimeout(timeoutId);
   }, [incorrect]);
 
+  const [username, setUsername] = useState('');
+  function usernameHandler(event) {
+    setUsername(event.target.value)
+  }
+
+  const [password, setPassword] = useState('');
+  function passwordHandler(event) {
+    setPassword(event.target.value)
+  }
+
+  function submitForm() {
+    fetch('/api/login', {
+      method: "POST",
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: username,
+        password: password
+      })
+    })
+  }
+
 
   return (
     <section className="bg-gray-50 w-full h-full">
@@ -36,7 +59,7 @@ function Landing() {
             <h1 className="flex justify-center text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl ">
               Login to Account
             </h1>
-            <form className="space-y-6" action="/api/login" method="POST">
+            <form className="space-y-6" onSubmit={submitForm}>
             <div className="absolute translate-x-[75px] -translate-y-3">
             {incorrect && <div className="text-red-500 font-semibold text-center animate-bounce2">Invalid username or password!</div>}
             </div>
@@ -44,7 +67,7 @@ function Landing() {
                 <label for="username" className="block mb-2 text-sm font-medium text-gray-900">Your username</label>
                 <input
                   type="text"
-                  name="username"
+                  onChange={usernameHandler}
                   id="username"
                   className={`bg-gray-50 border ${incorrect ? 'border-red-500' : 'border-gray-900'} sm:text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5`}
                   placeholder="Enter username"
@@ -52,12 +75,8 @@ function Landing() {
                 />
               </div>
               <div className="">
-                <label for="password"
-                  className="block mb-2 text-sm font-medium text-gray-900"
-                >
-                  Password
-                </label>
-                <input type="password" name="password" id="password" placeholder="••••••••"
+                <label for="password" className="block mb-2 text-sm font-medium text-gray-900">Password</label>
+                <input type="password" onChange={passwordHandler} id="password" placeholder="••••••••"
                   className={`bg-gray-50 border ${incorrect ? 'border-red-500' : 'border-gray-900'} sm:text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5`}
                   required=""
                 />

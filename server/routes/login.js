@@ -5,6 +5,7 @@ const router = express.Router();
 const cookieParser = require('cookie-parser');
 
 app.use(cookieParser());
+router.use(express.json())
 
 const mysql = require('mysql2');
 let connection = mysql.createConnection({
@@ -19,6 +20,7 @@ router.post('/', (req, res) => {
     const {username, password} = req.body;
     try {
         console.log('Receieved username: ' + username)
+        console.log('Receieved password: ' + password)
     }
     catch (err) {
         // res.json("Incorrect")
@@ -26,8 +28,11 @@ router.post('/', (req, res) => {
     }
 
     let q = `SELECT account_id, username, password, account_type FROM account WHERE username = '${username}'`;
-    connection.query(q, function(error, results, fields) {
-        if (error) throw error;
+    connection.query(q, function(err, results) {
+        if (err) { 
+            console.error(err)
+            res.json({message: 'Invalid username or password'})
+        };
         //results is an array of objects, results[0] assumes that we want the first row which should be valid if username is unique
         if (results.length > 0) { //at least 1 row is returned from the query (username exists)
             try {

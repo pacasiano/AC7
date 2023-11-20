@@ -3,6 +3,8 @@ const app = express();
 const mysql = require('mysql2');
 const router = express.Router();
 
+router.use(express.json())
+
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -10,7 +12,6 @@ const connection = mysql.createConnection({
     database: 'ac7_database'
 })
 
-// /:id here is for the account_id
 router.post('/:id', (req, res) => {
     //Address table needs all the properties below + customer_id
     const {id: account_id} = req.params;
@@ -20,6 +21,7 @@ router.post('/:id', (req, res) => {
     connection.query(q, (err, results) => {
         if (err) {
             console.error(err)
+            res.json( {Error: err.message} )
         }
         else {
             res.redirect("http://localhost:3000/AC7/user/profile")
