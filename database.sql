@@ -37,10 +37,10 @@ CREATE TABLE IF NOT EXISTS address (
     address_id BIGINT UNSIGNED AUTO_INCREMENT,
     customer_id BIGINT UNSIGNED NOT NULL,
     name VARCHAR(25) NOT NULL DEFAULT 'Address 1',
-    city VARCHAR(255) NOT NULL,
+    city VARCHAR(25) NOT NULL,
     zip_code CHAR(4) NOT NULL,
-    barangay VARCHAR(255) NOT NULL,
-    province VARCHAR(255) NOT NULL,
+    barangay VARCHAR(25) NOT NULL,
+    province VARCHAR(25) NOT NULL,
     street VARCHAR(255) NOT NULL,
     PRIMARY KEY (address_id),
     FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
