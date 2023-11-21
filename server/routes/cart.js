@@ -75,7 +75,7 @@ router.post('/:a_id/:p_id', (req, res) => {
         }
     })
 
-    res.redirect('http://localhost:3000/AC7/cart')
+    res.redirect('/AC7/cart')
 
 })
 

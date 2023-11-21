@@ -17,7 +17,7 @@ const connection = mysql.createConnection({
 router.get('/', (req, res) => {
     const q = 'SELECT * FROM customer';
     connection.query(q, function(error, results, fields) {
-        if (error) {console.error(err)}
+        if (error) {console.error(error)}
         else {
             res.json(results); //returns an array of obj literals in JSON format, each obj literal is a row from users table
         }
@@ -54,7 +54,7 @@ router.post('/', (req, res) => {
         } 
         else {
             console.log('Step 2.2: Address entry successfully created')
-            res.redirect('http://localhost:3000/AC7/login')
+            res.redirect('/AC7/login')
         }
     })
 })

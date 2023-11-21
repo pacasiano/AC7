@@ -57,7 +57,7 @@ router.post('/', (req, res) => {
                 }
             })
         }
-        res.redirect('http://localhost:3000/AC7/inventory-in/confirmation');
+        res.redirect('/AC7/inventory-in/confirmation');
     }
     else {
         connection.query(q2, (err, results) => {
@@ -74,7 +74,7 @@ router.post('/', (req, res) => {
                         console.error(err)
                     }
                 })
-                res.redirect('http://localhost:3000/AC7/inventory-in/confirmation');
+                res.redirect('/AC7/inventory-in/confirmation');
             }
         })
     }

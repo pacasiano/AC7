@@ -67,7 +67,7 @@ router.post('/', (req, res) => {
         }
     }
 
-    res.redirect('http://localhost:3000/AC7/inventory-out/confirmation');
+    res.redirect('/AC7/inventory-out/confirmation');
 })
 
 module.exports = router;

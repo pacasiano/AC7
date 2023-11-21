@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { myContext } from "../context/adminContext";
 import "../App.css";
 import Select from "react-select";
+import { IoWarning } from "react-icons/io5";
 
 export default function Inventory() {
   const [addItem, showAddItem] = useState(false);
@@ -84,14 +85,14 @@ export default function Inventory() {
               </thead>
               <tbody>
                 {filteredProducts.map((product) => (
-                  <tr className="bg-gray-300" key={product.product_id}>
+                  <tr className={`${product.quantity <= product.threshold ? "bg-gray-300" : "bg-gray-300"} h-12`} key={product.product_id}>
                     <td className="text-sm font-semibold border p-2">{product.product_id}</td>
                     <td className="text-sm font-semibold border p-2">{product.name}</td>
                     <td className="text-sm font-semibold border p-2">{product.description}</td>
                     <td className="text-sm font-semibold border p-2">{product.category}</td>
                     <td className="text-sm font-semibold border p-2">&#x20B1;{product.price}</td>
                     <td className="text-sm font-semibold border p-2">{product.threshold}</td>
-                    <td className="text-sm font-semibold border p-2">{product.quantity}</td>
+                    <td className={`${product.quantity <= product.threshold && "text-orange-500"} font-semibold text-sm  border p-2`}><div className="flex flex-row items-center gap-1">{product.quantity} {product.quantity <= product.threshold ? <IoWarning className="text-2xl font-bold" /> : ""}</div></td>
                   </tr>
                 ))}
               </tbody>

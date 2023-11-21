@@ -71,7 +71,7 @@ router.post('/', (req, res) => {
                                         `WHERE sale.account_id = ${account_id} AND product_id = ${product_id}`;
                     connection.query(updateQtyQuery, function(err, results) {
                         console.log("Add to cart: Sale_item quantity successfully updated!")
-                        res.redirect('http://localhost:3000/AC7/cart');
+                        res.redirect('/AC7/cart');
                     })
                 })
             }
@@ -89,7 +89,7 @@ router.post('/', (req, res) => {
                     }
             
                     console.log("Add to cart: Query 4 successful", results);
-                    res.redirect('http://localhost:3000/AC7/cart');
+                    res.redirect('/AC7/cart');
                 });
             }
         }) 

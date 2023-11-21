@@ -44,10 +44,10 @@ router.post('/', (req, res) => {
                     expirationDate.setDate(expirationDate.getDate() + 30); //set the date to the current time when user logs in then add 30 days to it
                     res.cookie('account_id', `${account_id}`, {expires: expirationDate}) //cookie expires in 30 days
                     if (account_type === 'customer') {
-                        res.redirect('http://localhost:3000/AC7/');
+                        res.redirect('/AC7/');
                     }
                     else {
-                        res.redirect('http://localhost:3000/AC7/');
+                        res.redirect('/AC7/');
                     }
                 }else {
                     res.send("Incorrect password!")
