@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import Item1 from "../imgs/Item1.png";
 
 function CartItem({item}) {
@@ -25,6 +25,22 @@ function CartItem({item}) {
         return id;
     }
   }
+
+  const [product, setProduct] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/product')
+      .then((res) => res.json())
+      .then((e) => {
+        const k = e.filter(product => product.product_id === product_id);
+      // Update the state with the filtered products
+      setProduct(k);
+      // console.log(k)
+      });
+  }, []);
+
+  const {quantity: stockQuantity} = product[0] || {};
+
   const accountId = getAcctIdFromCookie(cookie);
     
     const {name, price, quantity, product_id} = item;
@@ -111,7 +127,7 @@ function CartItem({item}) {
                     <div className="flex justify-center m-0 pt-2 text-xl font-light ">
                       {hookQty}
                     </div>
-                  <button onClick={() => {incrementQuantity(); setQtyAction('increment')}} className="flex justify-center m-0 mt-1 p-1 text-xl hover:font-extrabold ">
+                  <button disabled={hookQty >= stockQuantity} onClick={() => {incrementQuantity(); setQtyAction('increment')}} className="flex justify-center m-0 mt-1 p-1 text-xl hover:font-extrabold ">
                       +
                   </button>
                   <input value={qtyAction} name="action" className="hidden"></input>

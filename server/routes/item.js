@@ -115,7 +115,7 @@ router.post('/:id', (req, res) => {
             ` WHERE account_id = ${account_id} AND product_id = ${product_id}`;
     connection.query(q, (err, results) => {
         console.log(`Successfully deleted item with id ${product_id} from account with id ${account_id}`)
-        res.redirect('http://localhost:3000/AC7/cart');
+        res.redirect('/AC7/cart');
     });
 })
 

@@ -65,7 +65,7 @@ const [buttonError, setButtonError] = useState(false);
                                     {/* contact information */}
                                     <div>
                                         <label for="contactInfo" className="block mb-2 text-sm font-medium text-gray-900">Contact Information</label>
-                                        <input type="text" name="contact_info" id="contactInfo" placeholder="Contact Information" className="bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5" />
+                                        <input type="text" maxlength={11} name="contact_info" id="contactInfo" placeholder="Contact Information" className="bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5" />
                                     </div>
                                 </div>
                             </div>
@@ -82,35 +82,35 @@ const [buttonError, setButtonError] = useState(false);
                                             {/* Address Name */}
                                             <div>
                                                 <label for="addressName" className="block mb-2 text-sm font-medium text-gray-900">Address Name</label>
-                                                <input type="text" name="address_name" id="addressName" className="bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5" placeholder="Address Name" />
+                                                <input maxlength={25} type="text" name="address_name" id="addressName" className="bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5" placeholder="Address Name" />
                                             </div>
                                             {/* Street */}
                                             <div>
                                                 <label for="street" className="block mb-2 text-sm font-medium text-gray-900">Street</label>
-                                                <input type="text" name="street" id="street" placeholder="Street" className="bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5" />
+                                                <input maxlength={25} type="text" name="street" id="street" placeholder="Street" className="bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5" />
                                             </div>
                                             {/* Barangay */}
                                             <div>
                                                 <label for="barangay" className="block mb-2 text-sm font-medium text-gray-900">Barangay</label>
-                                                <input type="text" name="barangay" id="barangay" placeholder="Barangay" className="bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5" />
+                                                <input maxlength={25} type="text" name="barangay" id="barangay" placeholder="Barangay" className="bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5" />
                                             </div>
                                         </div>
                                         <div className="flex flex-col gap-4 w-1/2">
                                             {/* Province */}
                                             <div>
                                                 <label for="province" className="block mb-2 text-sm font-medium text-gray-900">Province</label>
-                                                <input type="text" name="province" id="province" className="bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5" placeholder="Province" />
+                                                <input maxlength={25} type="text" name="province" id="province" className="bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5" placeholder="Province" />
                                             </div>
                                             
                                             {/* City */}
                                             <div>
                                                 <label for="city" className="block mb-2 text-sm font-medium text-gray-900">City</label>
-                                                <input type="text" name="city" id="city" className="bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5" placeholder="City" />
+                                                <input maxlength={25} type="text" name="city" id="city" className="bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5" placeholder="City" />
                                             </div>
                                             {/* Zip-code */}
                                             <div>
                                                 <label for="zipCode" className="block mb-2 text-sm font-medium text-gray-900">Zip-code</label>
-                                                <input type="text" name="zip_code" id="zipCode" maxLength="4" className="bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5" placeholder="Zip Code" />
+                                                <input maxlength={5} type="text" name="zip_code" id="zipCode" maxLength="4" className="bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5" placeholder="Zip Code" />
                                             </div>
                                         </div>
                                     </div>
