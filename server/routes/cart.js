@@ -34,33 +34,32 @@ router.get('/:id', (req, res) => {
 });
 
 //Update quantity when incremented or decremented in cart
-router.post('/:a_id/:p_id', (req, res) => {
-    const {a_id: account_id, p_id: product_id} = req.params;
-    const {action} = req.body;
-    let sign = '-';
+router.post('/:id', (req, res) => {
+    const {id: account_id} = req.params;
+    const {product_id, quantity} = req.body;
     
-    if (action === 'increment') {
-        sign = '+';
-    }
-    else if (action === 'decrement') {
-        sign = '-';
-    }
-
-
-    const q1 = `UPDATE sale_item INNER JOIN sale USING (sale_id) SET quantity = quantity ${sign} 1 ` +
+    console.log('Updating database for cart quantity...')
+    console.log(req.body)
+    
+    const q1 = `UPDATE sale_item INNER JOIN sale USING (sale_id) SET quantity = ${quantity} ` +
                 `WHERE account_id = ${account_id} ` +
                 `AND sale_status = 'in progress' ` +
                 `AND product_id = ${product_id}`;
     connection.query(q1, (err, results) => {
-        if (err) { console.error(err) }
-        else { console.log(`${sign} for product with ID of ${product_id} is successful!`) }
+        if (err) {
+            console.error(err)
+            res.json({error: err.message});
+        }
     })
 
     //Check if the sale_item associated with the product_id has a quantity of 0
     const q2 = `SELECT quantity FROM sale_item INNER JOIN sale USING (sale_id) ` + 
                 `WHERE account_id = ${account_id} AND sale_status = 'in progress' AND product_id = ${product_id}`;
     connection.query(q2, (err, results) => {
-        if (err) { console.error(err) }
+        if (err) {
+            console.error(err)
+            res.json({error: err.message})
+        }
         else {
             const {quantity} = results[0];
             
@@ -69,13 +68,16 @@ router.post('/:a_id/:p_id', (req, res) => {
                 const q3 = 'DELETE sale_item FROM sale_item INNER JOIN sale USING (sale_id)' +
                 ` WHERE account_id = ${account_id} AND product_id = ${product_id}`;
                 connection.query(q3, (err, results) => {
-                    if (err) { console.error(err) } 
+                    if (err) {
+                        console.error(err)
+                        res.json({error: err.message})
+                    }
                 })
             }
         }
     })
 
-    res.redirect('/AC7/cart')
+    res.json( {message: "Cart quantity successfully updated"} )
 
 })
 
