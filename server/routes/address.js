@@ -24,7 +24,7 @@ router.post('/:id', (req, res) => {
             res.json( {Error: err.message} )
         }
         else {
-            res.redirect("/AC7/user/profile")
+            res.json("success")
         }
     });
 })

@@ -16,53 +16,36 @@ let connection = mysql.createConnection({
 });
 
 router.post('/', (req, res) => {
-    console.log(req.body)
-    const {username, password} = req.body;
-    try {
-        console.log('Receieved username: ' + username)
-        console.log('Receieved password: ' + password)
-    }
-    catch (err) {
-        // res.json("Incorrect")
-        console.log(err)
-    }
+    const { username, password } = req.body;
 
-    let q = `SELECT account_id, username, password, account_type FROM account WHERE username = '${username}'`;
-    connection.query(q, function(err, results) {
-        if (err) { 
-            console.error(err)
-            res.json({message: 'Invalid username or password'})
-        };
-        //results is an array of objects, results[0] assumes that we want the first row which should be valid if username is unique
-        if (results.length > 0) { //at least 1 row is returned from the query (username exists)
+    let q = `SELECT account_id, username, password FROM account WHERE username = '${username}'`;
+    connection.query(q, function (err, results) {
+        if (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Internal server error' });
+            return;
+        }
+
+        if (results.length > 0) {
             try {
-                const {account_id, username: dbUsername, password: dbPassword, account_type} = results[0]; //need to add some error handling
-                console.log("DB user: " + dbUsername);
-                console.log("DB pw: " + dbPassword);
+                const { account_id, password: dbPassword } = results[0];
                 if (password === dbPassword) {
-                    const expirationDate = new Date(); //create a new date
-                    expirationDate.setDate(expirationDate.getDate() + 30); //set the date to the current time when user logs in then add 30 days to it
-                    res.cookie('account_id', `${account_id}`, {expires: expirationDate}) //cookie expires in 30 days
-                    if (account_type === 'customer') {
-                        res.redirect('/AC7/');
-                    }
-                    else {
-                        res.redirect('/AC7/');
-                    }
-                }else {
-                    res.send("Incorrect password!")
+                    const expirationDate = new Date();
+                    expirationDate.setDate(expirationDate.getDate() + 30);
+                    res.cookie('account_id', `${account_id}`, { expires: expirationDate });
+                    res.json({ message: 'Correct' });
+                } else {
+                    res.json({ message: 'Incorrect' });
                 }
+            } catch (err) {
+                console.error(err);
+                res.status(500).json({ message: 'Internal server error' });
             }
-            catch (err) {
-                console.log(err);
-            }
+        } else {
+            res.json({ message: 'User not found' });
         }
-        else {
-            res.send("Username doesn't exist!")
-        }
-        // res.json(results); //returns an array of obj literals in JSON format, each obj literal is a row from users table
-        // connection.end()
     });
 });
+
 
 module.exports = router;

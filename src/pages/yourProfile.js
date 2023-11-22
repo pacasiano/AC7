@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { set } from "react-hook-form";
 
 export default function Settings() {
 
@@ -55,14 +56,16 @@ export default function Settings() {
     const accountId = getAcctIdFromCookie(cookie);
 
     const [userData, setUserData] = useState([]);
+    const [reloadData, setReloadData] = useState(false);
 
     useEffect(() => {
         fetch(`/api/profile/${accountId}`)
         .then((res) => res.json())
         .then((userData) => {
             setUserData(userData);
+            console.log(userData);
         });
-    }, []);
+    }, [accountId, reloadData]);
 
     //the userData[0] || {} syntax ensures that we only destructure once userData contains some data returned by fetch
     //if it is still undefined (fetch has not returned anything), it will default to an empty object - this prevents errors related to undefined values
@@ -70,19 +73,17 @@ export default function Settings() {
 
     const [addresses, setAddresses] = useState([]);
     const [addSuccess, setAddSuccess] = useState(false);
+    const [deleteSuccess, setDeleteSuccess] = useState(false);
+    const [reloadAddData, setReloadAddData] = useState(false);
 
     useEffect(() => {
         fetch(`/api/address/${accountId}`)
         .then((res) => res.json())
         .then((address) => {
             setAddresses(address);
-            // setAddSuccess(true);
+            
         });
-    }, []);
-
-    setTimeout(() => {
-        setAddSuccess(false);
-    }, 5000);
+    }, [accountId, reloadAddData]);
 
     //when save is clicked, it should also send a get request to check if the username already exists
 
@@ -111,7 +112,11 @@ export default function Settings() {
         setEdit_password(event.target.value ? event.target.value : password)
     }
 
-    function editAccountInfo() {
+    function editAccountInfo(e) {
+        e.preventDefault();
+
+
+        if(edit_email !== email || edit_username !== username || edit_password !== password) {
         fetch(`/api/account/${accountId}`, {
             method: 'PATCH',
             headers: {
@@ -128,9 +133,14 @@ export default function Settings() {
             setEditAccInfo(false);
             setSuccessAccInfo(true);
             console.log(data)
+            setReloadData((prev) => !prev);
         })
         .catch(err => console.error(err))
+    }else {
+        setEditAccInfo(false);
     }
+
+}
 
     
     //useStates, useEffects, and eventHandlers for editting personal information
@@ -167,7 +177,10 @@ export default function Settings() {
         setEdit_contactNo(event.target.value ? event.target.value : contact_info)
     }
 
-    function editPersonalInfo() {
+    function editPersonalInfo(e) {
+        e.preventDefault();
+
+        if(edit_first_name !== first_name || edit_last_name !== last_name || edit_middle_name !== middle_name || edit_contactNo !== contact_info) {
         fetch(`/api/customer/${accountId}`, {
             method: 'PATCH',
             headers: {
@@ -185,8 +198,12 @@ export default function Settings() {
             console.log(data)
             setEditPersonalInfo(false);
             setSuccessPersonalInfo(true);
+            setReloadData((prev) => !prev);
         })
         .catch(err => console.error(err))
+        }else {
+            setEditPersonalInfo(false);
+        }
     }
 
     function deleteAddress(address_id) {
@@ -196,7 +213,12 @@ export default function Settings() {
         .then(res => res.json())
         .then(data => {
             console.log(data);
-            window.location.reload();
+            setReloadAddData((prev) => !prev);
+            setAddSuccess(false);
+            setDeleteSuccess(true);
+            setTimeout(() => {
+                setDeleteSuccess(false);
+            }, 3000);
         })
     }
 
@@ -231,7 +253,9 @@ export default function Settings() {
         setNewAddressZipCode(event.target.value)
     }
 
-    function submitNewAddressForm() {
+    function submitNewAddressForm(e) {
+        e.preventDefault();
+
         fetch(`/api/address/${accountId}`, {
             method: "POST",
             headers: {
@@ -245,7 +269,21 @@ export default function Settings() {
                 city: newAddressCity,
                 zip_code: newAddressZipCode
             })
-        })        
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            console.log(data);
+            setReloadAddData((prev) => !prev);
+            setAdd(false);
+            setDeleteSuccess(false);
+            setAddSuccess(true);
+            setTimeout(() => {
+                setAddSuccess(false);
+            }, 3000);
+        })
+        .catch((error) => {
+            console.error('Error adding new address:', error);
+        }); 
     }
 
     // should be true when password or username is incorrect
@@ -302,15 +340,15 @@ export default function Settings() {
                     <div className="flex flex-col gap-3 pb-3">
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Email</span>
-                        <input onChange={handleEditEmail} name="email" className="rounded-sm w-full"/>
+                        <input placeholder={email} onChange={handleEditEmail} name="email" className="rounded-sm w-full pl-1"/>
                         </label> 
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Username</span>
-                        <input onChange={handleEditUsername} name="username" className="rounded-sm w-full"/>
+                        <input placeholder={username} onChange={handleEditUsername} name="username" className="rounded-sm w-full pl-1"/>
                         </label> 
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Password</span>
-                        <input onChange={handleEditPassword} name="password" className="rounded-sm w-full"/>
+                        <input placeholder={password} onChange={handleEditPassword} name="password" className="rounded-sm w-full pl-1"/>
                         </label>
                     </div>
                     </>
@@ -357,19 +395,19 @@ export default function Settings() {
                     <div className="flex flex-col gap-3">
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">First name</span>
-                        <input onChange={handleEditFirstName} name="firstname" className="rounded-sm w-full"/>
+                        <input placeholder={first_name} onChange={handleEditFirstName} name="firstname" className="rounded-sm w-full pl-1"/>
                         </label> 
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Middle name</span>
-                        <input onChange={handleEditMiddleName} name="middlename" className="rounded-sm w-full"/>
+                        <input placeholder={middle_name} onChange={handleEditMiddleName} name="middlename" className="rounded-sm w-full pl-1"/>
                         </label> 
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Last name</span>
-                        <input onChange={handleEditLastName} name="lastname" className="rounded-sm w-full"/>
+                        <input placeholder={last_name} onChange={handleEditLastName} name="lastname" className="rounded-sm w-full pl-1"/>
                         </label>
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Contact number</span>
-                        <input onChange={handleEditContactNo} name="contactnumber" className="rounded-sm w-full"/>
+                        <input placeholder={contact_info} onChange={handleEditContactNo} name="contactnumber" className="rounded-sm w-full pl-1"/>
                         </label>
                     </div>
                     </>
@@ -382,6 +420,7 @@ export default function Settings() {
                     <div className="bg-gray-100 p-5 flex flex-row justify-between">
                         <div className="text-2xl font-bold">Address</div>
                         {addSuccess && <div className="text-xl pt-1 font-bold text-green-600">Address Successfully Added!</div>}
+                        {deleteSuccess && <div className="text-xl pt-1 font-bold text-green-600">Address Successfully Deleted!</div>}
                         <button onClick={toggleAdd} className="text-sm w-32 font-bold px-2 pt-1 bg-gray-800 text-white rounded-md">{isAdd ? 'Cancel' : 'Add Address'}</button>
                     </div>
 
