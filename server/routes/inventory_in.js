@@ -13,7 +13,7 @@ const connection = mysql.createConnection({
 router.post('/', (req, res) => {
     //need to insert into 2 tables: inventory_in && inventory_in_item
     //need to create a row in inventory_in_item for each product_id
-    //need to update the quantity of the products if stock in was successful
+    //whatever you insert into inventory_in_item, also insert that into stock table
     console.log('STOCK IN')
     console.log(req.body)
     const {supplier_name, payment_amount, product_name, price, quantity: stock_in_qty} = req.body; //all of these values must be required
@@ -45,39 +45,63 @@ router.post('/', (req, res) => {
                 if (err) {
                     console.error(err)
                 }
-                else {
-                    console.log('Successfully inserted into inventory_in_item table');
-                    //Query 3: Update the quantity of the products that are included in the stock in
-                    let q3 = `UPDATE product SET quantity = quantity + ${stock_in_qty[i]} WHERE name = '${product_name[i]}'`
-                    connection.query(q3, (err, results) => {
-                        if(err) {
-                            console.error(err)
-                        }
-                    })
-                }
             })
         }
-        res.redirect('/AC7/inventory-in/confirmation');
     }
     else {
         connection.query(q2, (err, results) => {
             if (err) {
                 console.error(err)
             }
-            else {
-                console.log('Successfully inserted into inventory_in_item table')
-                //Query 3: Update the quantity of the products that are included in the stock in
-
-                let q3 = `UPDATE product SET quantity = quantity + ${stock_in_qty} WHERE name = '${product_name}'`
-                connection.query(q3, (err, results) => {
-                    if(err) {
-                        console.error(err)
-                    }
-                })
-                res.redirect('/AC7/inventory-in/confirmation');
-            }
         })
     }
+
+    //Query 3: Get the latest batch_no of a product
+    const q3 = `SELECT MAX(batch_no) AS max_batch_no FROM stock WHERE product_id = (SELECT product_id FROM product WHERE name = '${product_name}')`;
+    connection.query(q3, (err, results) => {
+        if (err) {
+            console.error(err)
+            res.json({message: err.message})
+        }
+
+        const {max_batch_no} = results[0];
+        let batch_no;
+        if (max_batch_no === null) {
+            batch_no = 1;
+        }
+        else {
+            batch_no = max_batch_no + 1;
+        }
+
+        //Query 4: Insert the same data that was inserted to inventory_in_item to stock table
+        let q4 = `INSERT INTO stock SET batch_no = ${batch_no}, product_id = (SELECT product_id FROM product WHERE name = '${product_name}'), ` +
+                    `quantity = ${stock_in_qty}, price = ${price}`;
+        if (Array.isArray(product_name)) {
+            for(let i = 0; i < product_name.length; i++) {
+                q4 = `INSERT INTO stock SET batch_no = ${batch_no}, product_id = (SELECT product_id FROM product WHERE name = '${product_name[i]}'), ` +
+                    `quantity = ${stock_in_qty[i]}, price = ${price[i]}`;
+                connection.query(q4, (err, results) => {
+                    if (err) {
+                        console.error(err)
+                        res.json({message: err.message})
+                    }
+                })
+            }
+            res.redirect('/AC7/inventory-in/confirmation');
+        }
+        else {
+            connection.query(q4, (err, results) => {
+                if (err) {
+                    console.error(err)
+                    res.json({message: err.message})
+                }
+                res.redirect('/AC7/inventory-in/confirmation');
+            })
+        }
+        
+    })
 })
+
+
 
 module.exports = router;

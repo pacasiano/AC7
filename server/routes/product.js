@@ -12,17 +12,21 @@ let connection = mysql.createConnection({
 
 router.get('/', (req, res) => {
     
-    let q = 'SELECT product_id, name, description, price, category, threshold, quantity FROM product';
-    connection.query(q, function(error, results, fields) {
-        if (error) throw error;
-        // console.log(results);
-        // console.log(JSON.stringify(results));
+    const q = 'SELECT product_id, name, description, category, threshold, SUM(quantity) AS quantity FROM product ' +
+            'LEFT JOIN stock USING (product_id) ' +
+            'GROUP BY product_id, threshold';
+    connection.query(q, function(err, results, fields) {
+        if (err) {
+            console.error(err); 
+            res.json({message: err.message});
+        }
+
         res.json(results); //returns an array of obj literals in JSON format, each obj literal is a row from the query
-        // connection.end();
     });
 
 });
 
+//Add new product
 router.post('/', (req, res) => {
     const {product_name, description, price, category, threshold} = req.body;
     console.log('Adding new product...')

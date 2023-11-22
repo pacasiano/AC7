@@ -78,7 +78,6 @@ export default function Inventory() {
                   <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Name</th>
                   <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Description</th>
                   <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Category</th>
-                  <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Price</th>
                   <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Threshold</th>
                   <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Quantity</th>
                 </tr>
@@ -90,7 +89,6 @@ export default function Inventory() {
                     <td className="text-sm font-semibold border p-2">{product.name}</td>
                     <td className="text-sm font-semibold border p-2">{product.description}</td>
                     <td className="text-sm font-semibold border p-2">{product.category}</td>
-                    <td className="text-sm font-semibold border p-2">&#x20B1;{product.price}</td>
                     <td className="text-sm font-semibold border p-2">{product.threshold}</td>
                     <td className={`${product.quantity <= product.threshold && "text-orange-500"} font-semibold text-sm  border p-2`}><div className="flex flex-row items-center gap-1">{product.quantity} {product.quantity <= product.threshold ? <IoWarning className="text-2xl font-bold" /> : ""}</div></td>
                   </tr>

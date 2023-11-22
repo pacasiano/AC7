@@ -99,11 +99,18 @@ CREATE TABLE IF NOT EXISTS product (
     product_id BIGINT UNSIGNED AUTO_INCREMENT,
     name VARCHAR(128) NOT NULL,
     description VARCHAR(128) NOT NULL,
-    price DECIMAL(10,2) NOT NULL,
     category VARCHAR(128) NOT NULL,
     threshold INT UNSIGNED NOT NULL,
-    quantity INT UNSIGNED NOT NULL,
     PRIMARY KEY (product_id)
+);
+
+CREATE TABLE IF NOT EXISTS stock (
+    batch_no BIGINT UNSIGNED NOT NULL DEFAULT 1,
+    product_id BIGINT UNSIGNED NOT NULL,
+    quantity INT UNSIGNED NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
 
 CREATE TABLE IF NOT EXISTS inventory_out (
@@ -133,14 +140,15 @@ CREATE TABLE IF NOT EXISTS inventory_in_item (
     FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
 
+-- No need na price history, pwede na ata imerge with stock table?
 -- stores the price history of a product
 -- query using the date and product_id (latest, etc.)
-CREATE TABLE IF NOT EXISTS price (
-    product_id BIGINT UNSIGNED NOT NULL,
-    price DECIMAL(10, 2),
-    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (product_id) REFERENCES product(product_id)
-);
+-- CREATE TABLE IF NOT EXISTS price (
+--     product_id BIGINT UNSIGNED NOT NULL,
+--     price DECIMAL(10, 2),
+--     date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     FOREIGN KEY (product_id) REFERENCES product(product_id)
+-- );
 
 -- this is the order table, but 'order' is a reserved keyword
 /* A new sale entry (row) is immediately made for each account. 
@@ -234,11 +242,11 @@ VALUES(1, 'Secret Hideout', 'Gotham', '123', 'Barangay 10', 'NA', '26 street'),
 (4, 'Literally Hell', 'Azarath', '567', 'Barangay 10', 'NA', '26 street'),
 (5, 'My Sweet Home', 'Davao City', '8000', 'Barangay Buhangin', 'Davao', '24 Jump Street');
 
-INSERT INTO product(name, description, price, category, threshold, quantity)
+INSERT INTO product(name, description, category, threshold)
 VALUES
-('Whitening Body Lotion', 'Brightens and evens skin tone, leaving you with a luminous, radiant complexion', 100, 'Cosmetics', 20, 50),
-('Bleaching Whipped Cream', 'Experience opulence in skincare with Bleaching Whipped Cream, a decadent secret for a luminous, flawless glow', 150, 'Cosmetics', 20, 50),
-('Kojic Soap', 'Uncover the allure of radiant skin with Kojic Soap, a refined indulgence for complexion perfection', 50, 'Cosmetics', 20, 50);
+('Whitening Body Lotion', 'Brightens and evens skin tone, leaving you with a luminous, radiant complexion', 'Cosmetics', 20),
+('Bleaching Whipped Cream', 'Experience opulence in skincare with Bleaching Whipped Cream, a decadent secret for a luminous, flawless glow', 'Cosmetics', 20),
+('Kojic Soap', 'Uncover the allure of radiant skin with Kojic Soap, a refined indulgence for complexion perfection', 'Cosmetics', 20);
 
 INSERT INTO sale(account_id, sale_status)
 VALUES (1, 'in progress'),
@@ -256,3 +264,4 @@ VALUES (1, 1, 3, 36.33),
  INSERT INTO supplier(address_id, name, contact_info) VALUES (5, 'Taburnok Inc.', '8884700');
 
 -- sale table might not need address_id since it already has account_id and account is connected to address
+
