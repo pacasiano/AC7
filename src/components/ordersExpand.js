@@ -38,7 +38,7 @@ function Order({ order }) {
             {/* ito yung mag ulit */}
             <table className="w-full">
               <thead>
-                <tr className="">
+                <tr className="bg-slate-200">
                   <th className="text-sm font-semibold p-2 text-black w-1/3">Product Id</th>
                   <th className="text-sm font-semibold p-2 text-black w-1/3">Quantity</th>
                   <th className="text-sm font-semibold p-2 text-black w-1/3">Price</th>
@@ -47,9 +47,9 @@ function Order({ order }) {
               <tbody>
               {order_items.map((order_item) => (
                 <tr className="text-middle border-t border-white">
-                  <th className="text-sm font-semibold p-2 text-black">{order_item.product_id}</th>
-                  <th className="text-sm font-semibold p-2 text-black">{order_item.quantity}</th>
-                  <th className="text-sm font-semibold p-2 text-black">{order_item.price}</th>
+                  <th className="text-sm font-normal p-2 text-black">{order_item.product_id}</th>
+                  <th className="text-sm font-normal p-2 text-black">{order_item.quantity}</th>
+                  <th className="text-sm font-normal p-2 text-black">{order_item.price}</th>
                 </tr>
               ))}
               </tbody>

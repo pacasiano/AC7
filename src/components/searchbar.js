@@ -21,9 +21,6 @@ function Search() {
 }, []);
 
 const someDataArray = useMemo(() => [
-    { id: 1, name: 'Apple' },
-    { id: 2, name: 'Banane' },
-    { id: 3, name: 'Cherry' },
     // ...otherData
     ...products.map((product) => ({ id: product.id, name: product.name })),
 ], [products]);

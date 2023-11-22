@@ -7,15 +7,6 @@ function Landing() {
 
   // should be true when password or username is incorrect
   const [incorrect, setIncorrect] = useState(false);
-  
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setIncorrect(false);
-    }, 2000);
-
-    // Clear the timeout if component unmounts or if incorrect becomes false before the timeout
-    return () => clearTimeout(timeoutId);
-  }, [incorrect]);
 
   const [username, setUsername] = useState('');
   function usernameHandler(event) {
@@ -27,19 +18,46 @@ function Landing() {
     setPassword(event.target.value)
   }
 
-  function submitForm() {
-    fetch('/api/login', {
-      method: "POST",
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({
-        username: username,
-        password: password
-      })
-    })
-  }
+  function submitForm(e) {
+    e.preventDefault();
 
+    fetch('/api/login', {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+            username: username,
+            password: password,
+        }),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.message === "Correct") {
+                // Handle correct credentials
+                window.location.href = "/AC7/";
+                console.log("Login successful");
+            } else if (data.message === "Incorrect") {
+                // Handle incorrect credentials
+                console.log("Incorrect credentials");
+                setIncorrect(true);
+            } else if (data.message === "User not found") {
+                // Handle user not found
+                console.log("User not found");
+                setIncorrect(true); // You can modify this based on your requirements
+            } else {
+                // Handle other cases
+                console.log("Unknown error");
+            }
+        })
+        .catch((error) => {
+            console.error('Error during fetch:', error);
+        });
+
+    setTimeout(() => {
+        setIncorrect(false);
+    }, 4000);
+}
 
   return (
     <section className="bg-gray-50 w-full h-full">
