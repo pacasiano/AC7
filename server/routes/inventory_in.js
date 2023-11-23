@@ -26,7 +26,7 @@ router.post('/', (req, res) => {
             console.error(err)
         }
         else {
-            console.log('Successfully inserted to inventory_in table')
+            console.log('[Stock In] Query 1: Successful')
         }
     })
 
@@ -45,6 +45,9 @@ router.post('/', (req, res) => {
                 if (err) {
                     console.error(err)
                 }
+                else {
+                    console.log('[Stock In] Query 2: Successful')
+                }
             })
         }
     }
@@ -56,50 +59,72 @@ router.post('/', (req, res) => {
         })
     }
 
-    //Query 3: Get the latest batch_no of a product
-    const q3 = `SELECT MAX(batch_no) AS max_batch_no FROM stock WHERE product_id = (SELECT product_id FROM product WHERE name = '${product_name}')`;
-    connection.query(q3, (err, results) => {
-        if (err) {
-            console.error(err)
-            res.json({message: err.message})
-        }
-
-        const {max_batch_no} = results[0];
-        let batch_no;
-        if (max_batch_no === null) {
-            batch_no = 1;
-        }
-        else {
-            batch_no = max_batch_no + 1;
-        }
-
-        //Query 4: Insert the same data that was inserted to inventory_in_item to stock table
-        let q4 = `INSERT INTO stock SET batch_no = ${batch_no}, product_id = (SELECT product_id FROM product WHERE name = '${product_name}'), ` +
-                    `quantity = ${stock_in_qty}, price = ${price}`;
-        if (Array.isArray(product_name)) {
-            for(let i = 0; i < product_name.length; i++) {
-                q4 = `INSERT INTO stock SET batch_no = ${batch_no}, product_id = (SELECT product_id FROM product WHERE name = '${product_name[i]}'), ` +
-                    `quantity = ${stock_in_qty[i]}, price = ${price[i]}`;
+    //Query 3: Get the latest batch_no for each product
+    if (Array.isArray(product_name)) {
+        for (let i = 0; i < product_name.length; i++) {
+            const q3 = `SELECT MAX(batch_no) AS max_batch_no FROM stock WHERE product_id = (SELECT product_id FROM product WHERE name = '${product_name[i]}')`;
+            connection.query(q3, (err, results) => {
+                if (err) {
+                    console.error(err)
+                }
+                else {
+                    console.log('[Stock In] Query 3: Successful')
+                }
+        
+                const {max_batch_no} = results[0];
+                let batch_no;
+                if (max_batch_no === null) {
+                    batch_no = 1;
+                }
+                else {
+                    batch_no = max_batch_no + 1;
+                }
+        
+                //Query 4: Insert the same data that was inserted to inventory_in_item to stock table
+                const q4 = `INSERT INTO stock SET batch_no = ${batch_no}, product_id = (SELECT product_id FROM product WHERE name = '${product_name[i]}'), ` +
+                            `quantity = ${stock_in_qty[i]}, price = ${price[i]}`;
                 connection.query(q4, (err, results) => {
                     if (err) {
-                        console.error(err)
-                        res.json({message: err.message})
+                        console.error(err.message)
+                    }
+                    else {
+                        console.log('[Stock In] Query 4: Successful')
                     }
                 })
-            }
-            res.redirect('/AC7/inventory-in/confirmation');
+            })
         }
-        else {
+        res.redirect('/AC7/inventory-in/confirmation');
+    }
+    else {
+        const q3 = `SELECT MAX(batch_no) AS max_batch_no FROM stock WHERE product_id = (SELECT product_id FROM product WHERE name = '${product_name}')`;
+        connection.query(q3, (err, results) => {
+            if (err) {
+                console.error(err)
+                res.json({message: err.message})
+            }
+    
+            const {max_batch_no} = results[0];
+            let batch_no;
+            if (max_batch_no === null) {
+                batch_no = 1;
+            }
+            else {
+                batch_no = max_batch_no + 1;
+            }
+    
+            //Query 4: Insert the same data that was inserted to inventory_in_item to stock table
+            const q4 = `INSERT INTO stock SET batch_no = ${batch_no}, product_id = (SELECT product_id FROM product WHERE name = '${product_name}'), ` +
+                        `quantity = ${stock_in_qty}, price = ${price}`;
             connection.query(q4, (err, results) => {
                 if (err) {
                     console.error(err)
-                    res.json({message: err.message})
                 }
-                res.redirect('/AC7/inventory-in/confirmation');
+                else {
+                    res.redirect('/AC7/inventory-in/confirmation');
+                }
             })
-        }
-        
-    })
+        })
+    }
 })
 
 
