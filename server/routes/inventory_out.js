@@ -10,16 +10,16 @@ const connection = mysql.createConnection({
 })
 
 router.post('/', (req, res) => {
-    const {account_id, comments, product_name, quantity} = req.body;
-    //comments is always an array with a minimum of 2 elements
+    const {account_id, comments, product_name, quantity, batch_no} = req.body;
+    //'comments' is always an array with a minimum of 2 elements (General comment and 1 comment from a product being stocked out)
     //product_name and quantity are arrays if there's more than 1 item stocked out, else theyre string/int
     const general_comment = comments[0] || 'none';
-    const isSingleItem = comments.length === 2 ? true : false;
+    const isSingleItem = comments.length === 2 ? true : false; 
 
     console.log('Inventory out...')
     console.log(req.body)
 
-    //Create a new inventory_out entry
+    //Query 1: Create a new inventory_out entry
     const q1 = `INSERT INTO inventory_out SET employee_id = (SELECT employee_id FROM employee WHERE account_id = ${account_id}), ` +
                 `comment = '${general_comment}'`;
     connection.query(q1, (err, results) => {
@@ -27,7 +27,7 @@ router.post('/', (req, res) => {
         else { console.log('Step 1 successful') }
     })
 
-    //Create an inventory_out_item entry for every item that was stocked out
+    //Query 2: Create an inventory_out_item entry for every item that was stocked out
     if (isSingleItem) {
         //In this case, only 1 item is stocked out
         const q2 = `INSERT INTO inventory_out_item SET inventory_out_ref_num = (SELECT inventory_out_ref_num FROM inventory_out ORDER BY date DESC LIMIT 1), ` +
@@ -49,9 +49,11 @@ router.post('/', (req, res) => {
         }
     }
 
-    //Stock out - Update product row 
+    //Query 3: Stock out - Update stock row 
     if (isSingleItem) {
-        const q3 = `UPDATE product SET quantity = quantity - ${quantity} WHERE name = '${product_name}'`
+        const q3 = `UPDATE stock SET quantity = quantity - ${quantity} ` +
+                    `WHERE product_id = (SELECT product_id FROM product WHERE name = '${product_name}') ` +
+                    `AND batch_no = ${batch_no}`;
         connection.query(q3, (err, results) => {
             if (err) { console.error(err) }
             else { console.log('Step 3 successful') }
@@ -59,7 +61,9 @@ router.post('/', (req, res) => {
     }
     else {
         for (let i = 0; i < quantity.length; i++) {
-            const q3 = `UPDATE product SET quantity = quantity - ${quantity[i]} WHERE name = '${product_name[i]}'`;
+            const q3 = `UPDATE stock SET quantity = quantity - ${quantity[i]} ` +
+                        `WHERE product_id = (SELECT product_id FROM product WHERE name = '${product_name[i]}') ` +
+                        `AND batch_no = ${batch_no}`;
             connection.query(q3, (err, results) => {
                 if (err) { console.error(err) }
                 else { console.log('Step 3 successful') }
