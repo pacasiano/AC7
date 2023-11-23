@@ -22,7 +22,8 @@ router.get('/:id', (req, res) => {
             'INNER JOIN sale_item USING (sale_id) ' +
             'INNER JOIN product USING (product_id) ' +
             'INNER JOIN stock USING (product_id) ' +
-            `WHERE sale.account_id = ${account_id} AND sale.sale_status = 'in progress'`;
+            `WHERE sale.account_id = ${account_id} AND sale.sale_status = 'in progress' ` +
+            'GROUP BY product.product_id, stock.price, sale_item.quantity';
 
     connection.query(q, function(err, results) {
         if (err) {
