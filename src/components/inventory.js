@@ -101,6 +101,16 @@ function InventoryCard({ product }) {
 
   const [extend, setExtend] = useState(false);
 
+  const [batches, setBatches] = useState([]);
+
+  useEffect(() => {
+    fetch(`/api/stock/${product.product_id}/all`)
+      .then((res) => res.json())
+      .then((data) => {
+        setBatches(data);
+      });
+  }, []);
+
   function extendHandler() {
     setExtend(!extend);
   }
@@ -135,18 +145,13 @@ function InventoryCard({ product }) {
         </thead>
         <tbody>
           {/* repeat this shi */}
-          {/* {batch.map((batch) => ( */}
+          {batches.map((batch) => (
             <tr className="h-8 border-t border-white">
-              <td className="text-sm font-normal">69696969</td>
-              <td className="text-sm font-normal">&#x20B1; 69</td>
-              <td className="text-sm font-normal">69</td>
+              <td className="text-sm font-normal">{batch.batch_no}</td>
+              <td className="text-sm font-normal">&#x20B1;{batch.price}</td>
+              <td className="text-sm font-normal">{batch.quantity}</td>
             </tr>
-            <tr className="h-8 border-t border-white">
-              <td className="text-sm font-normal">69696969</td>
-              <td className="text-sm font-normal">&#x20B1; 69</td>
-              <td className="text-sm font-normal">69</td>
-            </tr>
-          {/* ))} */}
+          ))}
         </tbody>
       </table>
 

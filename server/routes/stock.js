@@ -16,10 +16,20 @@ router.get('/:id', (req, res) => {
     connection.query(q, (err, results) => {
         if (err) {
             console.error(results)
-            res.json({message: err.message})
         }
         res.json(results[0])
     });
+})
+
+router.get('/:id/all', (req, res) => {
+    const {id: product_id} = req.params;
+    const q = `SELECT * FROM stock WHERE product_id = ${product_id}`;
+    connection.query(q, (err, results) => {
+        if (err) {
+            console.error(err)
+        }
+        res.json(results)
+    })
 })
 
 router.get('/', (req, res) => {
@@ -27,7 +37,6 @@ router.get('/', (req, res) => {
     connection.query(q, (err, results) => {
         if (err) {
             console.error(err);
-            res.json({ message: err.message });
         } else {
             console.log(results);
             res.json(results);
