@@ -16,6 +16,7 @@ const order_item = require('./routes/order_item.js');
 const employee = require('./routes/employee.js');
 const inventory_out = require('./routes/inventory_out.js');
 const shipping = require('./routes/shipment.js');
+const stock = require('./routes/stock.js');
 
 
 app.use(express.urlencoded( { extended: true } ));
@@ -57,6 +58,7 @@ app.use('/api/inventory_out', inventory_out);
 
 app.use('/api/shipment', shipping);
 
+app.use('/api/stock', stock);
 
 
 app.listen(8080, () => {

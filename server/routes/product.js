@@ -10,6 +10,7 @@ let connection = mysql.createConnection({
     database: 'ac7_database'
 });
 
+//Display all products for inventory
 router.get('/', (req, res) => {
     
     const q = 'SELECT product_id, name, description, category, threshold, SUM(quantity) AS quantity FROM product ' +
@@ -28,11 +29,11 @@ router.get('/', (req, res) => {
 
 //Add new product
 router.post('/', (req, res) => {
-    const {product_name, description, price, category, threshold} = req.body;
+    const {product_name, description, category, threshold} = req.body;
     console.log('Adding new product...')
     console.log(req.body)
     const q1 = `INSERT INTO product SET name = '${product_name}', description = '${description}', ` +
-                `price = ${price}, category = '${category}', threshold = ${threshold}, quantity = 0`;
+                `category = '${category}', threshold = ${threshold}, quantity = 0`;
     connection.query(q1, (err, results) => {
         if (err) {console.error(err)}
         else {

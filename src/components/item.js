@@ -1,9 +1,19 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Item1 from "../imgs/Item1.png";
 import { Form, Link } from "react-router-dom";
 import "../App.css";
 
 function Item(props) {
+
+  const [price, setPrice] = useState(0)
+
+  useEffect(() => {
+    fetch(`/api/stock/${props.product_obj.product_id}`)
+      .then(res => res.json())
+      .then(data => setPrice(data.price))
+
+  }, [])
+
 
   return (
     <form action="/api/item" method="POST">
@@ -17,7 +27,7 @@ function Item(props) {
           <div className="flex flex-col px-2 justify-start gap-2 w-full">
             <div className="flex flex-col pl-3 w-full">
               <textarea className="flex justify-start text-start m-0 pb-2 text-xl font-extrabold focus:outline-none resize-none" name="product_name" value={props.product_obj.name} readOnly={true}/>
-              <input className="flex m-0 justify-start pb-2 text-sm font-semibold focus:outline-none" name="product_price" value={`₱${props.product_obj.price}`} readOnly={true} />
+              <input className="flex m-0 justify-start pb-2 text-sm font-semibold focus:outline-none" name="product_price" value={`₱${price}`} readOnly={true} />
               <textarea className="flex m-0 justify-start text-xs focus:outline-none h-12 resize-none" value={props.product_obj.description} readOnly={true}/>
               <input className="visibility: hidden" name="product_id" value={props.product_obj.product_id}/>
               {/* props is the parameter name here. product_obj is the parameter name we set in itemSlider.js 
