@@ -22,5 +22,19 @@ router.get('/:id', (req, res) => {
     });
 })
 
+router.get('/', (req, res) => {
+    const q = 'SELECT batch_no FROM stock ORDER BY date';
+    connection.query(q, (err, results) => {
+        if (err) {
+            console.error(err);
+            res.json({ message: err.message });
+        } else {
+            console.log(results);
+            res.json(results);
+        }
+    });
+});
+
+
 
 module.exports = router;

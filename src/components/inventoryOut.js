@@ -118,6 +118,7 @@ export default function InventoryOut() {
               <thead className="bg-gray-400">
                 <tr>
                   <th className="text-sm font-semibold border p-2 text-white">Item Name</th>
+                  <th className="text-sm font-semibold border p-2 text-white w-1/6">Batch no.</th>
                   <th className="text-sm font-semibold border p-2 w-1/2 text-white">Comments</th>
                   <th className="text-sm w-44 font-semibold border p-2 text-white">Quantity</th>
                 </tr>
@@ -146,12 +147,23 @@ export default function InventoryOut() {
 function Items({ selectedProducts, setSelectedProducts }) {
   const [products, setProducts] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
+  const [batch, setBatch] = useState([]);
+  const [selectedBatch, setSelectedBatch] = useState(null);
 
   useEffect(() => {
     fetch("/api/product")
       .then((res) => res.json())
       .then((products) => {
         setProducts(products);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch(`/api/stock/`)
+      .then((res) => res.json())
+      .then((batch) => {
+        console.log(batch)
+        setBatch(batch);
       });
   }, []);
 
@@ -173,6 +185,16 @@ function Items({ selectedProducts, setSelectedProducts }) {
     setSelectedOption(option);
   };
 
+  const batchesSet = new Set(batch.map((stock) => stock.batch_no));
+  const batches = Array.from(batchesSet).map((batch_no) => ({
+    value: batch_no,
+    label: batch_no,
+  }));
+
+  const handleBatchChange = (option) => {
+    setSelectedBatch(option);
+  }
+
   return (
     <tbody className="bg-gray-300">
       <tr>
@@ -182,6 +204,15 @@ function Items({ selectedProducts, setSelectedProducts }) {
             name="product_name"
             className="h-10 w-full text-center"
             onChange={handleProductChange}
+            required
+          />
+        </td>
+        <td className="text-sm font-semibold border p-2">
+          <Select
+            options={batches}
+            name="batch_number"
+            className="h-10 w-full text-center"
+            onChange={handleBatchChange}
             required
           />
         </td>

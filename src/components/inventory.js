@@ -107,7 +107,7 @@ function InventoryCard({ product }) {
 
   return (
     <>
-    <tr className={`${product.quantity <= product.threshold ? "bg-gray-300" : "bg-gray-300"} h-12`} key={product.product_id}>
+    <tr className={`bg-gray-300 h-12`} key={product.product_id}>
       <td className="text-sm font-semibold border p-2">{product.product_id}</td>
       <td className="text-sm font-semibold border p-2">{product.name}</td>
       <td className="text-sm font-semibold border p-2">{product.description}</td>
