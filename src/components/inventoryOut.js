@@ -210,7 +210,7 @@ function Items({ selectedProducts, setSelectedProducts }) {
         <td className="text-sm font-semibold border p-2">
           <Select
             options={batches}
-            name="batch_number"
+            name="batch_no"
             className="h-10 w-full text-center"
             onChange={handleBatchChange}
             required
