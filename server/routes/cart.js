@@ -14,16 +14,16 @@ let connection = mysql.createConnection({
 router.use(express.json());
 
 
+//Display in cart
 router.get('/:id', (req, res) => {
-
-    // console.log('RUNNING .get("/cart/:id")')
     const {id: account_id} = req.params;
-    let q = 'SELECT product.product_id, product.name, stock.price, sale_item.quantity, sale.account_id FROM sale ' + 
+    let q = 'SELECT product.product_id, product.name, stock.price, batch_no, sale_item.quantity, sale.account_id FROM sale ' + 
             'INNER JOIN sale_item USING (sale_id) ' +
             'INNER JOIN product USING (product_id) ' +
             'INNER JOIN stock USING (product_id) ' +
             `WHERE sale.account_id = ${account_id} AND sale.sale_status = 'in progress' ` +
-            'GROUP BY product.product_id, stock.price, sale_item.quantity';
+            'AND stock.quantity > 0 AND stock.product_id = sale_item.product_id ' +
+            'AND batch_no = (SELECT MIN(batch_no) FROM stock)';
 
     connection.query(q, function(err, results) {
         if (err) {

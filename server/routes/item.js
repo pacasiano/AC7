@@ -17,7 +17,6 @@ const connection = mysql.createConnection({
 });
 
 router.post('/', (req, res) => {
-    const {username, password} = req.body;
     //instead of req.headers.cookie which returns a string, we can use the cookie parser 'req.cookies' to return an object
     const {account_id} = req.cookies;
     let {product_id, product_name, product_price} = req.body;
@@ -43,11 +42,6 @@ router.post('/', (req, res) => {
         }
     
         const { sale_id } = results[0];
-
-        //✅get the product_id of the product that was added to cart
-        //check if the current sale has a sale_item with this product_id
-        //if there is, increment the qty of that product in that sale_item
-        //if not, add a sale_item with that product_id
 
         //Query 2: Checks if the product that was added to cart already has a sale_item entry that's connected to an 'in progress' sale (current sale)
         //Basically, this query checks if the product is already in the cart or not. If it is, Query 3 runs, if not, Query 4 runs
