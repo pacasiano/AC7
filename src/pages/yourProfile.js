@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { set } from "react-hook-form";
 
 export default function Settings() {
 
@@ -206,22 +205,6 @@ export default function Settings() {
         }
     }
 
-    function deleteAddress(address_id) {
-        fetch(`/api/address/${address_id}`, {
-            method: "DELETE"
-        })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
-            setReloadAddData((prev) => !prev);
-            setAddSuccess(false);
-            setDeleteSuccess(true);
-            setTimeout(() => {
-                setDeleteSuccess(false);
-            }, 3000);
-        })
-    }
-
 
     const [newAddressName, setNewAddressName] = useState('')
     function newAddressNameHandler(event) {
@@ -297,7 +280,6 @@ export default function Settings() {
     // Clear the timeout if component unmounts or if incorrect becomes false before the timeout
     return () => clearTimeout(timeoutId);
   }, [incorrect]);
-
 
   return(
     <div className="w-full h-screen pt-16">
@@ -458,50 +440,157 @@ export default function Settings() {
                 </div>
 
                 <div className="flex flex-col gap-5">
-
-                    {/* address card from here, ito yung mag ulit ulit */}
                     {addresses.map((address) => (
-                        <div className="flex flex-col gap-4 bg-gray-100 p-5">
-                            <div className="flex justify-between">
-                                <span className="text-md font-semibold">{address.name}</span>
-                                {/* dito yung address id para ma delete, or ano pa need mo */}
-                                <input type="text" value={""} hidden/>
-                                <div className="flex flex-row gap-2">
-                                <button type="submit" className="text-xs font-normal bg-slate-800 px-2 py-1 rounded-md text-white">Edit</button>
-                                {addresses.length > 1 &&
-                                    <button onClick={() => deleteAddress(address.address_id)} type="submit" className="text-xs font-normal bg-slate-800 px-2 py-1 rounded-md text-white">Delete</button>
-                                }       
-                                </div>
-                            </div>
-                            <table className="w-full border-collapse">
-                                <thead>
-                                    <tr className="border-b-2">
-                                        <th className="text-sm font-semibold">Barangay</th>
-                                        <th className="text-sm font-semibold">Street</th>
-                                        <th className="text-sm font-semibold">Province</th>
-                                        <th className="text-sm font-semibold">City</th>
-                                        <th className="text-sm font-semibold">Zip Code</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr className="">
-                                        {/* plug the values here */}
-                                        <th className="text-sm font-medium w-1/5">{address.barangay}</th>
-                                        <th className="text-sm font-medium w-1/5">{address.street}</th>
-                                        <th className="text-sm font-medium w-1/5">{address.province}</th>
-                                        <th className="text-sm font-medium w-1/5">{address.city}</th>
-                                        <th className="text-sm font-medium w-1/5">{address.zip_code}</th>
-                                        {/* till dito */}
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <AddressCard addresses={addresses} address={address} setReloadAddData={setReloadAddData} setAddSuccess={setAddSuccess} setDeleteSuccess={setDeleteSuccess}/>
                     ))}
-                    {/* address card ends here */}
-
                 </div>
             </div>
         </div>
     </div>
     );
 }
+
+function AddressCard({ addresses, address, setReloadAddData, setAddSuccess, setDeleteSuccess }) {
+
+    function deleteAddress(address_id) {
+        fetch(`/api/address/${address_id}`, {
+            method: "DELETE"
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            setReloadAddData((prev) => !prev);
+            setAddSuccess(false);
+            setDeleteSuccess(true);
+            setTimeout(() => {
+                setDeleteSuccess(false);
+            }, 3000);
+        })
+    }
+
+
+
+    const [edit, setEdit] = useState(false);
+    const [resultSuccess, setResultSuccess] = useState(false);
+    const [resultFail, setResultFail] = useState(false);
+
+    // ito yung updated detailz
+    const [updatedAddress, setUpdatedAddress] = useState(address);
+
+    function handleEditAddress(event) {
+        setUpdatedAddress({...updatedAddress, [event.target.name]: event.target.value});
+    }
+
+    function submitEditAddressForm(e) {
+        e.preventDefault();
+
+        if (!deepEqual(updatedAddress, address)) {
+
+            // Dito yung form submit req something
+
+            setReloadAddData((prev) => !prev);
+            console.log("success");
+            setDeleteSuccess(false);
+            setResultSuccess(true);
+            setEdit(false);
+            setTimeout(() => {
+                setResultSuccess(false);
+            }, 1000);
+        } else {
+            console.log("no changes");
+            setResultSuccess(false);
+            setResultFail(true);
+            setEdit(false);
+            setTimeout(() => {
+                setResultFail(false);
+            }, 1000);
+        }
+    }
+
+    return(
+    <div className="flex flex-col gap-4 bg-gray-100 p-5">
+        <form onSubmit={submitEditAddressForm} >
+            <div className="flex justify-between pb-3">
+                
+                <div className="flex flex-row gap-5">
+                {!edit ? (
+                <span className="text-md font-semibold">{address.name}</span>
+                ) : (
+                <input name="name" onChange={handleEditAddress} placeholder={address.name} className="bg-transparent border rounded-md"/>
+                )}
+                {resultSuccess && <div className="text-md font-bold text-green-600">Address Successfully Updated!</div>}
+                {resultFail && <div className="text-md font-bold text-red-600">There are no changes!</div>}
+                </div>
+
+                <div className="flex flex-row gap-2">
+                <button type="button" onClick={() => {setEdit(!edit); console.log(edit)}} className="text-xs font-normal bg-slate-800 px-2 py-1 rounded-md text-white">{edit ? 'Cancel' : 'Edit'}</button>
+                {(!edit && addresses.length > 1) &&
+                <button onClick={() => deleteAddress(address.address_id)} className="text-xs font-normal bg-slate-800 px-2 py-1 rounded-md text-white">Delete</button>
+                }
+                {edit && <button type="submit" className="text-xs font-normal bg-green-500 px-2 py-1 rounded-md text-white">Save</button>}
+                </div>
+
+            </div>
+            <table className="w-full border-collapse">
+                <thead>
+                    <tr className="border-b-2">
+                        <th className="text-sm font-semibold">Barangay</th>
+                        <th className="text-sm font-semibold">Street</th>
+                        <th className="text-sm font-semibold">Province</th>
+                        <th className="text-sm font-semibold">City</th>
+                        <th className="text-sm font-semibold">Zip Code</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr className="">
+                        {edit ? (
+                        <>
+                            {/* dito makuha yung edited info */}
+                            <th className="text-sm font-medium w-1/5"><input name="barangay" onChange={handleEditAddress} placeholder={address.barangay} className="bg-transparent text-center border rounded-md"/></th>
+                            <th className="text-sm font-medium w-1/5"><input name="street" onChange={handleEditAddress} placeholder={address.street} className="bg-transparent text-center border rounded-md"/></th>
+                            <th className="text-sm font-medium w-1/5"><input name="province" onChange={handleEditAddress} placeholder={address.province} className="bg-transparent text-center border rounded-md"/></th>
+                            <th className="text-sm font-medium w-1/5"><input name="city" onChange={handleEditAddress} placeholder={address.city} className="bg-transparent text-center border rounded-md"/></th>
+                            <th className="text-sm font-medium w-1/5"><input name="zip_code" onChange={handleEditAddress} placeholder={address.zip_code} className="bg-transparent text-center border rounded-md"/></th>
+                        </>
+                        ) : (
+                        <>
+                            <th className="text-sm font-medium w-1/5">{address.barangay}</th>
+                            <th className="text-sm font-medium w-1/5">{address.street}</th>
+                            <th className="text-sm font-medium w-1/5">{address.province}</th>
+                            <th className="text-sm font-medium w-1/5">{address.city}</th>
+                            <th className="text-sm font-medium w-1/5">{address.zip_code}</th>
+                        </>
+                        )}
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+    );
+}
+
+function deepEqual(obj1, obj2) {
+    if (obj1 === obj2) {
+      return true;
+    }
+  
+    if (typeof obj1 !== 'object' || obj1 === null || typeof obj2 !== 'object' || obj2 === null) {
+      return false;
+    }
+  
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
+  
+    if (keys1.length !== keys2.length) {
+      return false;
+    }
+  
+    for (const key of keys1) {
+      if (!keys2.includes(key) || !deepEqual(obj1[key], obj2[key])) {
+        return false;
+      }
+    }
+  
+    return true;
+  }
+  
