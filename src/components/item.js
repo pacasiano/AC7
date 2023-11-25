@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import Item1 from "../imgs/Item1.png";
-import { Form, Link } from "react-router-dom";
+import { Form, Link} from "react-router-dom";
 import "../App.css";
 
 function Item(props) {
@@ -15,12 +15,14 @@ function Item(props) {
   }, [])
 
 
+
+
   return (
     <form action="/api/item" method="POST">
       <div className="item shadow-md rounded-md">
         <div className="flex flex-col justify-center items-center gap-3 w-auto">
           <div className="w-11/12 h-52 pt-3">
-            <Link to="/product">
+            <Link to={`/product/${props.product_obj.product_id}`}>
               <img className="object-none w-full h-full rounded-md" src={Item1} alt="Item1" />
             </Link>
           </div>

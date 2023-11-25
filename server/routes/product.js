@@ -10,9 +10,8 @@ let connection = mysql.createConnection({
     database: 'ac7_database'
 });
 
-//Display all products for inventory
+//Retrieve every product's detail (To display in components/inventory.js)
 router.get('/', (req, res) => {
-    
     const q = 'SELECT product_id, name, description, category, threshold, SUM(quantity) AS quantity FROM product ' +
             'LEFT JOIN stock USING (product_id) ' +
             'GROUP BY product_id, threshold';
@@ -21,11 +20,25 @@ router.get('/', (req, res) => {
             console.error(err); 
             res.json({message: err.message});
         }
-
         res.json(results); //returns an array of obj literals in JSON format, each obj literal is a row from the query
     });
 
 });
+
+//Retrieve a particular product's data (To display in pages/product.js)
+router.get('/:id', (req, res) => {
+    const {id: product_id} = req.params;
+    const q = `SELECT * FROM product INNER JOIN stock USING (product_id) WHERE product_id = ${product_id} ` +
+            `AND batch_no = (SELECT MIN(batch_no) FROM stock WHERE quantity > 0 AND product_id = ${product_id})`;
+    connection.query(q, (err, results) => {
+        if (err) {
+            console.error(err)
+        }
+        else {
+            res.json(results[0])
+        }
+    })
+})
 
 //Add new product
 router.post('/', (req, res) => {
@@ -42,8 +55,6 @@ router.post('/', (req, res) => {
     })
 })
 
-router.post('/:id', (req, res) => {
 
-})
 
 module.exports = router;

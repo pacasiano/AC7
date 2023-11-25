@@ -1,5 +1,6 @@
 import React, {useState,useEffect} from 'react';
 import Item1 from "../imgs/Item1.png";
+import { UNSAFE_DataRouterContext } from 'react-router-dom';
 
 function CartItem({item}) {
 
@@ -26,67 +27,69 @@ function CartItem({item}) {
     }
   }
 
+  const accountId = getAcctIdFromCookie(cookie);
+
+  const {name, price, quantity, product_id} = item;
+  let displayQty = parseInt(quantity);
+
+    
+  const [hookQty, setQuantity] = useState(displayQty);
+  const [total, setTotal] = useState((price * quantity).toFixed(2));
+
   const [product, setProduct] = useState([]);
 
   useEffect(() => {
-    fetch('/api/product')
+    fetch(`/api/product/${product_id}`)
       .then((res) => res.json())
-      .then((e) => {
-        const k = e.filter(product => product.product_id === product_id);
-      // Update the state with the filtered products
-      setProduct(k);
+      .then((data) => {
+        setProduct(data);
       });
   }, []);
 
-  const {quantity: stockQuantity} = product[0] || {};
+  const {quantity: maxStockQty} = product || {};
 
-  const accountId = getAcctIdFromCookie(cookie);
-    
-    const {name, price, quantity, product_id} = item;
-    let displayQty = parseInt(quantity);
 
-    
-    const [hookQty, setQuantity] = useState(displayQty);
-    const [total, setTotal] = useState((price * quantity).toFixed(2));
-
-    useEffect(() => {
-      setQuantity(hookQty)
-    }, [hookQty])
+  useEffect(() => {
+    setQuantity(hookQty)
+  }, [hookQty])
   
-    const incrementQuantity = () => {
+  const incrementQuantity = () => {
+    if (hookQty < maxStockQty) {
       setQuantity(hookQty + 1);
       let totalCalc = parseInt(total) + parseInt(price); 
       setTotal(totalCalc.toFixed(2));
-    };
+
+    }
+  };
   
-    const decrementQuantity = () => {
-      if (hookQty > 1) {
-        setQuantity(prevQty => prevQty - 1);
-        let totalCalc = parseInt(total) - parseInt(price); 
-        setTotal(totalCalc.toFixed(2));
-      }
-    };
+  const decrementQuantity = () => {
+    if (hookQty > 1) {
+      setQuantity(prevQty => prevQty - 1);
+      let totalCalc = parseInt(total) - parseInt(price); 
+      setTotal(totalCalc.toFixed(2));
+    }
+  };
 
 
-    useEffect(() => {
-      return () => {
-        //Code inside this return function only runs when the user leaves this page
-        //This return () => {} part of useEffect is commonly known as a "cleanup function" - it gets executed when the component is about to unmount
-        //We include hookQty inside useEffect's dependency array so hookQty's value inside this function is updated in conjunction with the value of hookQty outside this function
-        //Without hookQty in the dependency array, this function is ran once, when this page loads, and snapshots the value of hookQty when this page is loaded
-        console.log(hookQty + ' items for ' + name)
-        fetch(`/api/cart/${accountId}`, {
-          method: 'POST',
-          headers: {
-            'Content-type': 'application/json'
-          },
-          body: JSON.stringify({
-            product_id: product_id,
-            quantity: hookQty
-          })
+  useEffect(() => {
+    return () => {
+      //Code inside this return function only runs when the user leaves this page
+      //This return () => {} part of useEffect is commonly known as a "cleanup function" - it gets executed when the component is about to unmount
+      //We include hookQty inside useEffect's dependency array so hookQty's value inside this function is updated in conjunction with the value of hookQty outside this function
+      //Without hookQty in the dependency array, this function is ran once, when this page loads, and snapshots the value of hookQty when this page is loaded
+      console.log(hookQty + ' items for ' + name)
+      fetch(`/api/cart/${accountId}`, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          product_id: product_id,
+          quantity: hookQty
         })
-      }
-    }, [hookQty])
+      })
+    }
+  }, [hookQty])
 
     //use useEffect to monitor change in hookQty. After some delay, record the qty in db
     //to remove an item, wrap the item in a form with method=DELETE    
@@ -129,7 +132,7 @@ function CartItem({item}) {
                     <div className="flex justify-center m-0 pt-2 text-xl font-light ">
                       {hookQty}
                     </div>
-                  <button disabled={hookQty >= stockQuantity} onClick={incrementQuantity} className="flex justify-center m-0 mt-1 p-1 text-xl hover:font-extrabold ">
+                  <button onClick={incrementQuantity} className="flex justify-center m-0 mt-1 p-1 text-xl hover:font-extrabold ">
                       +
                   </button>
                 </div>
@@ -143,6 +146,6 @@ function CartItem({item}) {
           </tbody>
         </table>
     );
-  }
+}
 
 export default CartItem;
