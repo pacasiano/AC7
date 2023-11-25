@@ -29,7 +29,7 @@ function Item(props) {
               <textarea className="flex justify-start text-start m-0 pb-2 text-xl font-extrabold focus:outline-none resize-none" name="product_name" value={props.product_obj.name} readOnly={true}/>
               <input className="flex m-0 justify-start pb-2 text-sm font-semibold focus:outline-none" name="product_price" value={`₱${price}`} readOnly={true} />
               <textarea className="flex m-0 justify-start text-xs focus:outline-none h-12 resize-none" value={props.product_obj.description} readOnly={true}/>
-              <input className="visibility: hidden" name="product_id" value={props.product_obj.product_id}/>
+              <input className="visibility: hidden" name="product_id" defaultValue={props.product_obj.product_id}/>
               {/* props is the parameter name here. product_obj is the parameter name we set in itemSlider.js 
               which contains the columns we queried from routes/products.js. 
             Basically, 'props' contains a nested obj. We access the nested obj using 'product_obj'*/}

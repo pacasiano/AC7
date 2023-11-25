@@ -48,9 +48,13 @@ function CartItem({item}) {
     
     const [hookQty, setQuantity] = useState(displayQty);
     const [total, setTotal] = useState((price * quantity).toFixed(2));
+
+    useEffect(() => {
+      setQuantity(hookQty)
+    }, [hookQty])
   
     const incrementQuantity = () => {
-      setQuantity(prevQty => prevQty + 1);
+      setQuantity(hookQty + 1);
       let totalCalc = parseInt(total) + parseInt(price); 
       setTotal(totalCalc.toFixed(2));
     };
@@ -70,6 +74,7 @@ function CartItem({item}) {
         //This return () => {} part of useEffect is commonly known as a "cleanup function" - it gets executed when the component is about to unmount
         //We include hookQty inside useEffect's dependency array so hookQty's value inside this function is updated in conjunction with the value of hookQty outside this function
         //Without hookQty in the dependency array, this function is ran once, when this page loads, and snapshots the value of hookQty when this page is loaded
+        console.log(hookQty + ' items for ' + name)
         fetch(`/api/cart/${accountId}`, {
           method: 'POST',
           headers: {

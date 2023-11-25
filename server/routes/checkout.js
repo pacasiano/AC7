@@ -14,8 +14,6 @@ let connection = mysql.createConnection({
 });
 
 router.post('/', (req, res) => {
-    //when a checkout POST request is sent, the data that i want are: 
-    //4. Address_id for shipment entry
     console.log('CHECK ME TF OUT')
     console.log(req.body)
     const {account_id, items_purchased, payment_method, address_name, gcash_ref_num} = req.body;
@@ -66,7 +64,9 @@ router.post('/', (req, res) => {
 
     //Query 3: Update the product table - stock out the products that were bought in the checkout
     items_purchased.forEach((item) => {
-        let q3 = `UPDATE product SET quantity = quantity - ${item.quantity} WHERE product_id = ${item.product_id};`
+        const q3 = `UPDATE stock SET quantity = quantity - ${item.quantity} ` +
+                    `WHERE product_id = ${item.product_id} ` +
+                    `AND batch_no = (SELECT batch_no FROM (SELECT MIN(batch_no) AS batch_no FROM stock WHERE product_id = ${item.product_id} AND quantity > 0) as x)`;
         connection.query(q3, (err, results) => {
             if (err) {
                 console.error(err)
