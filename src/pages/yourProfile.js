@@ -510,7 +510,7 @@ function AddressCard({ addresses, address, setReloadAddData, setAddSuccess, setD
     return(
     <div className="flex flex-col gap-4 bg-gray-100 p-5">
         <form onSubmit={submitEditAddressForm} >
-            <div className="flex justify-between ">
+            <div className="flex justify-between pb-3">
                 
                 <div className="flex flex-row gap-5">
                 {!edit ? (
@@ -527,6 +527,7 @@ function AddressCard({ addresses, address, setReloadAddData, setAddSuccess, setD
                 {(!edit && addresses.length > 1) &&
                 <button onClick={() => deleteAddress(address.address_id)} className="text-xs font-normal bg-slate-800 px-2 py-1 rounded-md text-white">Delete</button>
                 }
+                {edit && <button type="submit" className="text-xs font-normal bg-green-500 px-2 py-1 rounded-md text-white">Save</button>}
                 </div>
 
             </div>
@@ -561,15 +562,6 @@ function AddressCard({ addresses, address, setReloadAddData, setAddSuccess, setD
                         </>
                         )}
                     </tr>
-                    {edit && (
-                        <tr>
-                            <td colSpan={5}>
-                                <div className="flex justify-end pt-2">
-                                    <button type="submit" className="text-xs font-normal bg-slate-800 px-2 py-1 rounded-md text-white">Save</button>
-                                </div>
-                            </td>
-                        </tr>
-                    )}
                 </tbody>
             </table>
         </form>
