@@ -23,24 +23,29 @@ import './App.css';
 
 function App() {
   //Get cookie
-  const cookie = document.cookie;
+  // const cookie = document.cookie;
 
-  function getAcctIdFromCookie(cookieStr) {
-    if (cookieStr.indexOf(';') > 0) {
-      const cookiesArray = cookieStr.split(';');
-      for (let i = 0; i < cookiesArray.length; i++) {
-        if (cookiesArray[i].indexOf('account_id') > 0) {
-          const id = cookiesArray[i].replace('account_id=', '').trim();
-          return id;
-        }
-      }
-    } else {
-      const id = cookie.slice(cookie.indexOf('=') + 1);
-      return id;
-    }
-  }
+  // function getAcctIdFromCookie(cookieStr) {
+  //   if (cookieStr.indexOf(';') > 0) {
+  //     const cookiesArray = cookieStr.split(';');
+  //     for (let i = 0; i < cookiesArray.length; i++) {
+  //       if (cookiesArray[i].indexOf('account_id') > 0) {
+  //         const id = cookiesArray[i].replace('account_id=', '').trim();
+  //         return id;
+  //       }
+  //     }
+  //   } else {
+  //     const id = cookie.slice(cookie.indexOf('=') + 1);
+  //     return id;
+  //   }
+  // }
 
-  const accountId = getAcctIdFromCookie(cookie);
+  // const accountId = getAcctIdFromCookie(cookie);
+
+  const accountId = document.cookie
+  .split("; ")
+  .find((row) => row.startsWith("account_id="))
+  ?.split("=")[1];
 
   const [user, setUser] = useState([]);
 
