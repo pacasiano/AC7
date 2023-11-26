@@ -25,6 +25,18 @@ router.get('/', (req, res) => {
 
 });
 
+
+//Retrieve all categories
+router.get('/categories', (req, res) => {
+    const q = 'SELECT category FROM product';
+    connection.query(q, (err, results) => {
+        if (err) console.error(err)
+        else {
+            res.json(results)
+        }
+    })
+})
+
 //Retrieve a particular product's data (To display in pages/product.js)
 router.get('/:id', (req, res) => {
     const {id: product_id} = req.params;
