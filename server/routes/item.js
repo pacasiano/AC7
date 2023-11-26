@@ -77,7 +77,7 @@ router.post('/', (req, res) => {
                     }
             
                     console.log("Add to cart: Query 4 successful", results);
-                    res.json({message: "Goods 👍"})
+                    res.redirect('/AC7/cart')
 
                 });
             }

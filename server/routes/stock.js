@@ -12,7 +12,7 @@ const connection = mysql.createConnection({
 router.get('/:id', (req, res) => {
     const {id : product_id} = req.params;
     const q = `SELECT * FROM stock WHERE product_id = ${product_id} ` +
-                'ORDER BY date LIMIT 1';
+                `AND batch_no = (SELECT batch_no FROM (SELECT MIN(batch_no) AS batch_no FROM stock WHERE product_id = ${product_id} AND quantity > 0) as x)`;
     connection.query(q, (err, results) => {
         if (err) {
             console.error(results)

@@ -22,7 +22,7 @@ router.get('/:id', (req, res) => {
             'INNER JOIN product USING (product_id) ' +
             'INNER JOIN stock USING (product_id) ' +
             `WHERE sale.account_id = ${account_id} AND sale.sale_status = 'in progress' ` +
-            'AND batch_no = (SELECT MIN(batch_no) FROM stock WHERE quantity > 0)';
+            'AND batch_no = (SELECT MIN(batch_no) AS batch_no FROM stock WHERE quantity > 0 AND product_id = product.product_id)';
 
     connection.query(q, function(err, results) {
         if (err) {
