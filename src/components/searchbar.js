@@ -22,7 +22,7 @@ function Search() {
 
 const someDataArray = useMemo(() => [
     // ...otherData
-    ...products.map((product) => ({ id: product.id, name: product.name })),
+    ...products.map((product) => ({ id: product.product_id, name: product.name })),
 ], [products]);
 
 
@@ -40,13 +40,17 @@ const someDataArray = useMemo(() => [
 
       setSearchResults(filteredResults);
       setIsLoading(false); // End loading
-    }, 500); // Adjust the delay time in milliseconds (e.g., 500ms)
+    }, 200); // Adjust the delay time in milliseconds (e.g., 500ms)
 
     return () => {
       clearTimeout(delayTimeout); // Clear the timeout on cleanup
       setIsLoading(false); // Ensure loading is reset on cleanup
     };
   }, [searchTerm, someDataArray]);
+
+  function redirectToProductPage(id) {
+    window.location.href = `/AC7/product/${id}`
+  }
 
   return (
         <>
@@ -62,8 +66,9 @@ const someDataArray = useMemo(() => [
               ) : (
                 searchResults.length > 0 ? (
                     <ul>
-                      {searchResults.map(item => (
-                        <li key={item.id}><Link className="cursor-pointer hover:font-semibold">{item.name}</Link></li>
+                      {searchResults.map(item =>  (
+                        // <li key={item.id}><Link to={`/product/${item.id}`} className="cursor-pointer hover:font-semibold">{item.name}</Link></li>
+                        <li key={item.id}><Link onClick={() => redirectToProductPage(item.id)} className="cursor-pointer hover:font-semibold">{item.name}</Link></li>
                       ))}
                     </ul>
                 ) : (
