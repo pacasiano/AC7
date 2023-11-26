@@ -28,7 +28,8 @@ router.get('/', (req, res) => {
 
 //Retrieve all categories
 router.get('/categories', (req, res) => {
-    const q = 'SELECT category FROM product';
+    const q = 'SELECT category FROM product ' +
+                'GROUP BY category';
     connection.query(q, (err, results) => {
         if (err) console.error(err)
         else {
