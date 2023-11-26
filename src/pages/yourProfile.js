@@ -78,8 +78,8 @@ export default function Settings() {
     useEffect(() => {
         fetch(`/api/address/${accountId}`)
         .then((res) => res.json())
-        .then((address) => {
-            setAddresses(address);
+        .then((data) => {
+            setAddresses(data);
             
         });
     }, [accountId, reloadAddData]);
@@ -486,7 +486,24 @@ function AddressCard({ addresses, address, setReloadAddData, setAddSuccess, setD
 
         if (!deepEqual(updatedAddress, address)) {
 
-            // Dito yung form submit req something
+            fetch(`/api/address/${address.address_id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: updatedAddress.name,
+                    barangay: updatedAddress.barangay,
+                    street: updatedAddress.street,
+                    province: updatedAddress.province,
+                    city: updatedAddress.city,
+                    zip_code: updatedAddress.zip_code
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data.message)
+            })
 
             setReloadAddData((prev) => !prev);
             console.log("success");
