@@ -246,7 +246,7 @@ INSERT INTO product(name, description, category, threshold)
 VALUES
 ('Whitening Body Lotion', 'Brightens and evens skin tone, leaving you with a luminous, radiant complexion', 'Bodycare', 20),
 ('Bleaching Whipped Cream', 'Experience opulence in skincare with Bleaching Whipped Cream, a decadent secret for a luminous, flawless glow', 'Skinscare', 20),
-('Kojic Soap', 'Uncover the allure of radiant skin with Kojic Soap, a refined indulgence for complexion perfection', 'Soap', 20);
+('Kojic Soap', 'Uncover the allure of radiant skin with Kojic Soap, a refined indulgence for complexion perfection', 'Bodycare', 20);
 
 INSERT INTO sale(account_id, sale_status)
 VALUES (1, 'in progress'),
