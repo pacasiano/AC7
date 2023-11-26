@@ -1,6 +1,7 @@
-const express = require('express')
-const mysql = require('mysql2')
+const express = require('express');
+const mysql = require('mysql2');
 const router = express.Router();
+const bcrypt = require('bcrypt');
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -15,29 +16,32 @@ router.use(express.json())
 router.post('/', (req, res) => {
     //username must be unique
     const {username, password} = req.body;
+    const saltRounds = 10;
 
-    //Query 1: Create new account
-    const q1 = `INSERT INTO account SET username = '${username}', password = '${password}', account_type = 'customer'`;
-    connection.query(q1, (err, results) => {
-        if (err) {console.error(err)}
-        else {
-            console.log('Step 1.1: Account creation successful')
-            
-        } 
-    })
+    //Encrypt password
+    bcrypt.hash(password, saltRounds, function(err, hash) {
+        // Query 1: Create new account
+        const q1 = `INSERT INTO account SET username = '${username}', password = '${hash}', account_type = 'customer'`;
+        connection.query(q1, (err, results) => {
+            if (err) {console.error(err)}
+            else {
+                console.log('Step 1.1: Account creation successful')
+            } 
+        })
 
-    //Query 2: Create and assign sale entry for new customer account
-    const q2 = `INSERT INTO sale SET account_id = (SELECT account_id FROM account WHERE username = '${username}')`
-    connection.query(q2, (err, results) => {
-        if (err) {
-            console.error(err)
-        }
-        else {
-            console.log('Step 1.2: Account creation successful')
-            res.json({
-                message: 'FUCK YES!'
-            })
-        }
+        //Query 2: Create and assign sale entry for new customer account
+        const q2 = `INSERT INTO sale SET account_id = (SELECT account_id FROM account WHERE username = '${username}')`
+        connection.query(q2, (err, results) => {
+            if (err) {
+                console.error(err)
+            }
+            else {
+                console.log('Step 1.2: Account creation successful')
+                res.json({
+                    message: 'FUCK YES!'
+                })
+            }
+        })
     })
 })
 
@@ -63,7 +67,7 @@ router.get('/:id', (req, res) => {
     }
 })
 
-// Get all usernames for availability checking
+// Get all usernames to check availability
 router.get('/', (req, res) => {
     const q = 'SELECT username FROM account';
     connection.query(q, (err, results) => {
@@ -81,15 +85,18 @@ router.patch('/:id', (req, res) => {
     console.log("Edit account info")
     const {id: account_id} = req.params;
     const {email, username, password} = req.body;
-    console.log(req.body)
-    const q1 = `UPDATE account SET username = '${username}', password = '${password}' WHERE account_id = ${account_id}`;
-    connection.query(q1, (err, results) => {
-        if (err) {
-            console.error(err)
-        } 
-        else {
-            console.log("Successfully editted acc info")
-        }
+    const saltRounds = 10;
+
+    bcrypt.hash(password, saltRounds, function(err, hash) {
+        const q1 = `UPDATE account SET username = '${username}', password = '${hash}' WHERE account_id = ${account_id}`;
+        connection.query(q1, (err, results) => {
+            if (err) {
+                console.error(err)
+            } 
+            else {
+                console.log("Successfully editted acc info")
+            }
+        })
     })
 
     const q2 = `UPDATE customer SET email = '${email}' WHERE account_id = ${account_id}`

@@ -10,6 +10,7 @@ const connection = mysql.createConnection({
     database: 'ac7_database'
 })
 
+//Retrieve customer and account data for the user to display in 'Your Profile'
 router.get('/:id', (req, res) => {
     const {id: account_id} = req.params
     

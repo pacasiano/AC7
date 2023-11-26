@@ -62,7 +62,6 @@ export default function Settings() {
         .then((res) => res.json())
         .then((userData) => {
             setUserData(userData);
-            console.log(userData);
         });
     }, [accountId, reloadData]);
 
@@ -312,7 +311,7 @@ export default function Settings() {
                         </label> 
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Password</span>
-                        <span className="border-b-2">{password ? '*'.repeat(password.length) : '*'}</span>
+                        <span className="border-b-2">{password ? '*'.repeat(25) : '*'}</span>
                         </label>
                     </div>
                     </>
@@ -330,7 +329,7 @@ export default function Settings() {
                         </label> 
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Password</span>
-                        <input placeholder={password} onChange={handleEditPassword} name="password" className="rounded-sm w-full pl-1"/>
+                        <input placeholder={password ? '*'.repeat(25) : '*'} onChange={handleEditPassword} name="password" className="rounded-sm w-full pl-1"/>
                         </label>
                     </div>
                     </>
