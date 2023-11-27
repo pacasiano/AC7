@@ -30,7 +30,8 @@ function Product() {
     }
   };
 
-  function submitForm() {
+  function submitForm(e) {
+    e.preventDefault();
     fetch('/api/item', {
       method: 'POST',
       headers: {
@@ -54,6 +55,7 @@ function Product() {
 
   return (
     <div className="flex flex-col lg:-mt-20 mt-0 justify-center h-screen ">
+      <form onSubmit={submitForm}>
       <section className="text-gray-700 body-font overflow-hidden bg-white">
         <div className="flex flex-col md:flex-row lg:px-0 px-9 py-15 justify-center  border-red-600 overflow-clip">
           <img
@@ -75,6 +77,7 @@ function Product() {
               </span>
               <span className="flex flex-row gap-5">
                 <button
+                  type='button'
                   onClick={decrementQuantity}
                   className="flex justify-center m-0 mt-1 p-1 w-1/3 align-middle text-xl hover:font-extrabold"
                 >
@@ -84,19 +87,21 @@ function Product() {
                   {quantity}
                 </div>
                 <button
+                  type='button'
                   onClick={incrementQuantity}
                   className="flex justify-center m-0 mt-1 p-1 w-1/3 align-middle text-xl hover:font-extrabold"
                 >
                   +
                 </button>
               </span>
-              <button onClick={submitForm} className="flex justify-center items-center text-white bg-black border-0 px-6 focus:outline-none hover:scale-105 rounded">
+              <button type="submit" className="flex justify-center items-center text-white bg-black border-0 px-6 focus:outline-none hover:scale-105 rounded">
                 Add to Cart
               </button>
             </div>
           </div>
         </div>
       </section>
+      </form>
     </div>
   );
 }

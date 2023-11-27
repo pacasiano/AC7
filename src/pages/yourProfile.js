@@ -11,19 +11,10 @@ export default function Settings() {
     const [isEditAccInfo, setEditAccInfo] = useState(false);
     const [isSuccessAccInfo, setSuccessAccInfo] = useState(false);
 
-    setTimeout(() => {
-        setSuccessAccInfo(false);
-      }, 5000);
-
     const toggleEditAccInfo = () => {
         setEditAccInfo(!isEditAccInfo);
     }
     const [isEditPersonalInfo, setEditPersonalInfo] = useState(false);
-    const [isSuccessPersonalInfo, setSuccessPersonalInfo] = useState(false);
-
-    setTimeout(() => {
-        setSuccessPersonalInfo(false);
-    }, 5000);
 
     const toggleEditPersonalInfo = () => {
         setEditPersonalInfo(!isEditPersonalInfo);
@@ -56,23 +47,29 @@ export default function Settings() {
 
     const [userData, setUserData] = useState([]);
     const [reloadData, setReloadData] = useState(false);
+     //the userData[0] || {} syntax ensures that we only destructure once userData contains some data returned by fetch
+    //if it is still undefined (fetch has not returned anything), it will default to an empty object - this prevents errors related to undefined values
+    const { email, username, password, first_name, middle_name, last_name, contact_info } = userData.length > 0 ? userData[0] : {};
 
+    // gets user data from db
     useEffect(() => {
         fetch(`/api/profile/${accountId}`)
         .then((res) => res.json())
         .then((userData) => {
             setUserData(userData);
+            console.log(userData)
         });
     }, [accountId, reloadData]);
 
-    //the userData[0] || {} syntax ensures that we only destructure once userData contains some data returned by fetch
-    //if it is still undefined (fetch has not returned anything), it will default to an empty object - this prevents errors related to undefined values
-    const {email, username, password, first_name, middle_name, last_name, contact_info} = userData[0] || {};
+    const toggleReloadData = () => {
+        setReloadData((prev) => !prev)
+    }
 
     const [addresses, setAddresses] = useState([]);
     const [addSuccess, setAddSuccess] = useState(false);
     const [deleteSuccess, setDeleteSuccess] = useState(false);
     const [reloadAddData, setReloadAddData] = useState(false);
+    const [resultSuccess, setResultSuccess] = useState(false);
 
     useEffect(() => {
         fetch(`/api/address/${accountId}`)
@@ -83,120 +80,102 @@ export default function Settings() {
         });
     }, [accountId, reloadAddData]);
 
-    //when save is clicked, it should also send a get request to check if the username already exists
+    //
+    // 
+    // FOR ACCOUNT INFORMATION
+    // 
+    // 
 
     //useStates, useEffects, and eventHandlers for editting account information
-    const [edit_email, setEdit_email] = useState(email);
-    useEffect(() => {
-        setEdit_email(email);
-      }, [email]);
-    function handleEditEmail(event) {
-        setEdit_email(event.target.value ? event.target.value : email)
+    const [accountInfo, setAccountInfo] = useState({
+        email: email,
+        username: username,
+        password: password
+    });
+    
+    const handleAccountInfo = (e) => {
+        setAccountInfo({...accountInfo, [e.target.name]: e.target.value});
     }
 
-    const [edit_username, setEdit_username] = useState(username);
-    useEffect(() => {
-        setEdit_username(username);
-      }, [username]);
-    function handleEditUsername(event) {
-        setEdit_username(event.target.value ? event.target.value : username)
-    }
-
-    const [edit_password, setEdit_password] = useState(password);
-    useEffect(() => {
-        setEdit_password(password);
-      }, [password]);
-    function handleEditPassword(event) {
-        setEdit_password(event.target.value ? event.target.value : password)
-    }
-
+    // edit account info
     function editAccountInfo(e) {
         e.preventDefault();
 
 
-        if(edit_email !== email || edit_username !== username || edit_password !== password) {
+        if(accountInfo.email !== email || accountInfo.username !== username || accountInfo.password !== password) {
         fetch(`/api/account/${accountId}`, {
             method: 'PATCH',
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                email: edit_email,
-                username: edit_username,
-                password: edit_password
+                email: accountInfo.email,
+                username: accountInfo.username,
+                password: accountInfo.password
             })
         })
         .then(res => res.json)
         .then(data => {
+            console.log(data)
+            setReloadAddData((prev) => !prev);
             setEditAccInfo(false);
             setSuccessAccInfo(true);
-            console.log(data)
-            setReloadData((prev) => !prev);
+            setTimeout(() => {
+                setSuccessAccInfo(false);
+            }, 3000);
+            toggleReloadData();
         })
         .catch(err => console.error(err))
     }else {
         setEditAccInfo(false);
     }
 
-}
+    }
 
+    //
+    // 
+    // FOR EDITTING PERSONAL INFORMATION
+    // 
+    // 
     
-    //useStates, useEffects, and eventHandlers for editting personal information
-    const [edit_first_name, setEdit_first_name] = useState(first_name);
-    useEffect(() => {
-        setEdit_first_name(first_name);
-      }, [first_name]);
-    function handleEditFirstName(event) {
-        setEdit_first_name(event.target.value ? event.target.value : first_name) 
-        //if event.target.value is empty, set first_name to the original first_name value that was taken from db
+    const [personalInfo, setPersonalInfo] = useState({
+        first_name: first_name,
+        middle_name: middle_name,
+        last_name: last_name,
+        contactNo: contact_info
+    });
+
+    const handlePersonalInfo = (e) => {
+        setPersonalInfo({...personalInfo, [e.target.name]: e.target.value});
     }
 
-    const [edit_last_name, setEdit_last_name] = useState(last_name);
-    useEffect(() => {
-        setEdit_last_name(last_name);
-      }, [last_name]);
-    function handleEditLastName(event) {
-        setEdit_last_name(event.target.value ? event.target.value : last_name)
-    }
-
-    const [edit_middle_name, setEdit_middle_name] = useState(middle_name);
-    useEffect(() => {
-        setEdit_middle_name(middle_name);
-      }, [middle_name]);
-    function handleEditMiddleName(event) {
-        setEdit_middle_name(event.target.value ? event.target.value : middle_name)
-    }
-
-    const [edit_contactNo, setEdit_contactNo] = useState(contact_info);
-    useEffect(() => {
-        setEdit_contactNo(contact_info);
-      }, [contact_info]);
-    function handleEditContactNo(event) {
-        setEdit_contactNo(event.target.value ? event.target.value : contact_info)
-    }
-
+    // edit personal info
     function editPersonalInfo(e) {
         e.preventDefault();
 
-        if(edit_first_name !== first_name || edit_last_name !== last_name || edit_middle_name !== middle_name || edit_contactNo !== contact_info) {
+        if(personalInfo.first_name !== first_name || personalInfo.last_name !== last_name || personalInfo.middle_name !== middle_name || personalInfo.contactNo !== contact_info) {
         fetch(`/api/customer/${accountId}`, {
             method: 'PATCH',
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                first_name: edit_first_name,
-                middle_name: edit_middle_name,
-                last_name: edit_last_name,
-                contact_info: edit_contactNo
+                first_name: personalInfo.first_name,
+                middle_name: personalInfo.middle_name,
+                last_name: personalInfo.last_name,
+                contact_info: personalInfo.contactNo
             })
         })
         .then(res => res.json)
         .then(data => {
             console.log(data)
+            setReloadAddData((prev) => !prev);
             setEditPersonalInfo(false);
-            setSuccessPersonalInfo(true);
-            setReloadData((prev) => !prev);
+            setSuccessAccInfo(true);
+            setTimeout(() => {
+                setSuccessAccInfo(false);
+            }, 3000);
+            toggleReloadData();
         })
         .catch(err => console.error(err))
         }else {
@@ -204,37 +183,27 @@ export default function Settings() {
         }
     }
 
+    //
+    // 
+    // FOR NEW ADDRESS
+    // 
+    // 
 
-    const [newAddressName, setNewAddressName] = useState('')
-    function newAddressNameHandler(event) {
-        setNewAddressName(event.target.value)
+    //useStates, useEffects, and eventHandlers for adding new address
+    const [newAddress, setNewAddress] = useState({
+        addressName: null,
+        barangay: null,
+        street: null,
+        province: null,
+        city: null,
+        zipcode: null,
+    });
+
+    const handleAddressInfo = (e) => {
+        setNewAddress({...newAddress, [e.target.id]: e.target.value});
     }
 
-    const [newAddressBarangay, setNewAddressBarangay] = useState('')
-    function newAddressBarangayHandler(event) {
-        setNewAddressBarangay(event.target.value)
-    }
-
-    const [newAddressStreet, setNewAddressStreet] = useState('')
-    function newAddressStreetHandler(event) {
-        setNewAddressStreet(event.target.value)
-    }
-
-    const [newAddressProvince, setNewAddressProvince] = useState('')
-    function newAddressProvinceHandler(event) {
-        setNewAddressProvince(event.target.value)
-    }
-
-    const [newAddressCity, setNewAddressCity] = useState('')
-    function newAddressCityHandler(event) {
-        setNewAddressCity(event.target.value)
-    }
-
-    const [newAddressZipCode, setNewAddressZipCode] = useState('')
-    function newAddressZipCodeHandler(event) {
-        setNewAddressZipCode(event.target.value)
-    }
-
+    // address
     function submitNewAddressForm(e) {
         e.preventDefault();
 
@@ -244,12 +213,12 @@ export default function Settings() {
                 'Content-type': 'application/json'
             },
             body: JSON.stringify({
-                name: newAddressName,
-                barangay: newAddressBarangay,
-                street: newAddressStreet,
-                province: newAddressProvince,
-                city: newAddressCity,
-                zip_code: newAddressZipCode
+                name: newAddress.name,
+                barangay: newAddress.barangay,
+                street: newAddress.street,
+                province: newAddress.province,
+                city: newAddress.city,
+                zip_code: newAddress.zipcode
             })
         })
         .then((res) => res.json())
@@ -281,6 +250,9 @@ export default function Settings() {
   }, [incorrect]);
 
   return(
+    <>
+    <Success isModalOpen={isSuccessAccInfo}/>
+    <SuccessAddress isModalOpen={resultSuccess}/>
     <div className="w-full h-screen pt-16">
         <div className="pt-12 flex flex-row justify-center gap-5">
             <div className="bg-gray-100 w-1/4 px-5 pt-6 pb-10">
@@ -293,10 +265,6 @@ export default function Settings() {
                         <button onClick={toggleEditAccInfo} className="bg-slate-800 text-white px-2 text-xs rounded">{isEditAccInfo ? 'Cancel' : 'Edit'}</button>
                         {isEditAccInfo && <button onClick={editAccountInfo} className="bg-slate-800 text-white px-2 text-xs rounded" >Save</button>}
                     </div>
-
-                    {isSuccessAccInfo && <div className="pb-3 font-black text-green-600">
-                        Information successfully updated!
-                    </div>}
 
                     {!isEditAccInfo ? ( 
                     <>
@@ -321,15 +289,15 @@ export default function Settings() {
                     <div className="flex flex-col gap-3 pb-3">
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Email</span>
-                        <input placeholder={email} onChange={handleEditEmail} name="email" className="rounded-sm w-full pl-1"/>
+                        <input placeholder={email} onChange={handleAccountInfo} name="email" className="rounded-sm w-full pl-1"/>
                         </label> 
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Username</span>
-                        <input placeholder={username} onChange={handleEditUsername} name="username" className="rounded-sm w-full pl-1"/>
+                        <input placeholder={username} onChange={handleAccountInfo} name="username" className="rounded-sm w-full pl-1"/>
                         </label> 
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Password</span>
-                        <input placeholder={password ? '*'.repeat(25) : '*'} onChange={handleEditPassword} name="password" className="rounded-sm w-full pl-1"/>
+                        <input placeholder={password ? '*'.repeat(25) : '*'} onChange={handleAccountInfo} name="password" className="rounded-sm w-full pl-1"/>
                         </label>
                     </div>
                     </>
@@ -344,10 +312,6 @@ export default function Settings() {
                         <button onClick={toggleEditPersonalInfo} className="bg-slate-800 text-white px-2 text-xs rounded">{isEditPersonalInfo ? 'Cancel' : 'Edit'}</button>
                         {isEditPersonalInfo && <button onClick={editPersonalInfo} className="bg-slate-800 text-white px-2 text-xs rounded" >Save</button>}
                     </div>
-
-                    {isSuccessPersonalInfo && <div className="pb-3 font-black text-green-600">
-                        Information successfully updated!
-                    </div>}
 
                     {!isEditPersonalInfo ? ( 
                     <>
@@ -376,19 +340,19 @@ export default function Settings() {
                     <div className="flex flex-col gap-3">
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">First name</span>
-                        <input placeholder={first_name} onChange={handleEditFirstName} name="firstname" className="rounded-sm w-full pl-1"/>
+                        <input placeholder={first_name} onChange={handlePersonalInfo} name="first_name" className="rounded-sm w-full pl-1"/>
                         </label> 
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Middle name</span>
-                        <input placeholder={middle_name} onChange={handleEditMiddleName} name="middlename" className="rounded-sm w-full pl-1"/>
+                        <input placeholder={middle_name} onChange={handlePersonalInfo} name="middle_name" className="rounded-sm w-full pl-1"/>
                         </label> 
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Last name</span>
-                        <input placeholder={last_name} onChange={handleEditLastName} name="lastname" className="rounded-sm w-full pl-1"/>
+                        <input placeholder={last_name} onChange={handlePersonalInfo} name="last_name" className="rounded-sm w-full pl-1"/>
                         </label>
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Contact number</span>
-                        <input placeholder={contact_info} onChange={handleEditContactNo} name="contactnumber" className="rounded-sm w-full pl-1"/>
+                        <input placeholder={contact_info} onChange={handlePersonalInfo} name="contactNo" className="rounded-sm w-full pl-1"/>
                         </label>
                     </div>
                     </>
@@ -410,27 +374,27 @@ export default function Settings() {
                         <form onSubmit={submitNewAddressForm} className="bg-gray-100 flex flex-row border-t-2 justify-evenly p-5 gap-5 text-sm">
                             <div className="flex flex-col">
                                 <span for="name" className="flex justify-start font-bold">Name</span>
-                                <input id="name" onChange={newAddressNameHandler} className="w-full  pl-1 rounded-md " maxLength={25}></input>
+                                <input id="name" onChange={handleAddressInfo} className="w-full  pl-1 rounded-md " maxLength={25}></input>
                             </div>
                             <div className="flex flex-col">
                                 <span for="barangay" className="flex justify-start font-bold">Barangay</span>
-                                <input id="barangay" onChange={newAddressBarangayHandler} className="w-full  pl-1 rounded-md " maxLength={25}></input>
+                                <input id="barangay" onChange={handleAddressInfo} className="w-full  pl-1 rounded-md " maxLength={25}></input>
                             </div>
                             <div className="flex flex-col">
                                 <span for="street" className="flex justify-start font-bold">Street</span>
-                                <input id="street" onChange={newAddressStreetHandler} className="w-full  pl-1 rounded-md " maxLength={25}></input>
+                                <input id="street" onChange={handleAddressInfo} className="w-full  pl-1 rounded-md " maxLength={25}></input>
                             </div>
                             <div className="flex flex-col">
                                 <span for="province" className="flex justify-start font-bold">Province</span>
-                                <input id="province" onChange={newAddressProvinceHandler} className="w-full  pl-1 rounded-md " maxLength={25}></input>
+                                <input id="province" onChange={handleAddressInfo} className="w-full  pl-1 rounded-md " maxLength={25}></input>
                             </div>
                             <div className="flex flex-col">
                                 <span for="city" className="flex justify-start font-bold">City</span>
-                                <input id="city" onChange={newAddressCityHandler} className="w-full  pl-1 rounded-md " maxLength={25}></input>
+                                <input id="city" onChange={handleAddressInfo} className="w-full  pl-1 rounded-md " maxLength={25}></input>
                             </div>
                             <div className="flex flex-col">
                                 <span for="zipcode" className="flex justify-start font-bold">Zip-Code</span>
-                                <input id="zipcode" onChange={newAddressZipCodeHandler} className="w-full  pl-1 rounded-md "></input>
+                                <input id="zipcode" onChange={handleAddressInfo} className="w-full  pl-1 rounded-md "></input>
                             </div>
                             <button className={`${incorrect && "animate-wiggle"} w-24 text-white h-full bg-green-500 px-2 py-1 font-bold rounded-md `}>Add</button>
                         </form>
@@ -440,16 +404,17 @@ export default function Settings() {
 
                 <div className="flex flex-col gap-5">
                     {addresses.map((address) => (
-                        <AddressCard addresses={addresses} address={address} setReloadAddData={setReloadAddData} setAddSuccess={setAddSuccess} setDeleteSuccess={setDeleteSuccess}/>
+                        <AddressCard key={address.address_id} addresses={addresses} address={address} setReloadAddData={setReloadAddData} setAddSuccess={setAddSuccess} setDeleteSuccess={setDeleteSuccess} setResultSuccess={setResultSuccess}/>
                     ))}
                 </div>
             </div>
         </div>
     </div>
+    </>
     );
 }
 
-function AddressCard({ addresses, address, setReloadAddData, setAddSuccess, setDeleteSuccess }) {
+function AddressCard({ addresses, address, setReloadAddData, setAddSuccess, setDeleteSuccess, setResultSuccess }) {
 
     function deleteAddress(address_id) {
         fetch(`/api/address/${address_id}`, {
@@ -467,10 +432,7 @@ function AddressCard({ addresses, address, setReloadAddData, setAddSuccess, setD
         })
     }
 
-
-
     const [edit, setEdit] = useState(false);
-    const [resultSuccess, setResultSuccess] = useState(false);
     const [resultFail, setResultFail] = useState(false);
 
     // ito yung updated detailz
@@ -511,7 +473,7 @@ function AddressCard({ addresses, address, setReloadAddData, setAddSuccess, setD
             setEdit(false);
             setTimeout(() => {
                 setResultSuccess(false);
-            }, 1000);
+            }, 3000);
         } else {
             console.log("no changes");
             setResultSuccess(false);
@@ -519,11 +481,12 @@ function AddressCard({ addresses, address, setReloadAddData, setAddSuccess, setD
             setEdit(false);
             setTimeout(() => {
                 setResultFail(false);
-            }, 1000);
+            }, 3000);
         }
     }
 
     return(
+    <>
     <div className="flex flex-col gap-4 bg-gray-100 p-5">
         <form onSubmit={submitEditAddressForm} >
             <div className="flex justify-between pb-3">
@@ -534,7 +497,6 @@ function AddressCard({ addresses, address, setReloadAddData, setAddSuccess, setD
                 ) : (
                 <input name="name" onChange={handleEditAddress} placeholder={address.name} className="bg-transparent border rounded-md"/>
                 )}
-                {resultSuccess && <div className="text-md font-bold text-green-600">Address Successfully Updated!</div>}
                 {resultFail && <div className="text-md font-bold text-red-600">There are no changes!</div>}
                 </div>
 
@@ -582,6 +544,7 @@ function AddressCard({ addresses, address, setReloadAddData, setAddSuccess, setD
             </table>
         </form>
     </div>
+    </>
     );
 }
 
@@ -609,4 +572,50 @@ function deepEqual(obj1, obj2) {
   
     return true;
   }
+
+  const Modal = ({ isOpen, children }) => {
+    if (!isOpen) {
+      return null;
+    }
+  
+    return (
+      <div className="modal-overlay">
+        <div className="modal-content">
+          {children}
+        </div>
+      </div>
+    );
+  };
+  
+  function Success({isModalOpen}) {
+  
+    return (
+      <div className="fixed pt-16">
+        <Modal isOpen={isModalOpen}>
+          <div className="w-screen flex justify-center items-center ">
+              <div className="bg-gray-50 p-3 rounded-xl w-1/2 shadow-md border">
+                <div className="text-green-500 text-md font-semibold text-center">Successfully edited account Information!</div>
+              </div>
+          </div>
+        </Modal>
+      </div>
+    );
+  };
+
+  function SuccessAddress({isModalOpen}) {
+  
+    return (
+      <div className="fixed pt-16">
+        <Modal isOpen={isModalOpen}>
+          <div className="w-screen flex justify-center items-center ">
+              <div className="bg-gray-50 p-3 rounded-xl w-1/2 shadow-md border">
+                <div className="text-green-500 text-md font-semibold text-center">Successfully edited Address Information!</div>
+              </div>
+          </div>
+        </Modal>
+      </div>
+    );
+  };
+
+
   

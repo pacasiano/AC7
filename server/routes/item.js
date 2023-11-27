@@ -59,8 +59,7 @@ router.post('/', (req, res) => {
                                         `WHERE sale.account_id = ${account_id} AND product_id = ${product_id}`;
                     connection.query(updateQtyQuery, function(err, results) {
                         console.log("Add to cart: Sale_item quantity successfully updated!")
-                        // res.json({message: "Goods 👍"})
-                        res.redirect('/AC7/cart')
+                        res.json({message: "Goods 👍"})
                     })
                 })
             }

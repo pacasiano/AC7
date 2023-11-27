@@ -58,7 +58,7 @@ function separatedOrders(orders) {
 
     return (
 
-      <div className="flex flex-row justify-between h-screen pt-16 px-20">
+      <div className="flex flex-row justify-between min-h-screen pt-16 px-20">
         <div className="" />
           <div className="flex flex-col items-start py-16 w-full ">
             <div className="flex flex-row gap-10 w-full">

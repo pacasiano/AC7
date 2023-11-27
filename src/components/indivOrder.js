@@ -28,7 +28,7 @@ function Product() {
   }, [sale_id]);
   
   return (
-    <div className="mt-24 h-screen p-10">
+    <div className="mt-24 mb-20 min-h-screen p-10">
       <div className="flex flex-row justify-center gap-10">
         <div className="flex flex-col w-3/6">
           <div className="flex flex-col bg-gray-100 p-5">

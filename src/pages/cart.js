@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "../App.css";
-import { Link } from "react-router-dom";
 import CODLogo from "../imgs/CODLogo.png";
 import gcashLogo from "../imgs/gcashLogo.png";
 import CartItem from "../components/cartItem";
@@ -39,13 +38,11 @@ function Cart() {
       setEmptyCart(true);
       setTimeout(() => {
         setEmptyCart(false);
-      }, 2000);
+      }, 3000);
     }else {
       window.location.href = "/AC7/checkout";
     }
   }
-  
-
 
   const [items, setItems] = useState([]);
 
@@ -73,7 +70,7 @@ function Cart() {
       setTimeout(() => {
         // Once the data is fetched or the operation is done, set loading to false
         setLoading(false);
-      }, 2000); // Adjust the time as needed
+      }, 3000); // Adjust the time as needed
     };
 
     // Call the asynchronous function
@@ -82,7 +79,9 @@ function Cart() {
   
 
   return (
-    <div className="Cart h-screen pt-16">
+    <>
+    <Invalid isModalOpen={emptyCart} />
+    <div className=" min-h-screen pt-16">
       <div className="flex flex-col lg:flex-row lg:items-start items-center lg:gap-0 gap-5 justify-evenly py-16">
         <div className="flex flex-col lg:w-1/2 w-11/12 gap-5 ">
           <div className="bg-gray-100 p-5">
@@ -113,7 +112,7 @@ function Cart() {
               </div>
               ) : (
                 // Content to display when loading is false
-                <div className={`${emptyCart ? "animate-bounce2 text-red-500 font-semibold transition-all" : "font-light" } text-center`}>
+                <div className={`font-light" text-center`}>
                   You currently do not have any Products in your shopping cart
                 </div>
               )}
@@ -152,7 +151,37 @@ function Cart() {
         </div>
       </div>
     </div>
+    </>
   );
 }
+
+const Modal = ({ isOpen, children }) => {
+  if (!isOpen) {
+    return null;
+  }
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        {children}
+      </div>
+    </div>
+  );
+};
+
+function Invalid({isModalOpen}) {
+
+  return (
+    <div className="fixed pt-16">
+      <Modal isOpen={isModalOpen}>
+        <div className="w-screen flex justify-center items-center animate-bounce2 ">
+            <div className="bg-gray-50 p-3 rounded-xl w-1/2 shadow-md border">
+              <div className="text-red-500 text-md font-semibold text-center">You currently do not have any Products in your shopping cart</div>
+            </div>
+        </div>
+      </Modal>
+    </div>
+  );
+};
 
 export default Cart;

@@ -4,6 +4,7 @@ import "../App.css";
 import CODLogo from "../imgs/CODLogo.png";
 import gcashLogo from "../imgs/gcashLogo.png";
 import Select from "react-select"
+import Confirmation from "../components/orderConfirmation";
 
 function Checkout() {
 
@@ -31,6 +32,9 @@ function Checkout() {
     }
 
     const accountId = getAcctIdFromCookie(cookie);
+
+    // Pop up modal
+    const [isSuccess, setIsSuccess] = useState(false);
 
     //Cart items summary
     const [items, setItems] = useState([]);
@@ -118,7 +122,7 @@ function Checkout() {
       .then(res => res.json())
       .then(data => {
         console.log("Data message" + data.message)
-        window.location.href = '/AC7/order/confirmation';
+        setIsSuccess(true);
       })
       .catch((err) => {
         console.error("Error: ", err)
@@ -127,7 +131,7 @@ function Checkout() {
       setEmptyFields(true);
       setTimeout(() => {
         setEmptyFields(false);
-      }, 2000);
+      }, 3000);
     }
   }
 
@@ -150,8 +154,10 @@ function Checkout() {
 
   return (
     <>
+    <Confirmation isModalOpen={isSuccess}/>
+    <Invalid isModalOpen={emptyFields}/>
     {items.length > 0 ? 
-    <div className="Checkout h-screen pt-16">
+    <div className="min-h-screen pt-16">
       <form onSubmit={sendPostReq} id="billingInfo" className="flex flex-col lg:flex-row lg:items-start items-center lg:gap-0 gap-5 justify-evenly py-20">
         <div className="flex flex-col lg:w-1/2 w-11/12 gap-5 ">
           <div className="bg-gray-100 p-5">
@@ -245,12 +251,9 @@ function Checkout() {
               </div>
               <div className="text-xs font-light">Total:</div>
             </div>
-            <div className="flex justify-end text-xl font-semibold">
+            <div className="flex justify-end text-xl font-semibold mb-7">
               &#x20B1;{`${totalPayment.toFixed(2)}`}
             </div>
-            {emptyFields ? <div className=" animate-bounce2 text-red-500 font-medium text-md text-center mb-2">
-              Please fill out all the fields
-            </div> : <div className="mb-7"></div>}
                 {/* <Link to="/order/confirmation">
                 </Link> */}
                 <button type='submit' className={`${emptyFields && "animate-wiggle"} w-full bg-black text-white p-4 text-xl`}>
@@ -287,11 +290,43 @@ function Checkout() {
       </div>
     </div>
     }
+    
     </>
   );}
 
 function CustomItem({price, value, qty}){
   return <div className={"text-sm font-semibold pb-1"}><span className='font-medium'>Php</span> {price}<span className={"text-md font-semibold pl-3"}>{qty}</span><span className='font-light'>x</span><span className={"pl-3 font-medium"}>{value}</span></div>;
 }
+
+
+const Modal = ({ isOpen, children }) => {
+  if (!isOpen) {
+    return null;
+  }
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        {children}
+      </div>
+    </div>
+  );
+};
+
+function Invalid({isModalOpen}) {
+
+  return (
+    <div className="fixed pt-16">
+      <Modal isOpen={isModalOpen}>
+        <div className="w-screen flex justify-center items-center animate-bounce2 ">
+            <div className="bg-gray-50 p-3 rounded-xl w-1/2 shadow-md border">
+              <div className="text-red-500 text-md font-semibold text-center">Please fill out all the fields!</div>
+            </div>
+        </div>
+      </Modal>
+    </div>
+  );
+};
+
 
 export default Checkout;

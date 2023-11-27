@@ -12,7 +12,6 @@ export default function Confirmation() {
                     <Link to="/admin" className="bg-gray-200 p-2 text-center rounded-xl w-60">Continue</Link>
                 </div>
             </div>
-
         </div>
     )
 }

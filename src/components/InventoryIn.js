@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react"
 import Select from "react-select"
 import "../App.css"
 import { myContext } from "../context/adminContext";
-
+import InventoryInConfirmation2 from "./inventoryInConfirmation2";
 
 export default function InventoryIn() {
 
@@ -45,6 +45,8 @@ export default function InventoryIn() {
       ];
 
     return(
+        <>
+        <InventoryInConfirmation2 />
         <div className=" px-8 py-8 ">
             <div className="flex flex-col gap-5 ">
                 <div id="header" className="flex flex-row justify-between">
@@ -108,6 +110,7 @@ export default function InventoryIn() {
                 </form>
             </div>   
         </div>
+        </>
     );
 }
 

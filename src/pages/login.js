@@ -43,6 +43,7 @@ function Landing() {
 
   // should be true when password or username is incorrect
   const [incorrect, setIncorrect] = useState(false);
+  const [invalidPassword, setInvalidPassword] = useState(false);
 
   const [username, setUsername] = useState('');
   function usernameHandler(event) {
@@ -76,11 +77,17 @@ function Landing() {
             } else if (data.message === "Incorrect") {
                 // Handle incorrect credentials
                 console.log("Incorrect credentials");
-                setIncorrect(true);
+                setInvalidPassword(true);
+                setTimeout(() => {
+                  setInvalidPassword(false);
+                }, 3000);
             } else if (data.message === "User not found") {
                 // Handle user not found
                 console.log("User not found");
-                setIncorrect(true); // You can modify this based on your requirements
+                setIncorrect(true);
+                setTimeout(() => {
+                  setIncorrect(false);
+                }, 3000);
             } else {
                 // Handle other cases
                 console.log("Unknown error");
@@ -89,16 +96,13 @@ function Landing() {
         .catch((error) => {
             console.error('Error during fetch:', error);
         });
-
-    setTimeout(() => {
-        setIncorrect(false);
-    }, 4000);
 }
 
   return (
+    <>
     <section className="bg-gray-50 w-full h-full">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <a href="/home"
+        <a href="/AC7/"
           className="flex items-center mb-3 mr-4 text-2xl font-semibold text-gray-900 "
         >
           <img
@@ -114,10 +118,7 @@ function Landing() {
               Login to Account
             </h1>
             <form className="space-y-6" onSubmit={submitForm}>
-            <div className="absolute translate-x-[75px] -translate-y-3">
-            {incorrect && <div className="text-red-500 font-semibold text-center animate-bounce2">Invalid username or password!</div>}
-            </div>
-              <div className={`${incorrect && "pt-4"}`}>
+              <div className={``}>
                 <label for="username" className="block mb-2 text-sm font-medium text-gray-900">Your username</label>
                 <input
                   type="text"
@@ -127,13 +128,15 @@ function Landing() {
                   placeholder="Enter username"
                   required=""
                 />
+                {incorrect && <span className="fixed text-red-500 text-xs">Invalid Username!</span>}
               </div>
               <div className="">
                 <label for="password" className="block mb-2 text-sm font-medium text-gray-900">Password</label>
                 <input type="password" onChange={passwordHandler} id="password" placeholder="••••••••"
-                  className={`bg-gray-50 border ${incorrect ? 'border-red-500' : 'border-gray-900'} sm:text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5`}
+                  className={`bg-gray-50 border ${(incorrect || invalidPassword) ? 'border-red-500' : 'border-gray-900'} sm:text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5`}
                   required=""
                 />
+                {invalidPassword && <span className="fixed text-red-500 text-xs">Invalid Password!</span>}
               </div>
               <button type="submit"
                 className={` ${incorrect === true ? "animate-wiggle " : ""} w-full text-gray-700 bg-gray-200 hover:bg-gray-300 hover:text-gray-50 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center`}
@@ -141,7 +144,7 @@ function Landing() {
                 Login to account
               </button>
               <p className="flex justify-center text-sm font-light text-gray-500">
-                Don't have an account?{" "}
+                Don't have an account? &nbsp;
                 <Link
                   to="/sign-up"
                   className="font-medium text-blue-400 hover:underline"
@@ -154,6 +157,7 @@ function Landing() {
         </div>
       </div>
     </section>
+    </>
   );
 }
 

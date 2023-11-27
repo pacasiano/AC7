@@ -1,6 +1,5 @@
 import React, {useState,useEffect} from 'react';
 import Item1 from "../imgs/Item1.png";
-import { UNSAFE_DataRouterContext } from 'react-router-dom';
 
 function CartItem({item}) {
 
@@ -70,14 +69,9 @@ function CartItem({item}) {
     }
   };
 
-
+  //use useEffect to monitor change in hookQty. After some delay, record the qty in db 
   useEffect(() => {
-    return () => {
-      //Code inside this return function only runs when the user leaves this page
-      //This return () => {} part of useEffect is commonly known as a "cleanup function" - it gets executed when the component is about to unmount
-      //We include hookQty inside useEffect's dependency array so hookQty's value inside this function is updated in conjunction with the value of hookQty outside this function
-      //Without hookQty in the dependency array, this function is ran once, when this page loads, and snapshots the value of hookQty when this page is loaded
-      console.log(hookQty + ' items for ' + name)
+
       fetch(`/api/cart/${accountId}`, {
         method: 'POST',
         headers: {
@@ -87,12 +81,9 @@ function CartItem({item}) {
           product_id: product_id,
           quantity: hookQty
         })
-      })
-    }
-  }, [hookQty])
-
-    //use useEffect to monitor change in hookQty. After some delay, record the qty in db
-    //to remove an item, wrap the item in a form with method=DELETE    
+      });
+  
+  }, [accountId, hookQty, name, product_id]);
   
     return (
         <table className="table-fixed w-full">
