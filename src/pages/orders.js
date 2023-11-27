@@ -15,7 +15,7 @@ function Orders() {
   const accountId = getAcctIdFromCookie();
 
 useEffect(() => {
-  fetch(`/api/orders/${accountId}`)
+  fetch(`/api/orders/orders/${accountId}`)
     .then((res) => {
       if (!res.ok) {
         throw new Error(`HTTP error! Status: ${res.status}`);

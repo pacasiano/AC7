@@ -24,6 +24,19 @@ router.get('/', (req, res) => {
     });
 });
 
+// Get a particular customer's info
+router.get('/username/:username', (req, res) => {
+    const q = 'SELECT * FROM customer WHERE username = ?';
+    connection.query(q, [req.params.username], function(error, results, fields) {
+        if (error) {
+            console.error(error);
+            res.json('wala')
+        } else {
+            res.json("meron") // returns an array of obj literals in JSON format, each obj literal is a row from the users table
+        }
+    });
+});
+
 //Create a new customer
 router.post('/', (req, res) => {
     const {username} = req.cookies;
@@ -54,7 +67,7 @@ router.post('/', (req, res) => {
         } 
         else {
             console.log('Step 2.2: Address entry successfully created')
-            res.redirect('/AC7/login')
+            res.json({message: "Goods 👍"})
         }
     })
 })

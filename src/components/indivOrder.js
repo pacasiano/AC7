@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 function Product() {
 
   const { sale_id } = useParams();
+  console.log(sale_id);
   const [orders, setOrders] = useState([]);
   const [orderStatus, setOrderStatus] = useState(false);
 
@@ -55,6 +56,7 @@ function Product() {
         <div className="flex flex-col gap-5 w-1/3">
           <OrderTotal sale_id={sale_id} />
           {/* <ShippingInfo sale_id={sale_id} /> */}
+          {}
           <OrderActions orders={orderStatus} />
         </div>
       </div>

@@ -5,6 +5,42 @@ import { Link } from "react-router-dom";
 
 function Landing() {
 
+  const usernameCookie = document.cookie.split("; ").find((row) => row.startsWith("username="))?.split("=")[1];
+  console.log(usernameCookie);
+
+  const [isCustomerRegistered, SetIsCustomerRegistered] = useState(true);
+
+  useEffect(() => {
+      if (usernameCookie) {
+          fetch(`/api/customer/username/${usernameCookie}`)
+              .then((res) => {
+                  if (!res.ok) {
+                      throw new Error(`HTTP error! Status: ${res.status}`);
+                  }
+                  return res.json();
+              })
+              .then((response) => {
+                  console.log('Fetched response:', response);
+                  if (response === "wala") {
+                    SetIsCustomerRegistered(false);
+                  }else{
+                      SetIsCustomerRegistered(true);
+                  }
+              })
+              .catch((error) => {
+                  console.error('Fetch error:', error);
+                  // Handle the error here
+              });
+      } else {
+          console.log('Username is undefined');
+          // Handle the case where username is undefined
+      }
+  }, [usernameCookie]);
+
+  if(!isCustomerRegistered) {
+    window.location.href = "/AC7/sign-up/account-information";
+  }
+
   // should be true when password or username is incorrect
   const [incorrect, setIncorrect] = useState(false);
 
@@ -122,3 +158,5 @@ function Landing() {
 }
 
 export default Landing;
+
+

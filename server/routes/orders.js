@@ -25,7 +25,7 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/:id', (req, res) => {
+router.get('/orders/:id', (req, res) => {
     const { id: account_id } = req.params;
     let q = 'SELECT sale_id, DATE_FORMAT(sale_date, \'%M %d, %Y\') AS sale_date, sale_status, DATE_FORMAT(received_date, \'%M %d, %Y\') as received_date FROM sale ' +
             `LEFT JOIN shipment USING (sale_id) WHERE account_id = ${account_id}`;
