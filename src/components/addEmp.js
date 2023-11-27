@@ -69,7 +69,7 @@ export default function AddEmployee() {
     const handleSubmit = async (event) => {
         event.preventDefault();
     
-       if(passStrength !== "Too weak" && usernameTaken === true) {
+       if(passStrength !== "Too weak" && usernameTaken === false) {
     
         try {
 

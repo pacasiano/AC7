@@ -4,6 +4,30 @@ import "../App.css";
 import { useParams } from 'react-router-dom';
 
 function Product() {
+
+  const { sale_id } = useParams();
+  const [orders, setOrders] = useState([]);
+  const [orderStatus, setOrderStatus] = useState(false);
+
+  useEffect(() => {
+    fetch(`/api/order_item/${sale_id}`)
+      .then((res) => res.json())
+      .then((orders) => {
+        setOrders(orders);
+        console.log(orders)
+      });
+  }, [sale_id]);
+
+  useEffect(() => {
+    fetch(`/api/orders/${sale_id}`)
+      .then((res) => res.json())
+      .then((order) => {
+        if (order[0].sale_status === "in progress") {
+          setOrderStatus(true);
+        }
+        console.log(order[0].sale_status)
+      });
+  }, [sale_id]);
   
   return (
     <div className="mt-24 h-screen p-10">
@@ -25,34 +49,23 @@ function Product() {
             </table>
           </div>
           <div className="flex flex-col pt-4 gap-5">
-            {/* This should be repeating based on the number of items in the order */}
-            <ProductItem />
+            {orders.map((order) => {return <ProductItem name={order.name} price={order.price} quantity={order.quantity}  />})}
           </div>
         </div>
         <div className="flex flex-col gap-5 w-1/3">
-          <OrderTotal />
-          <ShippingInfo />
+          <OrderTotal sale_id={sale_id} />
+          {/* <ShippingInfo sale_id={sale_id} /> */}
+          <OrderActions orders={orderStatus} />
         </div>
       </div>
     </div>
   );
 };
 
-// the Product Item (This is repeating depending on the number of items in the order)
-function ProductItem() {
-  const { sale_id } = useParams();
-  const [orders, setOrders] = useState([]);
+// the Product Item component
+function ProductItem({name, price, quantity}) {
 
-  useEffect(() => {
-    fetch(`/api/order_item/${sale_id}`)
-      .then((res) => res.json())
-      .then((orders) => {
-        setOrders(orders);
-      });
-  }, []);
-
-  const itemCards = orders.map((order) => {
-    let subTotal = (order.quantity  * order.price);
+    let subTotal = (quantity  * price);
     return (
       <div className="p-5 bg-gray-100">
       <table className="table-fxed w-full">
@@ -67,13 +80,13 @@ function ProductItem() {
             </td>
             <td className="w-1/4">
               <div className="flex flex-col justify-center items-center translate-x-3">
-                <div className="text-xl self-start font-semibold pb-1">{order.name}</div>
-                <div className="font-normal self-start text-sm">₱ {order.price}</div>
+                <div className="text-xl self-start font-semibold pb-1">{name}</div>
+                <div className="font-normal self-start text-sm">₱ {price}</div>
               </div>
             </td>
             <td className="w-1/4">
               <div className="flex justify-center">
-                <div className="text-xl font-medium">{order.quantity}</div>
+                <div className="text-xl font-medium">{quantity}</div>
               </div>
             </td>
             <td className="w-1/4">
@@ -86,17 +99,12 @@ function ProductItem() {
       </table>
       </div>
     );
-  });
-  return (
-    <div className="flex flex-col gap-4">
-      {itemCards}
-    </div>
-  );
 };
 
 // the Order Total
-function OrderTotal() {
-  const { sale_id } = useParams();
+function OrderTotal({sale_id}) {
+  
+  console.log(sale_id)
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
@@ -105,7 +113,7 @@ function OrderTotal() {
       .then((orders) => {
         setOrders(orders);
       });
-  }, []);
+  }, [sale_id]);
   
   let total = 0;
   orders.forEach((order) => {
@@ -131,9 +139,8 @@ function CustomItem({price, value, qty}){
 }
 
 // Shipping info
-function ShippingInfo() {
-  
-  const { sale_id } = useParams();
+function ShippingInfo(sale_id) {
+
   const [address, setAddress] = useState();
   
   useEffect(() => {
@@ -185,5 +192,21 @@ function ShippingInfo() {
   );
   
 };
+
+function OrderActions(status) {
+
+  return (
+    <div className="bg-gray-100 p-5 gap-5 flex flex-col">
+      <div className="text-xl font-bold">
+        Order actions
+      </div>
+      <div className="flex flex-row gap-2 w-full">
+        {/* currently disabled if order status is "in progress" dapat it should be disabled when order status is "courrier" */}
+        <button disabled={status} className={`${status ? "bg-neutral-50 text-gray-500" : "bg-neutral-200" }  p-2 rounded-md w-full font-medium`}>Cancel order</button>
+        <button disabled={!status} className={`${!status ? "bg-neutral-50 text-gray-500" : "bg-blue-300" } p-2 rounded-md w-full font-medium`}>Order Received</button>
+      </div>
+    </div>
+  )
+}
 
 export default Product;
