@@ -9,6 +9,8 @@ const connection = mysql.createConnection({
     database: "ac7_database"
 })
 
+router.use(express.json())
+
 //Get all employees
 router.get('/', (req, res) => {
     const q = 'SELECT * FROM employee';
@@ -29,6 +31,19 @@ router.get('/:id', (req, res) => {
         else {
             res.json(results);
         }
+    })
+})
+
+router.post('/', (req, res) => {
+    const {username, first_name, middle_name = '', last_name, position, contact_info} = req.body;
+    const q = `INSERT INTO employee SET account_id = (SELECT account_id FROM account WHERE username = '${username}'), ` +
+                `first_name = '${first_name}', middle_name = '${middle_name}', last_name = '${last_name}', ` +
+                `position = '${position}', contact_info = '${contact_info}'`
+    connection.query(q, (err, results) => {
+        if (err) { console.error(err) }
+        else {
+            res.redirect('/AC7')
+        } 
     })
 })
 

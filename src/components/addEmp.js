@@ -9,7 +9,37 @@ export default function AddEmployee() {
 
     // username and password values
     const [username, setUsername] = useState("");
-    const [password, setPassword] = useState();
+    const [password, setPassword] = useState('');
+
+    const [firstName, setFirstName] = useState('')
+    function handleFirstName(event) {
+        setFirstName(event.target.value ? event.target.value : '')
+    }
+
+    const [middleName, setMiddleName] = useState('')
+    function handleMiddleName(event) {
+        setMiddleName(event.target.value ? event.target.value : '')
+    }
+
+    const [lastName, setLastName] = useState('')
+    function handleLastName(event) {
+        setLastName(event.target.value ? event.target.value : '')
+    }
+
+    const [position, setPosition] = useState('')
+    function handlePosition(event) {
+        setPosition(event.target.value ? event.target.value : '')
+    }
+
+    const [contactInfo, setContactInfo] = useState('')
+    function handleContactInfo(event) {
+        setContactInfo(event.target.value ? event.target.value : '')
+    }
+    console.log(contactInfo)
+    console.log(position)
+    console.log(firstName)
+    console.log(lastName)
+
 
     // Fetches all accounts (for checking if username is taken)
     const [users, setUsers] = useState([]);
@@ -66,35 +96,44 @@ export default function AddEmployee() {
 
     const [invalidInput, setInvalidInput] = useState(false);
     // Checks if password matches, then submits form
-    const handleSubmit = async (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault();
     
-       if(passStrength !== "Too weak" && usernameTaken === true) {
+        if (passStrength !== "Too weak" && usernameTaken === false) {
+            fetch("/api/account", {
+                method: "POST",
+                headers: {
+                "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                return fetch('/api/employee', {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        first_name: firstName,
+                        middle_name: middleName,
+                        last_name: lastName,
+                        position: position,
+                        contact_info: contactInfo
+                    })
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                //we dont rly have to do anything
+            })
     
-        try {
-
-        // Send a POST request to the API endpoint (idk ano dapat dito)
-        const response = await fetch("/api/product", {
-            method: "POST",
-            headers: {
-            "Content-Type": "application/json",
-            },
-            // Include the body with the form data here if needed
-            // body: JSON.stringify({ key: value }),
-        });
-    
-        if (response.ok) {
-            // Handle success
-            console.log("Form submitted successfully!");
-        } else {
-            // Handle errors
-            console.error("Form submission failed:", response.status);
         }
-        } catch (error) {
-        console.error("Error submitting form:", error);
-        }
-
-        }else {
+        else {
             setInvalidInput(true)
             setTimeout(() => {
                setInvalidInput(false) 
@@ -169,19 +208,19 @@ export default function AddEmployee() {
                     <tbody>
                         <tr className="bg-gray-300">
                         <td className="text-sm font-semibold border p-2">
-                            <input name="first_name" className="w-full h-10 text-center" required />
+                            <input onChange={handleFirstName} name="first_name" className="w-full h-10 text-center" required />
                         </td>
                         <td className="text-sm font-semibold border p-2">
-                            <input name="middle_name" type="text" className="w-full h-10 text-center" />
+                            <input onChange={handleMiddleName} name="middle_name" type="text" className="w-full h-10 text-center" />
                         </td>
                         <td className="text-sm font-semibold border p-2">
-                            <input name="last_name" type="text" className="w-full h-10 text-center" required/>
+                            <input onChange={handleLastName} name="last_name" type="text" className="w-full h-10 text-center" required/>
                         </td>
                         <td className="text-sm font-semibold border p-2">
-                            <input name="position" type="text" className="w-full h-10 text-center" required/>
+                            <input onChange={handlePosition} name="position" type="text" className="w-full h-10 text-center" required/>
                         </td>
                         <td className="text-sm font-semibold border p-2">
-                            <input name="contact_info" type="text" className="w-full h-10 text-center" required/>
+                            <input onChange={handleContactInfo} name="contact_info" type="text" className="w-full h-10 text-center" required/>
                         </td>
                         </tr>
                     </tbody>

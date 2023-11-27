@@ -32,16 +32,25 @@ router.post('/', (req, res) => {
                 const { account_id, password: dbPassword } = results[0];
 
 
-                bcrypt.compare(password, dbPassword, function(err, result) {
-                    if (result === true) {
-                        const expirationDate = new Date();
-                        expirationDate.setDate(expirationDate.getDate() + 30);
-                        res.cookie('account_id', `${account_id}`, { expires: expirationDate });
-                        res.json({ message: 'Correct' });
-                    } else {
-                        res.json({ message: 'Incorrect' });
-                    }
-                });
+                if (password === dbPassword) {
+                    const expirationDate = new Date();
+                    expirationDate.setDate(expirationDate.getDate() + 30);
+                    res.cookie('account_id', `${account_id}`, { expires: expirationDate });
+                    res.json({ message: 'Correct' });
+                } else {
+                    res.json({ message: 'Incorrect' });
+                }
+
+                // bcrypt.compare(password, dbPassword, function(err, result) {
+                //     if (result === true) {
+                //         const expirationDate = new Date();
+                //         expirationDate.setDate(expirationDate.getDate() + 30);
+                //         res.cookie('account_id', `${account_id}`, { expires: expirationDate });
+                //         res.json({ message: 'Correct' });
+                //     } else {
+                //         res.json({ message: 'Incorrect' });
+                //     }
+                // });
             } 
             catch (err) {
                 console.error(err);

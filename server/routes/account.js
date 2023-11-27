@@ -38,7 +38,7 @@ router.post('/', (req, res) => {
             else {
                 console.log('Step 1.2: Account creation successful')
                 res.json({
-                    message: 'FUCK YES!'
+                    message: 'Goods 👍'
                 })
             }
         })
