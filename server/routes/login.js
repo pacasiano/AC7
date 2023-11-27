@@ -31,6 +31,7 @@ router.post('/', (req, res) => {
             try {
                 const { account_id, password: dbPassword } = results[0];
 
+
                 bcrypt.compare(password, dbPassword, function(err, result) {
                     if (result === true) {
                         const expirationDate = new Date();

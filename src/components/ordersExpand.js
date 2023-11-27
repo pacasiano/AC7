@@ -27,8 +27,12 @@ function Order({ order }) {
         <td className="text-sm font-semibold border p-2">{order.sale_date}</td>
         <td className="text-sm font-semibold border p-2">{order.sale_status}</td>
         <td className="text-sm font-semibold border p-2">&#x20B1;{order.price}</td>
-        <td className="w-32 text-sm font-semibold border p-2">
+        <td className="w-36 text-sm font-semibold border p-2">
+        <div className="flex flex-col gap-1">
+        <button onClick={Sent} disabled={order.sale_status === "in progress"} className={`${order.sale_status === "in progress" ? "bg-gray-200 text-gray-400" : "bg-green-500 text-white" } py-2 w-full rounded`}>Order Sent</button>
+        <button onClick={Returned} disabled={!order.sale_status === "in progress"} className={`${!order.sale_status === "in progress" ? "bg-gray-200 text-gray-400" : "bg-green-500 text-white" } py-2 w-full rounded`}>Returned</button>
         <button onClick={toggleExpand} className="bg-blue-500 text-white py-2 w-full rounded">{isExpanded ? 'COLLAPSE' : 'EXPAND'}</button>
+        </div>
         </td>
       </tr>
       {isExpanded && (
@@ -62,6 +66,18 @@ function Order({ order }) {
     </tbody>
 
   );
+}
+
+function Sent() {
+  return(
+    console.log("gi send na sa courier")
+  )
+}
+
+function Returned() {
+  return(
+    console.log("gi return sa seller")
+  )
 }
 
 export default Order;
