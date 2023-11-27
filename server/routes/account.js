@@ -15,13 +15,14 @@ router.use(express.json())
 //Create new account
 router.post('/', (req, res) => {
     //username must be unique
-    const {username, password} = req.body;
+    const {username, password, account_type = 'customer'} = req.body;
     const saltRounds = 10;
+
 
     //Encrypt password
     bcrypt.hash(password, saltRounds, function(err, hash) {
         // Query 1: Create new account
-        const q1 = `INSERT INTO account SET username = '${username}', password = '${hash}', account_type = 'customer'`;
+        const q1 = `INSERT INTO account SET username = '${username}', password = '${hash}', account_type = '${account_type}'`;
         connection.query(q1, (err, results) => {
             if (err) {console.error(err)}
             else {
@@ -38,7 +39,7 @@ router.post('/', (req, res) => {
             else {
                 console.log('Step 1.2: Account creation successful')
                 res.json({
-                    message: 'Goods 👍'
+                    message: 'good'
                 })
             }
         })
@@ -65,6 +66,19 @@ router.get('/:id', (req, res) => {
     catch (err) {
         res.json({message: 'No account logged in'})
     }
+})
+
+//Check if alpha account exists
+router.get('/get/alpha', (req, res) => {
+    const q = 'SELECT * FROM account WHERE username = \'alpha\'';
+    connection.query(q, (err, results) => {
+        if (results.length > 0) {
+            res.json({message: 'exists'})
+        }
+        else {
+            res.json({message: 'nonexistent'})
+        }
+    })
 })
 
 // Get all usernames to check availability

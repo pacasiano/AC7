@@ -129,7 +129,7 @@ export default function AddEmployee() {
             })
             .then(res => res.json())
             .then(data => {
-                //we dont rly have to do anything
+                window.location.href = '/AC7';
             })
     
         }

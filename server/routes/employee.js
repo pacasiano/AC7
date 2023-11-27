@@ -34,15 +34,19 @@ router.get('/:id', (req, res) => {
     })
 })
 
+//Create new employee
 router.post('/', (req, res) => {
     const {username, first_name, middle_name = '', last_name, position, contact_info} = req.body;
     const q = `INSERT INTO employee SET account_id = (SELECT account_id FROM account WHERE username = '${username}'), ` +
                 `first_name = '${first_name}', middle_name = '${middle_name}', last_name = '${last_name}', ` +
                 `position = '${position}', contact_info = '${contact_info}'`
     connection.query(q, (err, results) => {
-        if (err) { console.error(err) }
+        if (err) { 
+            console.error(err)
+            res.json({message: err.message})
+        }
         else {
-            res.redirect('/AC7')
+            res.json({message: 'Employee account creation successful!'})
         } 
     })
 })

@@ -23,25 +23,6 @@ import './App.css';
 
 function App() {
   //Get cookie
-  // const cookie = document.cookie;
-
-  // function getAcctIdFromCookie(cookieStr) {
-  //   if (cookieStr.indexOf(';') > 0) {
-  //     const cookiesArray = cookieStr.split(';');
-  //     for (let i = 0; i < cookiesArray.length; i++) {
-  //       if (cookiesArray[i].indexOf('account_id') > 0) {
-  //         const id = cookiesArray[i].replace('account_id=', '').trim();
-  //         return id;
-  //       }
-  //     }
-  //   } else {
-  //     const id = cookie.slice(cookie.indexOf('=') + 1);
-  //     return id;
-  //   }
-  // }
-
-  // const accountId = getAcctIdFromCookie(cookie);
-
   const accountId = document.cookie
   .split("; ")
   .find((row) => row.startsWith("account_id="))
@@ -59,6 +40,54 @@ function App() {
 
   const {account_type} = user[0] || {};
   console.log(account_type + " Account type")
+
+  //Check if alpha acc exists, if not, we create it
+  useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const response1 = await fetch('/api/account/get/alpha');
+            const data1 = await response1.json();
+
+            if (data1.message !== 'exists') {
+                const response2 = await fetch('/api/account', {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: 'alpha',
+                        password: '123',
+                        account_type: 'employee'
+                    })
+                });
+                const data2 = await response2.json();
+
+                if (data2.message === 'good') {
+                    const response3 = await fetch('/api/employee', {
+                        method: 'POST',
+                        headers: {
+                            'Content-type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            username: 'alpha',
+                            first_name: 'Alpha',
+                            middle_name: '',
+                            last_name: 'Employee',
+                            position: 'Big Boss',
+                            contact_info: '000-0000'
+                        })
+                    });
+                    const data3 = await response3.json();
+                    console.log(data3.message);
+                }
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    fetchData();
+}, []);
 
   return (
     <>
