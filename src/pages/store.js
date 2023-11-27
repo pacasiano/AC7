@@ -7,7 +7,7 @@ function Store() {
 
     const [categories, setCategories] = useState([])
     useEffect(() => {
-        fetch('/api/product/categories')
+        fetch('/api/product/categories/all')
         .then(res => res.json())
         .then(data => {
             setCategories(data)

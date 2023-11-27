@@ -27,7 +27,7 @@ router.get('/', (req, res) => {
 
 
 //Retrieve all categories
-router.get('/categories', (req, res) => {
+router.get('/categories/all', (req, res) => {
     const q = 'SELECT category FROM product ' +
                 'GROUP BY category';
     connection.query(q, (err, results) => {
@@ -59,11 +59,11 @@ router.post('/', (req, res) => {
     console.log('Adding new product...')
     console.log(req.body)
     const q1 = `INSERT INTO product SET name = '${product_name}', description = '${description}', ` +
-                `category = '${category}', threshold = ${threshold}, quantity = 0`;
+                `category = '${category}', threshold = ${threshold}`;
     connection.query(q1, (err, results) => {
         if (err) {console.error(err)}
         else {
-            res.send('Good boy!')
+            res.redirect('/AC7')
         }
     })
 })

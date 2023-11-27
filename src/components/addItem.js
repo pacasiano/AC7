@@ -1,24 +1,32 @@
 import React, { useState, useEffect, useContext } from "react";
 import Select from "react-select";
+import CreatableSelect from 'react-select/creatable';
 import { myContext } from "../context/adminContext";
 
 export default function AddItem() {
   
-  const { setPage } = useContext(myContext);
+    const { setPage } = useContext(myContext);
 
-  // category options
-  const options = [
-    {value: "Skin care", label: "Skin care"},
-    {value: "Hair care", label: "Hair care"},
-    {value: "Body care", label: "Body care"}
-];
+    const [categories, setCategories] = useState([]);
+    useEffect(() => {
+        fetch('/api/product/categories/all')
+        .then(res => res.json())
+        .then(data => setCategories(data))
+    }, [])
 
-const customStyles = {
-    control: base => ({
-      ...base,
-      height: 81,
-    })
-  };
+    // category options
+    const options = categories.map(category => ({
+        value: category.category, 
+        label: category.category
+    }))
+    
+
+    const customStyles = {
+        control: base => ({
+        ...base,
+        height: 81,
+        })
+    };
 
   return (
     <div className="px-8 py-8">
@@ -65,7 +73,8 @@ const customStyles = {
                         <input name="price" type="number" className="w-full h-20 text-center" required></input>
                     </td>
                     <td className="text-sm font-semibold border p-2">
-                        <Select options={options} isMulti name="category" styles={customStyles} className=" w-full h-full text-center" required />
+                        {/* <Select options={options} isMulti name="category" styles={customStyles} className=" w-full h-full text-center" required /> */}
+                        <CreatableSelect isClearable options={options} name="category" styles={customStyles} className=" w-full h-full text-center" required/>
                     </td>
                     <td className="text-sm font-semibold border p-2">
                         <input name="threshold" type="number" className=" w-full  h-20 text-center" required />
