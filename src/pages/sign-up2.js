@@ -2,6 +2,7 @@ import React, { useState , useEffect } from "react";
 import "../App.css";
 import navlogo from "../imgs/navlogo.png";
 import { Link } from "react-router-dom";
+import Check from "../imgs/check.png";
 
 function Landing() {
 
@@ -43,6 +44,7 @@ function Landing() {
     
     
     const [buttonError, setButtonError] = useState(false);
+    const [success, setSuccess] = useState(false);
     const [accountInformation, setAccountInformation] = useState({
         first_name: "",
         middle_name: "",
@@ -56,6 +58,41 @@ function Landing() {
         city: "",
         zip_code: ""
     });
+
+    const [value, setValue] = useState({
+        first_name: false,
+        middle_name: false,
+        last_name: false,
+        email: false,
+        contact_info: false,
+        address_name: false,
+        street: false,
+        barangay: false,
+        province: false,
+        city: false,
+        zip_code: false
+      });
+    
+      useEffect(() => {
+        const validateField = (field, value) => {
+          setValue((prevValue) => ({
+            ...prevValue,
+            [field]: !!value, // Set to true if value exists, false otherwise
+          }));
+        };
+    
+        validateField("first_name", accountInformation.first_name);
+        validateField("middle_name", accountInformation.middle_name);
+        validateField("last_name", accountInformation.last_name);
+        validateField("email", accountInformation.email);
+        validateField("contact_info", accountInformation.contact_info);
+        validateField("address_name", accountInformation.address_name);
+        validateField("street", accountInformation.street);
+        validateField("barangay", accountInformation.barangay);
+        validateField("province", accountInformation.province);
+        validateField("city", accountInformation.city);
+        validateField("zip_code", accountInformation.zip_code);
+      }, [accountInformation]);
 
     function handleAccountInformation(event) {
         setAccountInformation({...accountInformation, [event.target.name]: event.target.value});
@@ -93,8 +130,7 @@ function Landing() {
         .then(data => {
             console.log(data.message)
             // remove username cookie
-            document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            window.location.href = "/AC7/"
+            setSuccess(true);
             
         })
         .catch(err => {
@@ -112,10 +148,12 @@ function Landing() {
   };
 
   return (
+    <>
+    <Error isModalOpen={buttonError} />
+    <Success isModalOpen={success} />
     <div className="w-full h-screen flex flex-col justify-center items-center bg-gray-100 border-pink-700">
         {!isCustomerRegistered ? (<>
             <a href="/home" className="flex items-center mb-3 mr-4 text-2xl font-semibold text-gray-900 "><img className="object-cover w-24 h-14" src={navlogo} alt="logo"/>AC7 Dazzle White</a>
-            {buttonError && <div className="text-red-500 text-xl font-bold text-center animate-bounce2 pb-2 transition-all">Please fill out all fields!</div>}
             <div className="flex flex-col justify-center items-center bg-white rounded-lg shadow-lg p-5 w-2/3">
                 {/* this the form for this */}
                 <form onSubmit={handleSubmit} className="space-y-4 w-full">
@@ -128,27 +166,27 @@ function Landing() {
                                         {/* first name */}
                                         <div>
                                             <label for="firstName" className="block mb-2 text-sm font-medium text-gray-900">First Name</label>
-                                            <input onChange={handleAccountInformation} type="text" name="first_name" id="firstName" className="bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5" placeholder="First Name" />
+                                            <input onChange={handleAccountInformation} type="text" name="first_name" id="firstName" className={`${(buttonError && !value.first_name) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} placeholder="First Name" />
                                         </div>
                                         {/* Middle name */}
                                         <div>
                                             <label for="middleName" className="block mb-2 text-sm font-medium text-gray-900">Middle Name</label>
-                                            <input onChange={handleAccountInformation} type="text" name="middle_name" id="midldeName" placeholder="Middle Name" className="bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5" />
+                                            <input onChange={handleAccountInformation} type="text" name="middle_name" id="midldeName" placeholder="Middle Name" className={`${(buttonError && !value.middle_name) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} />
                                         </div>
                                         {/* Last name */}
                                         <div>
                                             <label for="lastName" className="block mb-2 text-sm font-medium text-gray-900">Last Name</label>
-                                            <input onChange={handleAccountInformation} type="text" name="last_name" id="lastName" placeholder="Last Name" className="bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5" />
+                                            <input onChange={handleAccountInformation} type="text" name="last_name" id="lastName" placeholder="Last Name" className={`${(buttonError && !value.last_name) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} />
                                         </div>
                                         {/* Email */}
                                         <div>
                                             <label for="email" className="block mb-2 text-sm font-medium text-gray-900">Email</label>
-                                            <input onChange={handleAccountInformation} type="text" name="email" id="email" placeholder="Email" className="bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5" />
+                                            <input onChange={handleAccountInformation} type="text" name="email" id="email" placeholder="Email" className={`${(buttonError && !value.email) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} />
                                         </div>
                                         {/* contact information */}
                                         <div>
                                             <label for="contactInfo" className="block mb-2 text-sm font-medium text-gray-900">Contact Information</label>
-                                            <input onChange={handleAccountInformation} type="text" maxlength={11} name="contact_info" id="contactInfo" placeholder="Contact Information" className="bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5" />
+                                            <input onChange={handleAccountInformation} type="text" maxlength={11} name="contact_info" id="contactInfo" placeholder="Contact Information" className={`${(buttonError && !value.contact_info) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} />
                                         </div>
                                     </div>
                                 </div>
@@ -165,35 +203,35 @@ function Landing() {
                                                 {/* Address Name */}
                                                 <div>
                                                     <label for="addressName" className="block mb-2 text-sm font-medium text-gray-900">Address Name</label>
-                                                    <input onChange={handleAccountInformation} maxlength={25} type="text" name="address_name" id="addressName" className="bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5" placeholder="Address Name" />
+                                                    <input onChange={handleAccountInformation} maxlength={25} type="text" name="address_name" id="addressName" className={`${(buttonError && !value.address_name) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} placeholder="Address Name" />
                                                 </div>
                                                 {/* Street */}
                                                 <div>
                                                     <label for="street" className="block mb-2 text-sm font-medium text-gray-900">Street</label>
-                                                    <input onChange={handleAccountInformation} maxlength={25} type="text" name="street" id="street" placeholder="Street" className="bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5" />
+                                                    <input onChange={handleAccountInformation} maxlength={25} type="text" name="street" id="street" placeholder="Street" className={`${(buttonError && !value.street) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} />
                                                 </div>
                                                 {/* Barangay */}
                                                 <div>
                                                     <label for="barangay" className="block mb-2 text-sm font-medium text-gray-900">Barangay</label>
-                                                    <input onChange={handleAccountInformation} maxlength={25} type="text" name="barangay" id="barangay" placeholder="Barangay" className="bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5" />
+                                                    <input onChange={handleAccountInformation} maxlength={25} type="text" name="barangay" id="barangay" placeholder="Barangay" className={`${(buttonError && !value.barangay) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} />
                                                 </div>
                                             </div>
                                             <div className="flex flex-col gap-4 w-1/2">
                                                 {/* Province */}
                                                 <div>
                                                     <label for="province" className="block mb-2 text-sm font-medium text-gray-900">Province</label>
-                                                    <input onChange={handleAccountInformation} maxlength={25} type="text" name="province" id="province" className="bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5" placeholder="Province" />
+                                                    <input onChange={handleAccountInformation} maxlength={25} type="text" name="province" id="province" className={`${(buttonError && !value.province) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} placeholder="Province" />
                                                 </div>
                                                 
                                                 {/* City */}
                                                 <div>
                                                     <label for="city" className="block mb-2 text-sm font-medium text-gray-900">City</label>
-                                                    <input onChange={handleAccountInformation} maxlength={25} type="text" name="city" id="city" className="bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5" placeholder="City" />
+                                                    <input onChange={handleAccountInformation} maxlength={25} type="text" name="city" id="city" className={`${(buttonError && !value.city) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} placeholder="City" />
                                                 </div>
                                                 {/* Zip-code */}
                                                 <div>
                                                     <label for="zipCode" className="block mb-2 text-sm font-medium text-gray-900">Zip-code</label>
-                                                    <input onChange={handleAccountInformation} maxlength={5} type="text" name="zip_code" id="zipCode" maxLength="4" className="bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5" placeholder="Zip Code" />
+                                                    <input onChange={handleAccountInformation} maxlength={5} type="text" name="zip_code" id="zipCode" maxLength="4" className={`${(buttonError && !value.zip_code) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} placeholder="Zip Code" />
                                                 </div>
                                             </div>
                                         </div>
@@ -220,7 +258,60 @@ function Landing() {
             </div>
         )}
     </div>
+    </>
   );
 }
 
-export default Landing;
+const Modal = ({ isOpen, children }) => {
+    if (!isOpen) {
+      return null;
+    }
+  
+    return (
+      <div className="modal-overlay">
+        <div className="modal-content">
+          {children}
+        </div>
+      </div>
+    );
+  };
+  
+  function Error({isModalOpen}) {
+  
+    return (
+      <div className="fixed pt-12">
+        <Modal isOpen={isModalOpen}>
+          <div className="w-screen flex justify-center items-center ">
+              <div className="bg-gray-50 p-3 rounded-xl w-1/2 shadow-md border animate-bounce2">
+                <div className="text-red-500 text-md font-semibold text-center">Error, Please fill in all inputs!</div>
+              </div>
+          </div>
+        </Modal>
+      </div>
+    );
+  };
+
+    function Success({isModalOpen}) {
+    return(
+    <div className="fixed backdrop-blur-sm bg-black/20 drop-shadow-xl z-50">
+        <Modal isOpen={true}>
+        <div className="h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-white/30 ">
+            <div className="fixed bg-gray-100 -mt-20 rounded-xl w-96">
+                <div className="p-5 flex flex-col justify-center items-center gap-2">
+                    <img src={Check} alt="check" className="w-32 h-32"/>
+                    <span className="text-xl font-bold text-center">Your account has been successfully Created!</span>
+                    <Link to={"/"} onClick={()=> removeCookie()} className="bg-gray-200 p-2 text-center rounded-xl w-60">Continue</Link>
+                </div>
+            </div>
+        </div>
+        </Modal>
+    </div>
+    );}
+
+    function removeCookie() {
+        document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    }
+
+
+
+  export default Landing;
