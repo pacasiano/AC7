@@ -46,8 +46,10 @@ function Product() {
               </thead>
             </table>
           </div>
-          <div className="flex flex-col pt-4 gap-5">
+          <div className="pt-5">
+            <div className="bg-gray-100 py-5 flex flex-col gap-5">
             {orders.map((order) => {return <ProductItem name={order.name} price={order.price} quantity={order.quantity}  />})}
+            </div>
           </div>
         </div>
         <div className="flex flex-col gap-5 w-1/3">
@@ -65,7 +67,7 @@ function ProductItem({name, price, quantity}) {
 
     let subTotal = (quantity  * price);
     return (
-      <div className="p-5 bg-gray-100">
+      <div className="px-5 bg-gray-100">
       <table className="table-fxed w-full">
         <tbody>
           <tr>

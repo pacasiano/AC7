@@ -5,6 +5,7 @@ import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { faUsers } from "@fortawesome/free-solid-svg-icons";
 import { faInbox } from "@fortawesome/free-solid-svg-icons";
 import { faTruck } from "@fortawesome/free-solid-svg-icons";
+import { faIndustry } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Inventory from "../components/inventory";
 import Orders from "../components/orders";
@@ -15,6 +16,8 @@ import AddItem from "../components/addItem";
 import InventoryOut from "../components/inventoryOut";
 import InventoryTransactions from "../components/inventoryTransactions";
 import AddEmployee from "../components/addEmp";
+import ViewSuppliers from "../components/supplier";
+import AddSupplier from "../components/supplierAdd";
 import { myContext } from "../context/adminContext";
 import { Link } from "react-router-dom";
 
@@ -32,7 +35,7 @@ export default function Admin() {
 
     return (
         <div>
-            <div className="h-screen w-screen ">
+            <div className="min-h-screen w-screen ">
                 <div className="flex flex-row" >
                     <div id="sideBar" className="fixed h-screen overflow-y-auto scrolling-sidebar flex flex-col bg-gray-200 w-52">
                         <img src={navlogo} alt="AC7 Logo" className="py-5 aspect-auto"></img>
@@ -56,6 +59,11 @@ export default function Admin() {
                                     <div id="shipping" className="">
                                         <button onClick={() => setPage("shipping")} >
                                         <div className="text-xl font-semibold"><FontAwesomeIcon icon={faTruck} /> Shipping</div>
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <button onClick={() => setPage("viewSuppliers")} >
+                                        <div className="text-xl font-semibold"><FontAwesomeIcon icon={faIndustry} /> Suppliers</div>
                                         </button>
                                     </div>
                                 </div>
@@ -86,6 +94,10 @@ export default function Admin() {
                                     return <InventoryTransactions />;
                                 case "addEmployee":
                                     return <AddEmployee />;
+                                case "viewSuppliers":
+                                    return <ViewSuppliers />;
+                                case "addSupplier":
+                                    return <AddSupplier />;
                                 default:
                                     return <Inventory />;
                             }

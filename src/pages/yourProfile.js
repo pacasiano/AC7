@@ -67,6 +67,7 @@ export default function Settings() {
 
     const [addresses, setAddresses] = useState([]);
     const [addSuccess, setAddSuccess] = useState(false);
+    const [addFail, setAddFail] = useState(false);
     const [deleteSuccess, setDeleteSuccess] = useState(false);
     const [reloadAddData, setReloadAddData] = useState(false);
     const [resultSuccess, setResultSuccess] = useState(false);
@@ -76,7 +77,7 @@ export default function Settings() {
         .then((res) => res.json())
         .then((data) => {
             setAddresses(data);
-            
+            console.log(data);
         });
     }, [accountId, reloadAddData]);
 
@@ -190,6 +191,7 @@ export default function Settings() {
     // 
 
     //useStates, useEffects, and eventHandlers for adding new address
+
     const [newAddress, setNewAddress] = useState({
         addressName: null,
         barangay: null,
@@ -199,6 +201,19 @@ export default function Settings() {
         zipcode: null,
     });
 
+    const [reloadNewAddress, setReloadNewAddress] = useState(false);
+    useEffect(() => {
+        //sets the newAddress obj back to null
+        setNewAddress({
+            addressName: null,
+            barangay: null,
+            street: null,
+            province: null,
+            city: null,
+            zipcode: null,
+        });
+    }, [reloadNewAddress]);
+
     const handleAddressInfo = (e) => {
         setNewAddress({...newAddress, [e.target.id]: e.target.value});
     }
@@ -207,6 +222,8 @@ export default function Settings() {
     function submitNewAddressForm(e) {
         e.preventDefault();
 
+        // only works if all inputs are not null
+        if(newAddress.name && newAddress.barangay && newAddress.street && newAddress.province && newAddress.city && newAddress.zipcode) {
         fetch(`/api/address/${accountId}`, {
             method: "POST",
             headers: {
@@ -224,6 +241,7 @@ export default function Settings() {
         .then((res) => res.json())
         .then((data) => {
             console.log(data);
+            setReloadNewAddress((prev) => !prev)
             setReloadAddData((prev) => !prev);
             setAdd(false);
             setDeleteSuccess(false);
@@ -235,6 +253,12 @@ export default function Settings() {
         .catch((error) => {
             console.error('Error adding new address:', error);
         }); 
+        }else{
+            setAddFail(true);
+            setTimeout(() => {
+                setAddFail(false);
+            }, 3000);
+        }
     }
 
     // should be true when password or username is incorrect
@@ -252,8 +276,11 @@ export default function Settings() {
   return(
     <>
     <Success isModalOpen={isSuccessAccInfo}/>
-    <SuccessAddress isModalOpen={resultSuccess}/>
-    <div className="w-full h-screen pt-16">
+    <SuccessAddressEdit isModalOpen={resultSuccess}/>
+    <SuccessAddressAdd isModalOpen={addSuccess}/>
+    <FailAddressAdd isModalOpen={addFail}/>
+    <AddressDeleted isModalOpen={deleteSuccess}/>
+    <div className="w-full min-h-screen py-16">
         <div className="pt-12 flex flex-row justify-center gap-5">
             <div className="bg-gray-100 w-1/4 px-5 pt-6 pb-10">
                 <div className="text-2xl font-bold pb-4">Profile</div>
@@ -364,8 +391,6 @@ export default function Settings() {
                 <div className="flex flex-col">
                     <div className="bg-gray-100 p-5 flex flex-row justify-between">
                         <div className="text-2xl font-bold">Address</div>
-                        {addSuccess && <div className="text-xl pt-1 font-bold text-green-600">Address Successfully Added!</div>}
-                        {deleteSuccess && <div className="text-xl pt-1 font-bold text-green-600">Address Successfully Deleted!</div>}
                         <button onClick={toggleAdd} className="text-sm w-32 font-bold px-2 pt-1 bg-gray-800 text-white rounded-md">{isAdd ? 'Cancel' : 'Add Address'}</button>
                     </div>
 
@@ -374,29 +399,29 @@ export default function Settings() {
                         <form onSubmit={submitNewAddressForm} className="bg-gray-100 flex flex-row border-t-2 justify-evenly p-5 gap-5 text-sm">
                             <div className="flex flex-col">
                                 <span for="name" className="flex justify-start font-bold">Name</span>
-                                <input id="name" onChange={handleAddressInfo} className="w-full  pl-1 rounded-md " maxLength={25}></input>
+                                <input id="name" onChange={handleAddressInfo} className={`${addFail ? "border-red-500 border" : "border"} w-full pl-1 rounded-md`} maxLength={25}></input>
                             </div>
                             <div className="flex flex-col">
                                 <span for="barangay" className="flex justify-start font-bold">Barangay</span>
-                                <input id="barangay" onChange={handleAddressInfo} className="w-full  pl-1 rounded-md " maxLength={25}></input>
+                                <input id="barangay" onChange={handleAddressInfo} className={`${addFail ? "border-red-500 border" : "border"} w-full  pl-1 rounded-md`} maxLength={25}></input>
                             </div>
                             <div className="flex flex-col">
                                 <span for="street" className="flex justify-start font-bold">Street</span>
-                                <input id="street" onChange={handleAddressInfo} className="w-full  pl-1 rounded-md " maxLength={25}></input>
+                                <input id="street" onChange={handleAddressInfo} className={`${addFail ? "border-red-500 border" : "border"} w-full  pl-1 rounded-md`} maxLength={25}></input>
                             </div>
                             <div className="flex flex-col">
                                 <span for="province" className="flex justify-start font-bold">Province</span>
-                                <input id="province" onChange={handleAddressInfo} className="w-full  pl-1 rounded-md " maxLength={25}></input>
+                                <input id="province" onChange={handleAddressInfo} className={`${addFail ? "border-red-500 border" : "border"} w-full  pl-1 rounded-md`} maxLength={25}></input>
                             </div>
                             <div className="flex flex-col">
                                 <span for="city" className="flex justify-start font-bold">City</span>
-                                <input id="city" onChange={handleAddressInfo} className="w-full  pl-1 rounded-md " maxLength={25}></input>
+                                <input id="city" onChange={handleAddressInfo} className={`${addFail ? "border-red-500 border" : "border"} w-full  pl-1 rounded-md`} maxLength={25}></input>
                             </div>
                             <div className="flex flex-col">
                                 <span for="zipcode" className="flex justify-start font-bold">Zip-Code</span>
-                                <input id="zipcode" onChange={handleAddressInfo} className="w-full  pl-1 rounded-md "></input>
+                                <input id="zipcode" onChange={handleAddressInfo} className={`${addFail ? "border-red-500 border" : "border"} w-full  pl-1 rounded-md`}></input>
                             </div>
-                            <button className={`${incorrect && "animate-wiggle"} w-24 text-white h-full bg-green-500 px-2 py-1 font-bold rounded-md `}>Add</button>
+                            <button className={`${addFail && "animate-wiggle"} w-24 text-white h-full bg-green-500 px-2 py-1 font-bold rounded-md `}>Add</button>
                         </form>
                     )}
                     {/* hanggang dito */}
@@ -497,7 +522,6 @@ function AddressCard({ addresses, address, setReloadAddData, setAddSuccess, setD
                 ) : (
                 <input name="name" onChange={handleEditAddress} placeholder={address.name} className="bg-transparent border rounded-md"/>
                 )}
-                {resultFail && <div className="text-md font-bold text-red-600">There are no changes!</div>}
                 </div>
 
                 <div className="flex flex-row gap-2">
@@ -602,7 +626,7 @@ function deepEqual(obj1, obj2) {
     );
   };
 
-  function SuccessAddress({isModalOpen}) {
+  function SuccessAddressEdit({isModalOpen}) {
   
     return (
       <div className="fixed pt-16">
@@ -610,6 +634,51 @@ function deepEqual(obj1, obj2) {
           <div className="w-screen flex justify-center items-center ">
               <div className="bg-gray-50 p-3 rounded-xl w-1/2 shadow-md border">
                 <div className="text-green-500 text-md font-semibold text-center">Successfully edited Address Information!</div>
+              </div>
+          </div>
+        </Modal>
+      </div>
+    );
+  };
+
+  function SuccessAddressAdd({isModalOpen}) {
+  
+    return (
+      <div className="fixed pt-16">
+        <Modal isOpen={isModalOpen}>
+          <div className="w-screen flex justify-center items-center ">
+              <div className="bg-gray-50 p-3 rounded-xl w-1/2 shadow-md border">
+                <div className="text-green-500 text-md font-semibold text-center">Successfully Added Address!</div>
+              </div>
+          </div>
+        </Modal>
+      </div>
+    );
+  };
+
+  function FailAddressAdd({isModalOpen}) {
+  
+    return (
+      <div className="fixed pt-16">
+        <Modal isOpen={isModalOpen}>
+          <div className="w-screen flex justify-center items-center ">
+              <div className="bg-gray-50 p-3 rounded-xl w-1/2 shadow-md border animate-bounce2">
+                <div className="text-red-500 text-md font-semibold text-center">Error, please fill in all details!</div>
+              </div>
+          </div>
+        </Modal>
+      </div>
+    );
+  };
+
+  function AddressDeleted({isModalOpen}) {
+  
+    return (
+      <div className="fixed pt-16">
+        <Modal isOpen={isModalOpen}>
+          <div className="w-screen flex justify-center items-center ">
+              <div className="bg-gray-50 p-3 rounded-xl w-1/2 shadow-md border">
+                <div className="text-green-500 text-md font-semibold text-center">Address has been successfully deleted!</div>
               </div>
           </div>
         </Modal>

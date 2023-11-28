@@ -1,8 +1,11 @@
-import React from "react";
+import React, {useContext} from "react";
 import "../App.css";
 import Select from "react-select";
+import { myContext } from "../context/adminContext";
 
 export default function Shipping() {
+
+    const { setPage } = useContext(myContext);
 
     const options = [
     { value: 'All', label: 'All' },
@@ -17,8 +20,8 @@ export default function Shipping() {
                 </div>
                 <div className="flex flex-col gap-3">
                     <div className="flex flex-row justify-between bg-gray-200 w-full p-5">
-                        <div>
-                            <span className="text-md font-bold">Delivery List</span>
+                        <div className="flex flex-row justify-between w-full">
+                            <div className="text-md font-bold">Delivery List</div>
                         </div>
                         <div className="flex flex-row gap-2">
                             {/* <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">View All</span></button> */}

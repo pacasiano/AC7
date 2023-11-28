@@ -17,4 +17,11 @@ router.get('/', (req, res) => {
     })
 })
 
+router.get('/all', (req, res) => {
+    const q = `SELECT * FROM supplier`;
+    connection.query(q, (err, results) => {
+        res.json(results)
+    })
+})
+
 module.exports = router;
