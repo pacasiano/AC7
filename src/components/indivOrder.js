@@ -2,12 +2,16 @@ import React, { useState, useEffect } from 'react';
 import Item1 from "../imgs/Item1.png";
 import "../App.css";
 import { useParams } from 'react-router-dom';
+import Check from "../imgs/check.png";
+import { Link } from "react-router-dom";
 
 function Product() {
 
   const { sale_id } = useParams();
   const [orders, setOrders] = useState([]);
   const [orderStatus, setOrderStatus] = useState('');
+  const [cancelled, setCancelled] = useState(false);
+  const [received, setReceived] = useState(false);
 
   useEffect(() => {
     fetch(`/api/order_item/${sale_id}`)
@@ -26,7 +30,10 @@ function Product() {
   }, [sale_id]);
   
   return (
-    <div className="mt-24 mb-20 min-h-screen p-10">
+    <>
+    <Cancelled isModalOpen={cancelled} />
+    <Received isModalOpen={received} />
+    <div className="py-24  min-h-screen">
       <div className="flex flex-row justify-center gap-10">
         <div className="flex flex-col w-3/6">
           <div className="flex flex-col bg-gray-100 p-5">
@@ -53,10 +60,11 @@ function Product() {
         <div className="flex flex-col gap-5 w-1/3">
           <OrderTotal sale_id={sale_id} />
           {/* <ShippingInfo sale_id={sale_id} /> */}
-          <OrderActions orders={orderStatus} sale_id={sale_id} />
+          <OrderActions orders={orderStatus} sale_id={sale_id} setCancelled={setCancelled} setReceived={setReceived} />
         </div>
       </div>
     </div>
+    </>
   );
 };
 
@@ -191,9 +199,11 @@ function ShippingInfo(sale_id) {
   
 };
 
-function OrderActions({orders: sale_status, sale_id}) {
+function OrderActions({orders: sale_status, sale_id, setCancelled, setReceived}) {
 
-  function cancelOrder() {
+  function cancelOrder(e) {
+    e.preventDefault();
+
     fetch(`/api/orders/${sale_id}`, {
       method: 'PATCH',
       headers: {
@@ -203,9 +213,21 @@ function OrderActions({orders: sale_status, sale_id}) {
         new_sale_status: 'cancelled'
       })
     })
+    .then((data) => {
+      console.log(data)
+      console.log('Order cancelled!')
+      setCancelled(true);
+    })
+    .catch(error => {
+      console.error('Error cancelling order:', error);
+      // Handle the error as needed
+    });
   }
+  
 
-  function completedOrder() {
+  function completedOrder(e) {
+    e.preventDefault();
+    
     fetch(`/api/orders/${sale_id}`, {
       method: 'PATCH',
       headers: {
@@ -215,6 +237,14 @@ function OrderActions({orders: sale_status, sale_id}) {
         new_sale_status: 'complete'
       })
     })
+    .then(() => {
+      console.log('Order received!')
+      setReceived(true);
+    })
+    .catch(error => {
+      console.error('Error cancelling order:', error);
+      // Handle the error as needed
+    });
   }
 
   return (
@@ -230,5 +260,57 @@ function OrderActions({orders: sale_status, sale_id}) {
     </div>
   )
 }
+
+const Modal = ({ isOpen, children }) => {
+  if (!isOpen) {
+    return null;
+  }
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        {children}
+      </div>
+    </div>
+  );
+};
+
+function Cancelled({isModalOpen}) {
+
+  return (
+    <div className="fixed backdrop-blur-sm bg-black/20 drop-shadow-xl z-50">
+        <Modal isOpen={isModalOpen}>
+          <div className="h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-white/30 ">
+              <div className="fixed bg-gray-100 -mt-20 rounded-xl w-96">
+                  <div className="p-5 flex flex-col justify-center items-center gap-2">
+                      <img src={Check} alt="check" className="w-32 h-32"/>
+                      <span className="text-xl font-bold">Order cancelled!</span>
+                      <Link to={"/orders"} className="bg-gray-200 p-2 text-center rounded-xl w-60">Continue</Link>
+                  </div>
+              </div>
+          </div>
+        </Modal>
+      </div>
+  );
+};
+
+function Received({isModalOpen}) {
+
+  return (
+    <div className="fixed backdrop-blur-sm bg-black/20 drop-shadow-xl z-50">
+        <Modal isOpen={isModalOpen}>
+          <div className="h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-white/30 ">
+              <div className="fixed bg-gray-100 -mt-20 rounded-xl w-96">
+                  <div className="p-5 flex flex-col justify-center items-center gap-2">
+                      <img src={Check} alt="check" className="w-32 h-32"/>
+                      <span className="text-xl font-bold">Order Received!</span>
+                      <Link to={"/orders"} className="bg-gray-200 p-2 text-center rounded-xl w-60">Continue</Link>
+                  </div>
+              </div>
+          </div>
+        </Modal>
+      </div>
+  );
+};
 
 export default Product;
