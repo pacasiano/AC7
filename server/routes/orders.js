@@ -2,6 +2,8 @@ const express = require('express');
 const mysql = require('mysql2');
 const router = express.Router();
 
+router.use(express.json())
+
 let connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -16,6 +18,7 @@ router.get('/', (req, res) => {
             'FROM sale LEFT JOIN sale_item USING (sale_id) ' +
             'LEFT JOIN shipment USING (sale_id) ' +
             'INNER JOIN customer USING (account_id) ' +
+            'WHERE sale_status != \'cart\' ' +
             'GROUP BY sale_id, customer_id ' +
             'ORDER BY sale.sale_date DESC';
     connection.query(q, function(error, results, fields) {
@@ -49,5 +52,21 @@ router.get('/:id', (req, res) => {
         res.json(results);
     });
 });
+
+//Update sale_status
+router.patch('/:id', (req, res) => {
+    const {id: sale_id} = req.params;
+    const {new_sale_status} = req.body;
+    const q = `UPDATE sale SET sale_status = '${new_sale_status}' WHERE sale_id = ${sale_id}`;
+    connection.query(q, (err, results) => {
+        if (err) {
+            console.error(err)
+            res.json({message: err.message})
+        }
+        else {
+            console.log(`Sale_status of Sale with ID ${sale_id} has been changed to ${new_sale_status}`)
+        }
+    })
+})
 
 module.exports = router;    

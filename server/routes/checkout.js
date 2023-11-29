@@ -20,7 +20,7 @@ router.post('/', (req, res) => {
     //need to validate gcash_ref_num length doesn't exceed 13 and only contains numbers
 
     //Query 1: Create a sale_payment entry
-    const q1 = `INSERT INTO sale_payment SET sale_id = (SELECT sale_id FROM sale WHERE account_id = ${account_id} AND sale_status = 'in progress'), ` +
+    const q1 = `INSERT INTO sale_payment SET sale_id = (SELECT sale_id FROM sale WHERE account_id = ${account_id} AND sale_status = 'cart'), ` +
                 `mode_of_payment = '${payment_method}'`;
     connection.query(q1, (err, results) => {
         if (err) {
@@ -36,7 +36,7 @@ router.post('/', (req, res) => {
         const q2 = `INSERT INTO gcash_payment SET ` +
                     `reference_num = ${gcash_ref_num}, ` +
                     `sale_payment_id = (SELECT sale_payment_id FROM sale_payment INNER JOIN sale USING (sale_id) ` +
-                                        `WHERE account_id = ${account_id} AND sale_status = 'in progress')`; 
+                                        `WHERE account_id = ${account_id} AND sale_status = 'cart')`; 
         connection.query(q2, (err, results) => {
             if (err) {
                 console.error(err)
@@ -49,7 +49,7 @@ router.post('/', (req, res) => {
 
     //Query #? : Create shipment entry (temporary implementation)
     const createShipmentQuery = `INSERT INTO shipment SET ` +
-                            `sale_id = (SELECT sale_id FROM sale WHERE account_id = ${account_id} AND sale_status = 'in progress'), ` +
+                            `sale_id = (SELECT sale_id FROM sale WHERE account_id = ${account_id} AND sale_status = 'cart'), ` +
                             `address_id = (SELECT address_id FROM address WHERE name = '${address_name}' AND ` +
                                             `customer_id = (SELECT customer_id FROM customer WHERE account_id = ${account_id})), ` +
                             `tracking_number = '123', courier = 'JNT', shipment_status = 'in progress'`;
@@ -77,8 +77,8 @@ router.post('/', (req, res) => {
         })
     })
 
-    //Query 4: Update the sale_status of the current sale from 'in progress' to 'complete'
-    const q4 = `UPDATE sale SET sale_status = 'complete' WHERE account_id = ${account_id} AND sale_status = 'in progress'`;
+    //Query 4: Update the sale_status of the current sale from 'cart' to 'packaging'
+    const q4 = `UPDATE sale SET sale_status = 'packaging' WHERE account_id = ${account_id} AND sale_status = 'cart'`;
     connection.query(q4, (err, results) => {
         if (err) { 
             console.error(err) 

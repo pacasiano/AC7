@@ -21,7 +21,7 @@ router.get('/:id', (req, res) => {
             'INNER JOIN sale_item USING (sale_id) ' +
             'INNER JOIN product USING (product_id) ' +
             'INNER JOIN stock USING (product_id) ' +
-            `WHERE sale.account_id = ${account_id} AND sale.sale_status = 'in progress' ` +
+            `WHERE sale.account_id = ${account_id} AND sale.sale_status = 'cart' ` +
             'AND batch_no = (SELECT MIN(batch_no) AS batch_no FROM stock WHERE quantity > 0 AND product_id = product.product_id)';
 
     connection.query(q, function(err, results) {
@@ -44,7 +44,7 @@ router.post('/:id', (req, res) => {
     
     const q1 = `UPDATE sale_item INNER JOIN sale USING (sale_id) SET quantity = ${quantity} ` +
                 `WHERE account_id = ${account_id} ` +
-                `AND sale_status = 'in progress' ` +
+                `AND sale_status = 'cart' ` +
                 `AND product_id = ${product_id}`;
     connection.query(q1, (err, results) => {
         if (err) {
@@ -55,7 +55,7 @@ router.post('/:id', (req, res) => {
 
     //Check if the sale_item associated with the product_id has a quantity of 0
     const q2 = `SELECT quantity FROM sale_item INNER JOIN sale USING (sale_id) ` + 
-                `WHERE account_id = ${account_id} AND sale_status = 'in progress' AND product_id = ${product_id}`;
+                `WHERE account_id = ${account_id} AND sale_status = 'cart' AND product_id = ${product_id}`;
     connection.query(q2, (err, results) => {
         if (err) {
             console.error(err)

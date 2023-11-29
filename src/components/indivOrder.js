@@ -7,7 +7,7 @@ function Product() {
 
   const { sale_id } = useParams();
   const [orders, setOrders] = useState([]);
-  const [orderStatus, setOrderStatus] = useState(false);
+  const [orderStatus, setOrderStatus] = useState('');
 
   useEffect(() => {
     fetch(`/api/order_item/${sale_id}`)
@@ -21,9 +21,7 @@ function Product() {
     fetch(`/api/orders/${sale_id}`)
       .then((res) => res.json())
       .then((order) => {
-        if (order[0].sale_status === "in progress") {
-          setOrderStatus(true);
-        }
+        setOrderStatus(order[0].sale_status);
       });
   }, [sale_id]);
   
@@ -55,7 +53,7 @@ function Product() {
         <div className="flex flex-col gap-5 w-1/3">
           <OrderTotal sale_id={sale_id} />
           {/* <ShippingInfo sale_id={sale_id} /> */}
-          {orderStatus && <OrderActions orders={orderStatus} />}
+          <OrderActions orders={orderStatus} sale_id={sale_id} />
         </div>
       </div>
     </div>
@@ -193,7 +191,31 @@ function ShippingInfo(sale_id) {
   
 };
 
-function OrderActions(status) {
+function OrderActions({orders: sale_status, sale_id}) {
+
+  function cancelOrder() {
+    fetch(`/api/orders/${sale_id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        new_sale_status: 'cancelled'
+      })
+    })
+  }
+
+  function completedOrder() {
+    fetch(`/api/orders/${sale_id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        new_sale_status: 'complete'
+      })
+    })
+  }
 
   return (
     <div className="bg-gray-100 p-5 gap-5 flex flex-col">
@@ -201,9 +223,9 @@ function OrderActions(status) {
         Order actions
       </div>
       <div className="flex flex-row gap-2 w-full">
-        {/* currently disabled if order status is "in progress" dapat it should be disabled when order status is "courrier" */}
-        <button disabled={status} className={`${status ? "bg-neutral-50 text-gray-500" : "bg-neutral-200" }  p-2 rounded-md w-full font-medium`}>Cancel order</button>
-        <button disabled={!status} className={`${!status ? "bg-neutral-50 text-gray-500" : "bg-blue-300" } p-2 rounded-md w-full font-medium`}>Order Received</button>
+        {/* currently disabled if order status is "cart" dapat it should be disabled when order status is "courrier" */}
+        <button onClick={cancelOrder} disabled={sale_status !== 'packaging'} className={`${sale_status !== 'packaging' ? "bg-neutral-50 text-gray-500" : "bg-neutral-200" }  p-2 rounded-md w-full font-medium`}>Cancel order</button>
+        <button onClick={completedOrder} disabled={sale_status !== 'shipped'} className={`${sale_status !== 'shipped' ? "bg-neutral-50 text-gray-500" : "bg-blue-300" } p-2 rounded-md w-full font-medium`}>Order Received</button>
       </div>
     </div>
   )

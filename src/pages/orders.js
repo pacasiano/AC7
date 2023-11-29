@@ -42,7 +42,7 @@ function separatedOrders(orders) {
   let cancelled = [];
 
   for (let i = 0; i < orders.length; i++) {
-    if (orders[i].sale_status === 'in progress') {
+    if (orders[i].sale_status === 'packaging' || orders[i].sale_status === 'shipped') {
       onGoing.push(orders[i]);
     } else if (orders[i].sale_status === 'complete') {
       complete.push(orders[i]);

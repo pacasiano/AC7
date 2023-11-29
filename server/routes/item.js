@@ -23,8 +23,8 @@ router.post('/', (req, res) => {
     let {product_id, product_price, quantity: addedQuantity = 1} = req.body;
     product_price = product_price.replace('₱', ''); //the value returned from client-side has a dollar sign, so we remove it
 
-    //Query 1: Get the sale_id with the sale_status of 'in progress'
-    let q = `SELECT sale_id FROM sale WHERE account_id = '${account_id}' AND sale_status = 'in progress'`;
+    //Query 1: Get the sale_id with the sale_status of 'cart'
+    let q = `SELECT sale_id FROM sale WHERE account_id = '${account_id}' AND sale_status = 'cart'`;
     connection.query(q, function(err, results) {
         if (err) {
             console.error(err.message);
@@ -40,17 +40,17 @@ router.post('/', (req, res) => {
     
         const { sale_id } = results[0];
 
-        //Query 2: Checks if the product that was added to cart already has a sale_item entry that's connected to an 'in progress' sale (current sale)
+        //Query 2: Checks if the product that was added to cart already has a sale_item entry that's connected to an 'cart' sale (current sale)
         //Basically, this query checks if the product is already in the cart or not. If it is, Query 3 runs, if not, Query 4 runs
         let q2 = 'SELECT sale_item_id, product_id FROM sale INNER JOIN sale_item USING (sale_id) ' + 
-                `WHERE account_id = ${account_id} AND product_id = ${product_id} AND sale_status = 'in progress'`;
+                `WHERE account_id = ${account_id} AND product_id = ${product_id} AND sale_status = 'cart'`;
         connection.query(q2, function(err, results) {
             console.log("Add to cart: Query 2 ");
             console.log(results) 
             if (results[0]) {
                 //Query 3: If this product exists in the cart already, we want to (1) take its quantity then (2) add the quantity that the user inputted
                 let q3 =  'SELECT quantity FROM sale INNER JOIN sale_item USING (sale_id) ' + 
-                            `WHERE account_id = ${account_id} AND product_id = ${product_id} AND sale_status = 'in progress'`;
+                            `WHERE account_id = ${account_id} AND product_id = ${product_id} AND sale_status = 'cart'`;
                 connection.query(q3, function(err, results) {
                     let {quantity} = results[0];
                     quantity = parseInt(quantity) + addedQuantity;

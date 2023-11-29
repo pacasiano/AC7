@@ -17,6 +17,30 @@ function Order({ order }) {
         });
 }, []);
 
+  function sent() {
+    fetch(`/api/orders/${order.sale_id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        new_sale_status: 'shipped'
+      })
+    })
+  }
+
+  function returned() {
+    fetch(`/api/orders/${order.sale_id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        new_sale_status: 'returned'
+      })
+    })
+  }
+
   return (
 
     <tbody>
@@ -29,8 +53,8 @@ function Order({ order }) {
         <td className="text-sm font-semibold border p-2">&#x20B1;{order.price}</td>
         <td className="w-36 text-sm font-semibold border p-2">
         <div className="flex flex-col gap-1">
-        <button onClick={Sent} disabled={order.sale_status === "in progress"} className={`${order.sale_status === "in progress" ? "bg-gray-200 text-gray-400" : "bg-green-500 text-white" } py-2 w-full rounded`}>Order Sent</button>
-        <button onClick={Returned} disabled={!order.sale_status === "in progress"} className={`${!order.sale_status === "in progress" ? "bg-gray-200 text-gray-400" : "bg-green-500 text-white" } py-2 w-full rounded`}>Returned</button>
+        <button onClick={sent} disabled={order.sale_status !== "packaging"} className={`${order.sale_status !== "packaging" ? "bg-gray-200 text-gray-400" : "bg-green-500 text-white" } py-2 w-full rounded`}>Shipped</button>
+        <button onClick={returned} disabled={!(order.sale_status === "shipped")} className={`${!(order.sale_status === "shipped") ? "bg-gray-200 text-gray-400" : "bg-green-500 text-white" } py-2 w-full rounded`}>Returned</button>
         <button onClick={toggleExpand} className="bg-blue-500 text-white py-2 w-full rounded">{isExpanded ? 'COLLAPSE' : 'EXPAND'}</button>
         </div>
         </td>
@@ -68,16 +92,5 @@ function Order({ order }) {
   );
 }
 
-function Sent() {
-  return(
-    console.log("gi send na sa courier")
-  )
-}
-
-function Returned() {
-  return(
-    console.log("gi return sa seller")
-  )
-}
 
 export default Order;
