@@ -52,7 +52,7 @@ function UserDropdown() {
 
 
     return (
-        <div id="userDropdown" className="transition duration-500 ease-in-out z-50 w-52 absolute translate-x-[29rem] translate-y-4 mt-14 pb-1 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+        <div id="userDropdown" className="transition duration-500 ease-in-out z-50 w-52 absolute translate-x-[40rem] translate-y-4 mt-14 pb-1 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
             <div className="flex justify-start items-start pl-5 flex-col py-3 border-b">
                 <div className="text-xl">{first_name}</div>
                 <div className="text-xs">{email}</div>
@@ -71,10 +71,10 @@ export function userDropdown() {
     var element = document.getElementById("userDropdown");
     if (element.classList.contains("translate-x-[90%]")) {
         element.classList.remove("translate-x-[90%]");
-        element.classList.add("translate-x-[29rem]");
+        element.classList.add("translate-x-[40rem]");
     }
     else {
-        element.classList.remove("translate-x-[29rem]");
+        element.classList.remove("translate-x-[40rem]");
         element.classList.add("translate-x-[90%]");
     }
 }
