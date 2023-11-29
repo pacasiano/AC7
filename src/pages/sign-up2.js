@@ -294,7 +294,7 @@ const Modal = ({ isOpen, children }) => {
     function Success({isModalOpen}) {
     return(
     <div className="fixed backdrop-blur-sm bg-black/20 drop-shadow-xl z-50">
-        <Modal isOpen={true}>
+        <Modal isOpen={isModalOpen}>
         <div className="h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-white/30 ">
             <div className="fixed bg-gray-100 -mt-20 rounded-xl w-96">
                 <div className="p-5 flex flex-col justify-center items-center gap-2">

@@ -95,15 +95,51 @@ export default function Settings() {
     });
     
     const handleAccountInfo = (e) => {
+        if(e.target.name === 'username'){
+            handleUsernameInput(e);
+        }
         setAccountInfo({...accountInfo, [e.target.name]: e.target.value});
     }
+
+    const [users, setUsers] = useState([]);
+    const [errorUserNameTaken, setErrorUsernameTaken] = useState(false);
+
+    useEffect(() => {
+        fetch('/api/account')
+            .then((res) => res.json())
+            .then((data) => {
+                setUsers(data);
+            });
+    }, []);
+
+  const [usernameTaken, setUsernameTaken] = useState(false);
+  function handleUsernameInput(event) {
+    const enteredUsername = event.target.value;
+
+    // Check if the entered username already exists
+    const isUsernameTaken = users.some(user => user.username === enteredUsername);
+
+    if (isUsernameTaken) {
+        setUsernameTaken(true);
+    } else {
+        setUsernameTaken(false);
+        setAccountInfo(enteredUsername);
+    }
+  }
 
     // edit account info
     function editAccountInfo(e) {
         e.preventDefault();
 
+        if(usernameTaken){
+            setErrorUsernameTaken(true);
+            setTimeout(() => {
+                setErrorUsernameTaken(false);
+            }, 3000);
+            return;
+        }
 
-        if(accountInfo.email !== email || accountInfo.username !== username || accountInfo.password !== password) {
+        if((accountInfo.email !== email || accountInfo.username !== username || accountInfo.password !== password) && usernameTaken === false) {
         fetch(`/api/account/${accountId}`, {
             method: 'PATCH',
             headers: {
@@ -271,7 +307,7 @@ export default function Settings() {
 
     // Clear the timeout if component unmounts or if incorrect becomes false before the timeout
     return () => clearTimeout(timeoutId);
-  }, [incorrect]);
+  }, [incorrect]); 
 
   return(
     <>
@@ -280,6 +316,7 @@ export default function Settings() {
     <SuccessAddressAdd isModalOpen={addSuccess}/>
     <FailAddressAdd isModalOpen={addFail}/>
     <AddressDeleted isModalOpen={deleteSuccess}/>
+    <ErrorTaken isModalOpen={errorUserNameTaken}/>
     <div className="w-full min-h-screen py-16">
         <div className="pt-12 flex flex-row justify-center gap-5">
             <div className="bg-gray-100 w-1/4 px-5 pt-6 pb-10">
@@ -290,7 +327,7 @@ export default function Settings() {
                     <div className="flex flex-row pb-4 gap-2">
                         <div className="text-md font-bold">Account Information</div>
                         <button onClick={toggleEditAccInfo} className="bg-slate-800 text-white px-2 text-xs rounded">{isEditAccInfo ? 'Cancel' : 'Edit'}</button>
-                        {isEditAccInfo && <button onClick={editAccountInfo} className="bg-slate-800 text-white px-2 text-xs rounded" >Save</button>}
+                        {isEditAccInfo && <button onClick={editAccountInfo} className={`${errorUserNameTaken && "animate-wiggle"} bg-slate-800 text-white px-2 text-xs rounded`} >Save</button>}
                     </div>
 
                     {!isEditAccInfo ? ( 
@@ -320,7 +357,12 @@ export default function Settings() {
                         </label> 
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Username</span>
-                        <input placeholder={username} onChange={handleAccountInfo} name="username" className="rounded-sm w-full pl-1"/>
+                        <input placeholder={username} onChange={handleAccountInfo} name="username" className={`${(errorUserNameTaken || usernameTaken) && "border border-red-500"} rounded-sm w-full pl-1`}/>
+                        {usernameTaken && ( 
+                        <span className="fixed translate-y-[43px] text-sm font-light text-red-500">
+                            Username is already taken
+                        </span>
+                        )}
                         </label> 
                         <label className="flex flex-col max-w-sm">
                         <span className="text-sm font-semibold">Password</span>
@@ -686,5 +728,18 @@ function deepEqual(obj1, obj2) {
     );
   };
 
-
+  function ErrorTaken({isModalOpen}) {
+  
+    return (
+      <div className="fixed pt-16">
+        <Modal isOpen={isModalOpen}>
+          <div className="w-screen flex justify-center items-center ">
+              <div className="bg-gray-50 p-3 rounded-xl w-1/2 shadow-md border animate-bounce2">
+                <div className="text-red-500 text-md font-semibold text-center">Error, Username is alredy taken!</div>
+              </div>
+          </div>
+        </Modal>
+      </div>
+    );
+  };
   

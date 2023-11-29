@@ -5,6 +5,42 @@ import { Link } from "react-router-dom";
 import { passwordStrength } from 'check-password-strength'
 
 function Landing() {
+
+  const usernameCookie = document.cookie.split("; ").find((row) => row.startsWith("username="))?.split("=")[1];
+  console.log(usernameCookie);
+
+  const [isCustomerRegistered, SetIsCustomerRegistered] = useState(true);
+
+  useEffect(() => {
+      if (usernameCookie) {
+          fetch(`/api/customer/username/${usernameCookie}`)
+              .then((res) => {
+                  if (!res.ok) {
+                      throw new Error(`HTTP error! Status: ${res.status}`);
+                  }
+                  return res.json();
+              })
+              .then((response) => {
+                  console.log('Fetched response:', response);
+                  if (response === "wala") {
+                    SetIsCustomerRegistered(false);
+                  }else{
+                    SetIsCustomerRegistered(true);
+                  }
+              })
+              .catch((error) => {
+                  console.error('Fetch error:', error);
+                  // Handle the error here
+              });
+      } else {
+          console.log('Username is undefined');
+          // Handle the case where username is undefined
+      }
+  }, [usernameCookie]);
+
+  if(!isCustomerRegistered) {
+    window.location.href = "/AC7/sign-up/account-information";
+  }
   
   //also need to verify that password = confirmPassword
 
@@ -16,7 +52,6 @@ function Landing() {
             .then((res) => res.json())
             .then((data) => {
                 setUsers(data);
-                console.log(data);
             });
     }, []);
 
@@ -31,22 +66,27 @@ function Landing() {
         setUsernameTaken(true);
     } else {
         setUsernameTaken(false);
-        console.log("Username available")
         setUsername(enteredUsername);
     }
   } 
 
-  const [password, setPassword] = useState();
-  const [password2, setPassword2] = useState();
+  const [password, setPassword] = useState(null);
+  const [password2, setPassword2] = useState(null);
+  const [passStrength, setPassStrength] = useState(null);
 
-  const [passStrength, setPassStrength] = useState();
   function handlePasswordInput(event) {
-    setPassStrength(passwordStrength(event.target.value).value)
+    if(event.target.value === "") {
+      setPassStrength(null)
+    }else {
+      setPassStrength(passwordStrength(event.target.value).value)
+    }
+    
     setPassword(event.target.value)
     console.log("Pass 1: " + passStrength)
   }
 
   function handlePasswordInput2(event) {
+
     setPassword2(event.target.value)
     console.log("pass 2 updated")
   }
@@ -61,38 +101,35 @@ function Landing() {
   function submitForm(e) {
     e.preventDefault();
 
-    if(passStrength !== "Too weak" && match === null && usernameTaken === false) {
+  if(passStrength !== "Too weak" && password === password2 && username !== "" && !usernameTaken){
 
-    let now = new Date();
-    now.setTime(now.getTime() + 1 * 3600 * 1000);
-    document.cookie = `username=${username}; expires=" + now.toUTCString() + "; path=/`;
+      let now = new Date();
+      now.setTime(now.getTime() + 1 * 3600 * 1000);
+      document.cookie = `username=${username}; expires=" + now.toUTCString() + "; path=/`;
 
-    fetch('/api/account', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(accData)
-    })
-    
-    .then(res => res.json())
-    .then(data => {
-      console.log('Sign up data: ' + data)
-      window.location.href = '/AC7/sign-up/account-information';
-    })
-    .catch((err) => {
-      console.error("Error: ", err)
-    })
-
-    }else {
-      console.log("May error")
-      setSubmitError(true)
-
-      setTimeout(() => {
-        setSubmitError(false)
-        console.log("false na")
-    }, 1000);
-    }
+      fetch('/api/account', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(accData)
+      })
+      
+      .then(res => res.json())
+      .then(data => {
+        console.log('Sign up data: ' + data)
+        window.location.href = '/AC7/sign-up/account-information';
+      })
+      .catch((err) => {
+        console.error("Error: ", err)
+      })
+  }else{
+    console.log("nag error kasi may mali sa password or username")
+    setSubmitError(true)
+    setTimeout(() => {
+    setSubmitError(false)
+    }, 3000);
+  }
 
   }
 
@@ -115,15 +152,38 @@ function Landing() {
   const [match, setMatch] = useState(null);
   useEffect(() => {
 
-      if (password === password2) {
-        console.log("Passwords match")
-        setMatch(null)
-      } else {   
-        setMatch("Passwords do not match")
-      };
+    if (password === "" || password2 === "") {
+      setMatch(null)
+      return;
+    }
 
-  }, [password, password2]);
-  
+    if (password === password2) {
+      console.log("Passwords match")
+      setMatch(null)
+    } else {   
+      setMatch("Passwords do not match")
+    };
+
+  }, [password, password2, passStrength]);
+
+  const [value, setValue] = useState({
+      username: false,
+      password: false,
+      password2: false
+  });
+
+  useEffect(() => {
+      const validateField = (field, value) => {
+        setValue((prevValue) => ({
+          ...prevValue,
+          [field]: !!value, // Set to true if value exists, false otherwise
+        }));
+      };
+    
+      validateField("username", username);
+      validateField("password", password);
+      validateField("password2", password2);
+  }, [username, password, password2]);
 
   return (
     <section className="bg-gray-50 w-full h-full  ">
@@ -141,30 +201,30 @@ function Landing() {
               <div>
                 <div className="flex flex-row gap-2">
                 <label for="username" className="block mb-2 text-sm font-medium text-gray-900">Username</label>
-                {usernameTaken && ( 
-                  <span className="text-sm font-medium text-red-500 animate-bounce2">
-                    Username is already taken
-                  </span>
-                )}
                 </div>
                 <input onChange={handleUsernameInput} type="username" name="username" id="username"
-                  className={` ${usernameTaken && 'border-red-500 ' } bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5`}
-                  placeholder="Your username" required/>
+                  className={` ${(usernameTaken||(submitError && !value.username)) && 'border-red-500 ' } bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5`}
+                  placeholder="Your username" />
+                  {usernameTaken && ( 
+                  <span className="fixed text-sm font-sm text-red-500">
+                    Username is already taken
+                  </span>
+                  )}
               </div>
               
               {/* First Password */}
               <div>
                 <div className="flex flex-row justify-start gap-2">
                 <label for="password" className="block mb-2 text-sm font-medium text-gray-900">Password</label>
-                {passStrength !== null && (
-                    <span className={`text-sm font-medium ${passStrength === "Too weak" ? "animate-bounce2" : ""} ${getTextColor(passStrength)}`}>
+                </div>
+                <input onChange={handlePasswordInput} type="password" name="password" id="password" placeholder="••••••••"
+                  className={` ${((!value.password && submitError)||(match === "Passwords do not match")||(passStrength === "Too weak")) ? 'border-red-500' : ''} border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5`}
+                  />
+                  {passStrength !== null && (
+                    <span className={`fixed text-sm font-sm ${passStrength === "Too weak" ? "animate-bounce2" : ""} ${getTextColor(passStrength)}`}>
                       {passStrength}
                     </span>
                 )}
-                </div>
-                <input onChange={handlePasswordInput} type="password" name="password" id="password" placeholder="••••••••"
-                  className={` ${passStrength === "Too weak" ? 'border-red-500' : ''} border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5`}
-                  required/>
               </div>
 
               {/* Second Password */}
@@ -173,15 +233,15 @@ function Landing() {
                 <label for="password" className="block mb-2 text-sm font-medium text-gray-900">
                   Confirm password
                 </label>
-                {password2 !== null && (
-                    <span className={`text-sm font-medium text-red-500  ${match === "Passwords do not match" ? "animate-bounce2" : ""}`}>
+                </div>
+                <input onChange={handlePasswordInput2} type="password" name="confirm-password" id="confirm-password" placeholder="••••••••"
+                  className={` ${(match === "Passwords do not match" || (!value.password2 && submitError)) ? 'border-red-500' : ''} bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5`}
+                  />
+                  {password2 !== null && (
+                    <span className={`fixed text-sm font-sm text-red-500  ${match === "Passwords do not match" ? "animate-bounce2" : ""}`}>
                       {match}
                     </span>
                 )}
-                </div>
-                <input onChange={handlePasswordInput2} type="password" name="confirm-password" id="confirm-password" placeholder="••••••••"
-                  className={` ${match === "Passwords do not match" ? 'border-red-500' : ''} bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5`}
-                  required/>
               </div>
 
               {/* Terms and conditions */}
@@ -206,7 +266,7 @@ function Landing() {
 
               {/* Already have an account */}
               <p className="flex justify-center text-sm font-light text-gray-500">
-                Already have an account?{" "}
+                Already have an account? &nbsp;
                 <Link to="/login" className="font-medium text-blue-400 hover:underline">Login here</Link>
               </p>
 
