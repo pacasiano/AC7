@@ -245,11 +245,11 @@ VALUES
 ('Bleaching Whipped Cream', 'Experience opulence in skincare with Bleaching Whipped Cream, a decadent secret for a luminous, flawless glow', 'Skinscare', 20),
 ('Kojic Soap', 'Uncover the allure of radiant skin with Kojic Soap, a refined indulgence for complexion perfection', 'Bodycare', 20);
 
-INSERT INTO sale(account_id, sale_status)
-VALUES (1, 'in progress'),
-(2, 'in progress'),
-(4, 'in progress'),
-(5, 'in progress');
+INSERT INTO sale(account_id)
+VALUES (1),
+(2),
+(4),
+(5);
 
 INSERT INTO sale_item(sale_id, product_id, quantity, price)
 VALUES (1, 1, 3, 36.33),

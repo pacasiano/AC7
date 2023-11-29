@@ -64,7 +64,7 @@ router.get('/:id', (req, res) => {
                 res.json({message: 'No account logged in'})
             }
             else {
-                const {account_type} = results[0];
+                const {account_type} = results;
                 console.log(`Account with ID of ${account_id} is of type ${account_type}`)
                 res.json(results)
             }

@@ -15,7 +15,8 @@ const connection = mysql.createConnection({
 router.get('/:id', (req, res) => {
     const {id : account_id} = req.params;
     const q = 'SELECT * FROM address ' + 
-                `WHERE customer_id = (SELECT customer_id FROM customer WHERE account_id = ${account_id})`;
+                `WHERE customer_id = (SELECT customer_id FROM customer WHERE account_id = ${account_id}) ` +
+                'AND address_status = \'active\'';
     connection.query(q, (err, results) => {
         res.json(results)
     })
@@ -40,7 +41,7 @@ router.post('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
     const {id: address_id} = req.params;
-    const q1 = `DELETE FROM address WHERE address_id = ${address_id}`;
+    const q1 = `UPDATE address SET address_status = 'inactive' WHERE address_id = ${address_id}`;
     connection.query(q1, (err, results) => {
         if(err) {console.error(err)}
         else {
