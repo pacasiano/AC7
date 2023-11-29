@@ -4,6 +4,7 @@ import "../App.css"
 import { myContext } from "../context/adminContext";
 import InventoryInConfirmation2 from "./inventoryInConfirmation2";
 
+
 export default function InventoryIn() {
 
     const [numbersToBeDelivered, setNumbersToBeDelivered] = useState(1);

@@ -36,7 +36,7 @@ function App() {
       .then((user) => {
         setUser(user);
       });
-  }, []);
+  }, [accountId]);
 
   const {account_type} = user[0] || {};
   console.log(account_type + " Account type")

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { myContext } from "../context/adminContext";
 import { passwordStrength } from 'check-password-strength'
-import { set } from "react-hook-form";
 
 export default function AddEmployee() {
     
@@ -108,6 +107,7 @@ export default function AddEmployee() {
                 body: JSON.stringify({
                     username: username,
                     password: password,
+                    account_type: 'employee'
                 })
             })
             .then(res => res.json())
@@ -123,7 +123,7 @@ export default function AddEmployee() {
                         middle_name: middleName,
                         last_name: lastName,
                         position: position,
-                        contact_info: contactInfo
+                        contact_info: contactInfo,
                     })
                 })
             })

@@ -140,7 +140,7 @@ export default function Users() {
                                 <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Position</th>
                                 <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Emp_Status</th>
                                 <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Contact Info</th>
-                                <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Actions</th>
+                                {/* <th className="sticky top-0 bg-gray-400 text-sm font-semibold border p-2 text-white">Actions</th> */}
                             </tr>
                         </thead>
                         <tbody>
@@ -152,12 +152,11 @@ export default function Users() {
                                     <td className="text-sm font-semibold border p-2">{employee.position}</td>
                                     <td className="text-sm font-semibold border p-2">{employee.emp_status}</td>
                                     <td className="text-sm font-semibold border p-2">{employee.contact_info}</td>
-                                    <td className="flex flex-row gap-2 text-sm font-semibold border p-2 ">
+                                    {/* <td className="flex flex-row gap-2 text-sm font-semibold border p-2 ">
                                     <button className="bg-green-500 text-white px-4 py-2 w-full rounded">EDIT</button>
-                                    </td>
+                                    </td> */}
                                 </tr>
-                                ))
-                            }
+                            ))}
                         </tbody>
                     </table>
                     </div>

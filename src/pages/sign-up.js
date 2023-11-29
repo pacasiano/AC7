@@ -93,7 +93,8 @@ function Landing() {
 
   const accData = {
     username: username,
-    password: password
+    password: password,
+    account_type: 'customer'
   }
 
   const [submitError, setSubmitError] = useState(false);

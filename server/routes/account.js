@@ -15,7 +15,7 @@ router.use(express.json())
 //Create new account
 router.post('/', (req, res) => {
     //username must be unique
-    const {username, password, account_type = 'customer'} = req.body;
+    const {username, password, account_type = "customer"} = req.body;
     const saltRounds = 10;
 
 
@@ -27,22 +27,29 @@ router.post('/', (req, res) => {
             if (err) {console.error(err)}
             else {
                 console.log('Step 1.1: Account creation successful')
+                if (account_type === 'employee') {
+                    res.json({
+                        message: 'good'
+                    })
+                }
             } 
         })
-
-        //Query 2: Create and assign sale entry for new customer account
-        const q2 = `INSERT INTO sale SET account_id = (SELECT account_id FROM account WHERE username = '${username}')`
-        connection.query(q2, (err, results) => {
-            if (err) {
-                console.error(err)
-            }
-            else {
-                console.log('Step 1.2: Account creation successful')
-                res.json({
-                    message: 'good'
-                })
-            }
-        })
+        
+        if(account_type === "customer") {
+            //Query 2: Create and assign sale entry for new customer account
+            const q2 = `INSERT INTO sale SET account_id = (SELECT account_id FROM account WHERE username = '${username}')`
+            connection.query(q2, (err, results) => {
+                if (err) {
+                    console.error(err)
+                }
+                else {
+                    console.log('Step 1.2: Account creation successful')
+                    res.json({
+                        message: 'good'
+                    })
+                }
+            })
+        }
     })
 })
 
