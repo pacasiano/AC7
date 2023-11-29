@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS address (
     barangay VARCHAR(25) NOT NULL,
     province VARCHAR(25) NOT NULL,
     street VARCHAR(255) NOT NULL,
+    address_status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
     PRIMARY KEY (address_id),
     FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
     -- assumes addresses are from ph
@@ -163,7 +164,7 @@ CREATE TABLE IF NOT EXISTS sale (
     -- sale table probably doesn't need an address, no? We only get the address for shipment once the sale is checked out since they select an address there anyway
     sale_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
     -- the date updates when the sale_status is changed from in progress to 'complete' ryt?
-    sale_status ENUM('in progress', 'complete') DEFAULT 'in progress',
+    sale_status ENUM('cart', 'packaging', 'shipped', 'complete', 'returned', 'cancelled') DEFAULT 'cart',
     PRIMARY KEY (sale_id),
     FOREIGN KEY (account_id) REFERENCES account(account_id)
     -- FOREIGN KEY (address_id) REFERENCES address(address_id)
@@ -184,6 +185,7 @@ CREATE TABLE IF NOT EXISTS sale_item (
 CREATE TABLE IF NOT EXISTS sale_payment (
     sale_payment_id BIGINT UNSIGNED AUTO_INCREMENT,
     sale_id BIGINT UNSIGNED NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
     mode_of_payment ENUM('cod', 'gcash') NOT NULL,
     payment_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     -- payment_status ENUM('complete', 'incomplete'), -- doesn't make sense to allow utang, esp for a small business
