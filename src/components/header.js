@@ -26,13 +26,15 @@ function Header() {
                     <CustomLink to="/about" className="flex items-center m-0">About</CustomLink>
                 </div>
                     
-                <div className="flex jusitfy-evenly gap-2 pr-4 md:gap-4 md:pr-7 -ml-[90%] w-[30%]">
-                    <div className="flex items-center md:visible collapse h-full w-full">
+                <div className="flex flex-row justify-end gap-4 pr-4">
+                    <div className="flex justify-center items-center md:visible collapse h-full md:w-60 w-0">
                         <Search/>
                         {/* <Select/> */}
                     </div>
+                    <div className="flex flex-row gap-4">
                     <CustomLink to="/cart" className="flex items-center text-xl m-0"><FontAwesomeIcon icon={faCartShopping} style={{color: "#000000",}} /></CustomLink>
                     <button onClick={userDropdown} className="flex cursor-pointer items-center text-xl transition ease-out duration-500 hover:bg-gray-300 my-2 px-2 rounded-md"><FontAwesomeIcon icon={faUser} style={{color: "#000000",}} /></button>
+                    </div>
                     <UserDropdown/>
                 </div>
             </div>
