@@ -69,13 +69,13 @@ function UserDropdown() {
 
 export function userDropdown() {
     var element = document.getElementById("userDropdown");
-    if (element.classList.contains("translate-x-[90%]")) {
-        element.classList.remove("translate-x-[90%]");
+    if (element.classList.contains("translate-x-[12rem]")) {
+        element.classList.remove("translate-x-[12rem]");
         element.classList.add("translate-x-[40rem]");
     }
     else {
         element.classList.remove("translate-x-[40rem]");
-        element.classList.add("translate-x-[90%]");
+        element.classList.add("translate-x-[12rem]");
     }
 }
 
