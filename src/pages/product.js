@@ -46,7 +46,7 @@ function Product() {
     .then(res => res.json())
     .then(data => {
       console.log("Data message" + data.message)
-      window.location.href = '/AC7/cart';
+      // window.location.href = '/AC7/cart';
     })
     .catch((err) => {
       console.error("Error: ", err)
