@@ -54,7 +54,7 @@ function Product() {
   }
 
   return (
-    <div className="flex flex-col lg:-mt-20 mt-0 justify-center h-screen ">
+    <div className="flex flex-col py-16 mt-0 justify-center min-h-screen ">
       <form onSubmit={submitForm}>
       <section className="text-gray-700 body-font overflow-hidden bg-white">
         <div className="flex flex-col md:flex-row lg:px-0 px-9 py-15 justify-center  border-red-600 overflow-clip">

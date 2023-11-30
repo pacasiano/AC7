@@ -79,6 +79,7 @@ router.post('/:id', (req, res) => {
     })
 
     res.json( {message: "Cart quantity successfully updated"} )
+    // res.redirect('/cart')
 
 })
 
