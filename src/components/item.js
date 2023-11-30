@@ -14,11 +14,27 @@ function Item(props) {
 
   }, [])
 
-
+  function submitForm() {
+    fetch('/api/item', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        product_price: price,
+        product_id: props.product_obj.product_id
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log(data)
+      window.location.href = '/AC7/cart';
+    })
+  }
 
 
   return (
-    <form action="/api/item" method="POST">
+    <form onSubmit={submitForm}>
       <div className="item shadow-md rounded-md">
         <div className="flex flex-col justify-center items-center gap-3 w-auto">
           <div className="w-11/12 h-52 pt-3">

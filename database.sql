@@ -71,6 +71,19 @@ CREATE TABLE IF NOT EXISTS supplier (
     FOREIGN KEY (address_id) REFERENCES address(address_id)
 );
 
+CREATE TABLE IF NOT EXISTS inventory_in (
+    -- not sure if this needs a PK. A composite key composed of supplier_id and product_id wouldn't be unique
+    -- However, both FKs are already used as indices when querying so PK prolly not needed
+    inventory_in_id BIGINT UNSIGNED AUTO_INCREMENT,
+    supplier_id BIGINT UNSIGNED NOT NULL,
+    comment VARCHAR(255) DEFAULT 'none' , -- general reason for stocking out - what's the event? annual damage check or smtg?
+    payment_amount DECIMAL(10,2) NOT NULL, -- total payment of a particular delivery
+    date_ordered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, -- when/how do we record this? when we order, we don't create an entry for inventory in yet
+    date_delivered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (inventory_in_id),
+    FOREIGN KEY (supplier_id) REFERENCES supplier(supplier_id)
+);
+
 CREATE TABLE IF NOT EXISTS purchase_payment (
     payment_id BIGINT UNSIGNED AUTO_INCREMENT,
     inventory_in_id BIGINT UNSIGNED NOT NULL,
@@ -92,6 +105,15 @@ CREATE TABLE IF NOT EXISTS product (
     PRIMARY KEY (product_id)
 );
 
+CREATE TABLE IF NOT EXISTS inventory_in_item (
+    inventory_in_id BIGINT UNSIGNED NOT NULL,
+    product_id BIGINT UNSIGNED NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    quantity INT UNSIGNED NOT NULL,
+    FOREIGN KEY (inventory_in_id) REFERENCES inventory_in(inventory_in_id),
+    FOREIGN KEY (product_id) REFERENCES product(product_id)
+);
+
 CREATE TABLE IF NOT EXISTS stock (
     batch_no BIGINT UNSIGNED NOT NULL DEFAULT 1,
     product_id BIGINT UNSIGNED NOT NULL,
@@ -101,27 +123,7 @@ CREATE TABLE IF NOT EXISTS stock (
     FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
 
-CREATE TABLE IF NOT EXISTS inventory_in (
-    -- not sure if this needs a PK. A composite key composed of supplier_id and product_id wouldn't be unique
-    -- However, both FKs are already used as indices when querying so PK prolly not needed
-    inventory_in_id BIGINT UNSIGNED AUTO_INCREMENT,
-    supplier_id BIGINT UNSIGNED NOT NULL,
-    comment VARCHAR(255) DEFAULT 'none' , -- general reason for stocking out - what's the event? annual damage check or smtg?
-    payment_amount DECIMAL(10,2) NOT NULL, -- total payment of a particular delivery
-    date_ordered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, -- when/how do we record this? when we order, we don't create an entry for inventory in yet
-    date_delivered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (inventory_in_id),
-    FOREIGN KEY (supplier_id) REFERENCES supplier(supplier_id)
-);
 
-CREATE TABLE IF NOT EXISTS inventory_in_item (
-    inventory_in_id BIGINT UNSIGNED NOT NULL,
-    product_id BIGINT UNSIGNED NOT NULL,
-    price DECIMAL(10,2) NOT NULL,
-    quantity INT UNSIGNED NOT NULL,
-    FOREIGN KEY (inventory_in_id) REFERENCES inventory_in(inventory_in_id),
-    FOREIGN KEY (product_id) REFERENCES product(product_id)
-);
 
 CREATE TABLE IF NOT EXISTS inventory_out (
     inventory_out_ref_num BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
