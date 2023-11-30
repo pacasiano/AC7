@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const router = express.Router();
 const cookieParser = require('cookie-parser');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 app.use(cookieParser());
 router.use(express.json())
