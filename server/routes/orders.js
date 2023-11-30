@@ -31,7 +31,7 @@ router.get('/', (req, res) => {
 router.get('/orders/:id', (req, res) => {
     const { id: account_id } = req.params;
     let q = 'SELECT sale_id, DATE_FORMAT(sale_date, \'%M %d, %Y\') AS sale_date, sale_status, DATE_FORMAT(received_date, \'%M %d, %Y\') AS received_date, ' +
-            'sale_payment.amount AS amount, product.name AS name FROM sale '
+            'sale_payment.amount AS amount, product.name AS name FROM sale ' +
             'LEFT JOIN shipment USING (sale_id) ' +
             'INNER JOIN sale_payment USING (sale_id) ' +
             'INNER JOIN sale_item USING (sale_id) ' +
@@ -73,5 +73,19 @@ router.patch('/:id', (req, res) => {
         }
     })
 })
+
+router.get('/sale_items/:id', (req, res) => {
+    const { id: sale_id } = req.params;
+    let q = 'SELECT sale_item.*, product.name FROM sale_item JOIN product ON sale_item.product_id = product.product_id WHERE sale_item.sale_id = ?';
+
+    connection.query(q, [sale_id], (err, results) => {
+        if (err) {
+            console.error(err);
+            res.status(500).json({ error: 'Internal Server Error' });
+        } else {
+            res.json(results);
+        }
+    });
+});
 
 module.exports = router;    

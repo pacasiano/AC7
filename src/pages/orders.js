@@ -52,8 +52,11 @@ function separatedOrders(orders) {
   }
 
   setOngoing(onGoing);
+  console.log('Ongoing orders:', onGoing)
   setComplete(complete);
+  console.log('Completed orders:', complete)
   setCancelled(cancelled);
+  console.log('Cancelled orders:', cancelled)
 }
 
     return (
@@ -61,12 +64,13 @@ function separatedOrders(orders) {
       <div className="flex flex-row justify-between min-h-screen pt-16 px-20">
         <div className="" />
           <div className="flex flex-col items-start py-16 w-full ">
-            <div className="flex flex-row gap-10 w-full">
+            <div className="flex flex-row gap-5 w-full">
 
-                <div className="flex flex-col w-full gap-5">
+                <div className="flex flex-col w-1/2 gap-5">
                   <div className="bg-gray-100 p-3">
                     <div className="text-xl font-bold text-start">Ongoing</div>
                   </div>
+                  {ongoing.length === 0 && <div className="text-center text-lg bg-gray-100 py-5 font-semibold">No ongoing orders!</div>}
                   {ongoing.map((ongoing) => {
                     return (
                       <OnGoing
@@ -74,19 +78,21 @@ function separatedOrders(orders) {
                         sale_id={ongoing.sale_id}
                         sale_date={ongoing.sale_date}
                         sale_status={ongoing.sale_status}
-                        received_date={ongoing.received_date}
-                        total={ongoing.total}
+                        name={ongoing.name}
+                        quantity={ongoing.quantity}
+
                       />
                     )
                   })}
                 </div>
 
-                <div className="flex flex-col w-3/4 gap-5">
+                <div className="flex flex-row w-1/2 gap-5">
 
-                <div className="flex flex-col w-full gap-5">
+                <div className="flex flex-col w-1/2 gap-5">
                   <div className="bg-gray-100 p-3">
                     <div className="text-xl font-bold text-start">Completed</div>
                   </div>
+                  {complete.length === 0 && <div className="text-center text-lg bg-gray-100 py-5 font-semibold">No Completed orders!</div>}
                   {complete.map((complete) => {
                     return (
                       <Complete
@@ -94,7 +100,7 @@ function separatedOrders(orders) {
                         sale_id={complete.sale_id}
                         sale_date={complete.sale_date}
                         sale_status={complete.sale_status}
-                        received_date={complete.received_date}
+                        // received_date={complete.received_date}
                         total={complete.total}
                       />
                     )
@@ -102,10 +108,11 @@ function separatedOrders(orders) {
                 </div>
               
 
-              <div className="flex flex-col w-full gap-5">
+              <div className="flex flex-col w-1/2 gap-5">
                 <div className="bg-gray-100 p-3 ">
                   <div className="text-xl font-bold text-start">Cancelled</div>
                 </div>
+                {cancelled.length === 0 && <div className="text-center text-lg bg-gray-100 py-5 font-semibold">No Cancelled orders!</div>}
                 {cancelled.map((cancelled) => {
                   return (
                     <Complete
@@ -113,7 +120,7 @@ function separatedOrders(orders) {
                       sale_id={cancelled.sale_id}
                       sale_date={cancelled.sale_date}
                       sale_status={cancelled.sale_status}
-                      received_date={cancelled.received_date}
+                      // received_date={cancelled.received_date}
                       total={cancelled.total}
                     />
                   )
