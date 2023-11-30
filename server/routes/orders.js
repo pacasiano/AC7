@@ -30,8 +30,13 @@ router.get('/', (req, res) => {
 
 router.get('/orders/:id', (req, res) => {
     const { id: account_id } = req.params;
-    let q = 'SELECT sale_id, DATE_FORMAT(sale_date, \'%M %d, %Y\') AS sale_date, sale_status, DATE_FORMAT(received_date, \'%M %d, %Y\') as received_date FROM sale ' +
-            `LEFT JOIN shipment USING (sale_id) WHERE account_id = ${account_id}`;
+    let q = 'SELECT sale_id, DATE_FORMAT(sale_date, \'%M %d, %Y\') AS sale_date, sale_status, DATE_FORMAT(received_date, \'%M %d, %Y\') AS received_date, ' +
+            'sale_payment.amount AS amount, product.name AS name FROM sale '
+            'LEFT JOIN shipment USING (sale_id) ' +
+            'INNER JOIN sale_payment USING (sale_id) ' +
+            'INNER JOIN sale_item USING (sale_id) ' +
+            'INNER JOIN product USING (product_id) ' +
+            `WHERE account_id = ${account_id}`;
     connection.query(q, function (err, results) {
         if (err) {
             console.log(err.message);

@@ -16,12 +16,12 @@ let connection = mysql.createConnection({
 router.post('/', (req, res) => {
     console.log('CHECK ME TF OUT')
     console.log(req.body)
-    const {account_id, items_purchased, payment_method, address_name, gcash_ref_num} = req.body;
+    const {account_id, items_purchased, payment_method, address_name, gcash_ref_num, amount} = req.body;
     //need to validate gcash_ref_num length doesn't exceed 13 and only contains numbers
 
     //Query 1: Create a sale_payment entry
     const q1 = `INSERT INTO sale_payment SET sale_id = (SELECT sale_id FROM sale WHERE account_id = ${account_id} AND sale_status = 'cart'), ` +
-                `mode_of_payment = '${payment_method}'`;
+                `mode_of_payment = '${payment_method}', amount = ${amount}`;
     connection.query(q1, (err, results) => {
         if (err) {
             console.error(err)

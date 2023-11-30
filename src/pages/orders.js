@@ -14,27 +14,27 @@ function Orders() {
 
   const accountId = getAcctIdFromCookie();
 
-useEffect(() => {
-  fetch(`/api/orders/orders/${accountId}`)
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error(`HTTP error! Status: ${res.status}`);
-      }
-      return res.json();
-    })
-    .then((orders) => {
-      console.log('Fetched orders:', orders);
-      separatedOrders(orders);
-    })
-    .catch((error) => {
-      console.error('Fetch error:', error);
-    });
-}, [accountId]);
+  useEffect(() => {
+    fetch(`/api/orders/orders/${accountId}`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((orders) => {
+        console.log('Fetched orders:', orders);
+        separatedOrders(orders);
+      })
+      .catch((error) => {
+        console.error('Fetch error:', error);
+      });
+  }, [accountId]);
 
-// Separate ongoing orders
-const [ongoing, setOngoing] = useState([]);
-const [complete, setComplete] = useState([]);
-const [cancelled, setCancelled] = useState([]);
+  // Separate ongoing orders
+  const [ongoing, setOngoing] = useState([]);
+  const [complete, setComplete] = useState([]);
+  const [cancelled, setCancelled] = useState([]);
 
 function separatedOrders(orders) {
   let onGoing = [];
@@ -128,6 +128,6 @@ function separatedOrders(orders) {
           
     );
   
-  }
+}
   
   export default Orders;

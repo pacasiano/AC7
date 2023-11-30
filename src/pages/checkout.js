@@ -110,6 +110,7 @@ function Checkout() {
       payment_method: payment,
       gcash_ref_num: gcashRefNum,
       address_name: selectedOption.value,
+      amount: totalPayment
     }
 
     fetch('/api/checkout', {
