@@ -65,10 +65,10 @@ const someDataArray = useMemo(() => [
                 </div>
               ) : (
                 searchResults.length > 0 ? (
-                    <div className="flex flex-col bg-white w-full rounded-md">
+                    <div className="flex flex-col bg-white w-full rounded-md p-2">
                       {searchResults.map(item =>  (
-                        <Link onClick={() => redirectToProductPage(item.id)} className="cursor-pointer font-normal hover:font-medium whitespace-nowrap">
-                        <div key={item.id} className="hover:bg-gray-200 py-2 pl-3 rounded-md">{item.name}</div>
+                        <Link onClick={() => redirectToProductPage(item.id)} className=" hover:font-semibold cursor-pointer font-normal whitespace-nowrap">
+                        <div key={item.id} className="transition-all delay-75 ease-in hover:bg-gray-200 py-2 pl-3 rounded-md">{item.name}</div>
                         </Link>
                       ))}
                     </div>

@@ -57,14 +57,14 @@ function separatedOrders(orders) {
 
     return (
 
-      <div className="flex flex-row justify-between min-h-screen py-24 px-20">
+      <div className="transition-all ease-in flex flex-row justify-between min-h-screen py-24 px-20">
         <div className="flex flex-row w-full gap-5">
           <div className="flex flex-col w-[70%] gap-5">
 
             <div className="flex flex-row">
-              <button onClick={() => setMode("ongoing")} className={`${mode === "ongoing" ? "bg-gray-50" : "bg-gray-100 text-black/60"} hover:text-black hover:drop-shadow-md ${mode === "ongoing" && "shadow-md"} p-3 text-xl font-bold text-center w-1/3`}>Ongoing</button>
-              <button onClick={() => setMode("complete")} className={`${mode === "complete" ? "bg-gray-50" : "bg-gray-100 text-black/60"} hover:text-black hover:drop-shadow-md ${mode === "complete" && "shadow-md"} p-3 text-xl font-bold text-center w-1/3`}>Completed</button>
-              <button onClick={() => setMode("cancelled")} className={`${mode === "cancelled" ? "bg-gray-50" : "bg-gray-100 text-black/60"} hover:text-black hover:drop-shadow-md ${mode === "cancelled" && "shadow-md"} p-3 text-xl font-bold text-center w-1/3`}>Cancelled</button>
+              <button onClick={() => setMode("ongoing")} className={`${mode === "ongoing" ? "bg-gray-50" : "bg-gray-100 text-black/60"} transition-all hover:text-black hover:drop-shadow-md ${mode === "ongoing" && "shadow-md"} p-3 text-xl font-bold text-center w-1/3`}>Ongoing</button>
+              <button onClick={() => setMode("complete")} className={`${mode === "complete" ? "bg-gray-50" : "bg-gray-100 text-black/60"} transition-all hover:text-black hover:drop-shadow-md ${mode === "complete" && "shadow-md"} p-3 text-xl font-bold text-center w-1/3`}>Completed</button>
+              <button onClick={() => setMode("cancelled")} className={`${mode === "cancelled" ? "bg-gray-50" : "bg-gray-100 text-black/60"} transition-all hover:text-black hover:drop-shadow-md ${mode === "cancelled" && "shadow-md"} p-3 text-xl font-bold text-center w-1/3`}>Cancelled</button>
             </div>
 
             {(ongoing.length === 0 && mode === "ongoing" ) && <div className="text-center text-lg bg-gray-100 py-5 font-semibold">No ongoing orders!</div>}

@@ -20,7 +20,7 @@ function OrderCard({sale_id, sale_date, sale_status, shipped_date, received_date
     }, [sale_id]); 
 
     return (
-        <Link to={`/orders/${sale_id}`} className="bg-gray-100 p-5 h-34 hover:shadow-md hover:cursor-pointer">
+        <Link to={`/orders/${sale_id}`} className="bg-gray-100 p-5 h-34 hover:shadow-md hover:cursor-pointer transition-all">
             <div className="flex flex-col">
                 <div className="flex flex-row gap-4">
                     <div className="w-28">

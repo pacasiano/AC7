@@ -187,7 +187,7 @@ function Landing() {
   }, [username, password, password2]);
 
   return (
-    <section className="bg-gray-50 w-full h-full  ">
+    <section className="transition-all ease-in bg-gray-50 w-full h-full  ">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a href="/home" className="flex items-center mb-3 mr-4 text-2xl font-semibold text-gray-900 ">
           <img className="object-cover w-24 h-14" src={navlogo} alt="logo"/>

@@ -151,7 +151,7 @@ function Landing() {
     <>
     <Error isModalOpen={buttonError} />
     <Success isModalOpen={success} />
-    <div className="w-full h-screen flex flex-col justify-center items-center bg-gray-100 border-pink-700">
+    <div className="transition-all ease-in w-full h-screen flex flex-col justify-center items-center bg-gray-100 border-pink-700">
         {!isCustomerRegistered ? (<>
             <div className="flex items-center mb-3 mr-4 text-2xl font-semibold text-gray-900 "><img className="object-cover w-24 h-14" src={navlogo} alt="logo"/>AC7 Dazzle White</div>
             <div className="flex flex-col justify-center items-center bg-white rounded-lg shadow-lg p-5 w-2/3">

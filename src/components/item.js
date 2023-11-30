@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import Item1 from "../imgs/Item1.png";
-import { Form, Link} from "react-router-dom";
+import {Link} from "react-router-dom";
 import "../App.css";
 
 function Item(props) {
@@ -12,9 +12,11 @@ function Item(props) {
       .then(res => res.json())
       .then(data => setPrice(data.price))
 
-  }, [])
+  }, [props.product_obj.product_id])
 
-  function submitForm() {
+  function submitForm(e) {
+    e.preventDefault()
+
     fetch('/api/item', {
       method: 'POST',
       headers: {
@@ -53,7 +55,7 @@ function Item(props) {
             Basically, 'props' contains a nested obj. We access the nested obj using 'product_obj'*/}
             </div>
             <div className="flex justify-center py-2">
-              <button className="flex items-center justify-center w-11/12 h-10 mb-2 text-md font-bold text-white bg-black rounded-md">Add to Cart</button>
+              <button className="flex items-center transition-all hover:bg-black justify-center w-11/12 h-10 mb-2 text-md font-bold text-white bg-black/80 rounded-md">Add to Cart</button>
             </div>
           </div>
         </div>

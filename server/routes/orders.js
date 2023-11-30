@@ -68,6 +68,7 @@ router.patch('/:id', (req, res) => {
         }
         else {
             console.log(`Sale_status of Sale with ID ${sale_id} has been changed to ${new_sale_status}`)
+            res.json({message: `Sale_status of Sale with ID ${sale_id} has been changed to ${new_sale_status}`})
         }
     })
 })

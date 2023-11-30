@@ -14,7 +14,7 @@ function Error404() {
   }, []);
 
   return (
-    <div className="h-screen flex items-center justify-center">
+    <div className="transition-all ease-in h-screen flex items-center justify-center">
       {loading ? (
         // Render rotating loading spinner while loading is true
         <div className="animate-spin rounded-full border-t-4 border-black border-solid h-12 w-12"></div>

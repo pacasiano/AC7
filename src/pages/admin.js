@@ -34,7 +34,7 @@ export default function Admin() {
       
 
     return (
-        <div>
+        <div className="transition-all ease-in">
             <div className="min-h-screen w-screen ">
                 <div className="flex flex-row" >
                     <div id="sideBar" className="fixed h-screen overflow-y-auto scrolling-sidebar flex flex-col bg-gray-200 w-52">

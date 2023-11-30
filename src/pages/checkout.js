@@ -139,26 +139,47 @@ function Checkout() {
   const customStyles = {
     control: base => ({
       ...base,
-      height: "2rem",
-      fontSize: '15px',  // Use fontSize instead of text
-      fontWeight: 'bold',   // Set fontWeight to 'bold'
-      background: "#F3F4F6",
-      border: "1px solid #e2e8f0",
-      active: "border: none",
-      boxShadow: "none",
-      "&:hover": {
-        border: "1px solid black",
-        boxShadow: "none"
-      }
-    })
+      height: '2rem',
+      fontSize: '15px',
+      fontWeight: 'bold',
+      background: '#F3F4F6',
+      border: 'none',
+      active: 'border: none',
+      boxShadow: 'none',
+      transition: 'all 0.3s',
+      backgroundColor: 'black',
+      rounded: 'true',
+      '&:hover': {
+        border: 'none',
+        boxShadow: 'none',
+      },
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      // borderRadius 10px on selected option
+      borderRadius: "7px",
+      // focused color when selected option
+      backgroundColor: (state.isSelected ? 'black' : 'white')||(state.isFocused ? '#F3F4F6' : 'white'),
+      color: state.isSelected ? '#F3F4F6' : 'black',
+    }),
+    menu: base => ({
+      ...base,
+      borderRadius: "7px",
+      marginTop: 0,
+      // padding top and bottom should be the same in order to highlight the selected option
+      paddingLeft: "3px",
+      paddingRight: "3px"
+    }),
   };
+  
+  
 
   return (
     <>
     <Confirmation isModalOpen={isSuccess}/>
     <Invalid isModalOpen={emptyFields}/>
     {items.length > 0 ? 
-    <div className="min-h-screen pt-16">
+    <div className="transition-all ease-in min-h-screen pt-16">
       <form onSubmit={sendPostReq} id="billingInfo" className="flex flex-col lg:flex-row lg:items-start items-center lg:gap-0 gap-5 justify-evenly py-20">
         <div className="flex flex-col lg:w-1/2 w-11/12 gap-5 ">
           <div className="bg-gray-100 p-5">
@@ -166,12 +187,12 @@ function Checkout() {
               Payment Method
             </div>
             <div className="flex flex-row justify-start pl-2">
-                <input name="paymentMethod" id="gcash" value="gcash" checked={payment === 'gcash'} onChange={handleOptionChange}  type="radio" />
                 <label for="gcash" className="transition duration-300 ease-out hover:bg-gray-50 hover:-translate-y-0.5 active:bg-gray-200 active:translate-y-0 pl-2 pr-6 py-1 rounded-md cursor-pointer group-checked:bg-gray-600">
+                <input className="transition-all" name="paymentMethod" id="gcash" value="gcash" checked={payment === 'gcash'} onChange={handleOptionChange}  type="radio" /><span className="pr-1"></span>
                 Gcash</label>
                 
-                <input name="paymentMethod" id="cod" value="cod" checked={payment === 'cod'} onChange={handleOptionChange} type="radio" />
-                <label for="cod" className="transition duration-300 ease-out hover:bg-gray-50 hover:-translate-y-0.5 active:bg-gray-200 active:translate-y-0 pl-2 py-1 rounded-md cursor-pointer checked:bg-gray500">
+                <label for="cod" className="transition duration-300 ease-out hover:bg-gray-50 hover:-translate-y-0.5 active:bg-gray-200 active:translate-y-0 px-2 py-1 rounded-md cursor-pointer checked:bg-gray500">
+                <input name="paymentMethod" id="cod" value="cod" checked={payment === 'cod'} onChange={handleOptionChange} type="radio" /><span className="pr-1"></span>
                 Cash on Delivery</label>
             </div>
             {payment === 'gcash' && (
@@ -193,14 +214,14 @@ function Checkout() {
             </div>
             <div className="flex flex-col gap-3 justify-start pl-2">
               <div className="flex flex-row justify-start items-center">
-                <div className="text-md font-md pr-16">Name:</div>
+                <div className="text-md font-md">Name:</div>
               <Select
                 value={selectedOption}
                 onChange={handleSelectChange}
                 options={options}
-                className={`${(selectedOption === null && emptyFields) && "border border-red-500"} ml-2 w-48 text-center text-sm bg-gray-100`}
+                className={`${(selectedOption === null && emptyFields) && "border border-red-500"} ml-16 w-52 pl-2 text-left text-sm bg-gray-100`}
                 styles={customStyles}
-                
+                isRtl={false}
               />
               </div>
               
@@ -257,7 +278,7 @@ function Checkout() {
             </div>
                 {/* <Link to="/order/confirmation">
                 </Link> */}
-                <button type='submit' className={`${emptyFields && "animate-wiggle"} w-full bg-black text-white p-4 text-xl`}>
+                <button type='submit' className={`${emptyFields && "animate-wiggle"} transition-all w-full bg-black/80 hover:bg-black text-white p-4 text-xl`}>
                   Pay
                 </button>
                 {/* <button onClick={sendPostReq} className="w-full bg-black text-white p-4 mt-7 text-xl">

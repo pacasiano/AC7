@@ -254,8 +254,8 @@ function OrderActions({orders: sale_status, sale_id, setCancelled, setReceived})
       </div>
       <div className="flex flex-row gap-2 w-full">
         {/* currently disabled if order status is "cart" dapat it should be disabled when order status is "courrier" */}
-        <button onClick={cancelOrder} disabled={sale_status !== 'packaging'} className={`${sale_status !== 'packaging' ? "bg-neutral-50 text-gray-500" : "bg-neutral-200" }  p-2 rounded-md w-full font-medium`}>Cancel order</button>
-        <button onClick={completedOrder} disabled={sale_status !== 'shipped'} className={`${sale_status !== 'shipped' ? "bg-neutral-50 text-gray-500" : "bg-blue-300" } p-2 rounded-md w-full font-medium`}>Order Received</button>
+        <button onClick={cancelOrder} disabled={sale_status !== 'packaging'} className={`${sale_status !== 'packaging' ? "bg-neutral-50 text-gray-500" : "bg-neutral-200" } transition-all ${sale_status === 'packaging' && "hover:bg-black/20"} p-2 rounded-md w-full font-medium`}>Cancel order</button>
+        <button onClick={completedOrder} disabled={sale_status !== 'shipped'} className={`${sale_status !== 'shipped' ? "bg-neutral-50 text-gray-500" : "bg-neutral-200" } transition-all ${sale_status === 'shipped' && "hover:bg-black/20"} p-2 rounded-md w-full font-medium`}>Order Received</button>
       </div>
     </div>
   )

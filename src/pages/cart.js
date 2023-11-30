@@ -81,7 +81,7 @@ function Cart() {
   return (
     <>
     <Invalid isModalOpen={emptyCart} />
-    <div className=" min-h-screen pt-16">
+    <div className="transition-all ease-in min-h-screen pt-16">
       <div className="flex flex-col lg:flex-row lg:items-start items-center lg:gap-0 gap-5 justify-evenly py-16">
         <div className="flex flex-col lg:w-1/2 w-11/12 gap-5 ">
           <div className="bg-gray-100 p-5">
@@ -133,7 +133,7 @@ function Cart() {
               {`₱${orderSubtotal.toFixed(2)}`}
             </div>
               <button 
-                className={`w-full p-4 mt-7 text-xl ${emptyCart && 'animate-wiggle'} bg-gray-800 text-gray-50`} 
+                className={`transition-all w-full p-4 mt-7 text-xl ${emptyCart && 'animate-wiggle'} bg-black/80 hover:bg-black text-gray-50`} 
                 onClick={submitOrder}
               >
                 Check out

@@ -656,7 +656,7 @@ function deepEqual(obj1, obj2) {
   function Success({isModalOpen}) {
   
     return (
-      <div className="fixed pt-16">
+      <div className="transition-all ease-in fixed pt-16">
         <Modal isOpen={isModalOpen}>
           <div className="w-screen flex justify-center items-center ">
               <div className="bg-gray-50 p-3 rounded-xl w-1/2 shadow-md border">

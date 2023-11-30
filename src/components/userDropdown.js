@@ -58,10 +58,10 @@ function UserDropdown() {
                 <div className="text-xs">{email}</div>
             </div>
             <div className="flex justify-start flex-col py-1 pl-5 items-start">
-                <Link to="/user/profile" className="block py-2 text-sm text-gray-700 hover:font-bold">Your Profile</Link>
-                <Link to="/orders" className="block py-2 text-sm text-gray-700 hover:font-bold">Orders</Link>
+                <Link to="/user/profile" className="transition-all block py-2 text-sm text-gray-700 hover:font-bold">Your Profile</Link>
+                <Link to="/orders" className="transition-all block py-2 text-sm text-gray-700 hover:font-bold">Orders</Link>
                 {/* <Link to="/user/settings" className="block py-2 text-sm text-gray-700 hover:font-bold">Settings</Link> */}
-                <Link to="/" onClick={removeCookie} className="block py-2 text-sm text-gray-700 hover:font-bold">Sign out</Link>
+                <Link to="/" onClick={removeCookie} className="transition-all block py-2 text-sm text-gray-700 hover:font-bold">Sign out</Link>
             </div>
         </div>
     );

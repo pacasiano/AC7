@@ -108,7 +108,7 @@ function CartItem({item}) {
                       <div className="flex justify-start font-normal text-sm ">
                         ₱{price}
                       </div>
-                      <button className="absolute text-xs font-thin ">
+                      <button className="transition-all hover:font-semibold text-black/95 absolute text-xs font-thin ">
                         Remove
                       </button>
                     </div>  
@@ -117,13 +117,13 @@ function CartItem({item}) {
               </td>
               <td className="pb-1 ">
                 <div className="flex flex-row gap-5 justify-center"> 
-                  <button onClick={decrementQuantity} className="flex justify-center m-0 mt-1 p-1 text-xl hover:font-extrabold ">
+                  <button onClick={decrementQuantity} className="transition-all flex justify-center m-0 mt-1 p-1 text-xl hover:font-extrabold ">
                     -
                   </button>
                     <div className="flex justify-center m-0 pt-2 text-xl font-light ">
                       {hookQty}
                     </div>
-                  <button onClick={incrementQuantity} className="flex justify-center m-0 mt-1 p-1 text-xl hover:font-extrabold ">
+                  <button onClick={incrementQuantity} className="transition-all flex justify-center m-0 mt-1 p-1 text-xl hover:font-extrabold ">
                       +
                   </button>
                 </div>

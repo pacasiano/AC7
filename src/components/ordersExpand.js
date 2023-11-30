@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function Order({ order }) {
+function Order({ order, setReloadData, setShipped, setReturned, reloadData }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpand = () => {
@@ -15,9 +15,11 @@ function Order({ order }) {
         .then((data) => { //store the data in 'products' state variable
           setOrder_item(data);
         });
-}, []);
+}, [order.sale_id]);
 
-  function sent() {
+  function sent(e) {
+    e.preventDefault();
+
     fetch(`/api/orders/${order.sale_id}`, {
       method: 'PATCH',
       headers: {
@@ -27,9 +29,19 @@ function Order({ order }) {
         new_sale_status: 'shipped'
       })
     })
+    .then(res => res.json())
+    .then((data) =>{
+      console.log(data);
+      setShipped(true);
+      setReloadData(!reloadData);
+    })
+
+    
   }
 
-  function returned() {
+  function returned(e) {
+    e.preventDefault();
+
     fetch(`/api/orders/${order.sale_id}`, {
       method: 'PATCH',
       headers: {
@@ -39,6 +51,13 @@ function Order({ order }) {
         new_sale_status: 'returned'
       })
     })
+    .then(res => res.json())
+    .then((data) =>{
+      console.log(data);
+      setReturned(true);
+      setReloadData(!reloadData);
+    })
+
   }
 
   return (
