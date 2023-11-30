@@ -16,12 +16,7 @@ function Orders() {
 
   useEffect(() => {
     fetch(`/api/orders/orders/${accountId}`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! Status: ${res.status}`);
-        }
-        return res.json();
-      })
+      .then(res => res.json())
       .then((orders) => {
         console.log('Fetched orders:', orders);
         separatedOrders(orders);
@@ -78,9 +73,8 @@ function separatedOrders(orders) {
                         sale_id={ongoing.sale_id}
                         sale_date={ongoing.sale_date}
                         sale_status={ongoing.sale_status}
-                        name={ongoing.name}
-                        quantity={ongoing.amount}
-
+                        received_date={ongoing.received_date}
+                        total={ongoing.amount}
                       />
                     )
                   })}
