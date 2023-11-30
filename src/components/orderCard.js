@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import "../App.css";
 import Item1 from "../imgs/Item1.png";
 import { Link } from "react-router-dom";
@@ -33,11 +33,13 @@ function OnGoing({sale_id, sale_date, sale_status, received_date, total}) {
 
     const [items, setItems] = useState([]);
 
-    fetch(`/api/orders/sale_item/${sale_id}`)
-    .then(res => res.json())
-    .then(data => setItems(data))
-    console.log(items)
-
+    // useEffect(() => {
+    //     fetch(`/api/orders/sale_item/${sale_id}`)
+    //     .then(res => res.json())
+    //     .then(data => setItems(data))
+    //     console.log(items)
+    // }, [])
+        
     return (
         <Link to={`/orders/${sale_id}`} className="bg-gray-100 p-5 hover:shadow-xl hover:bg-neutral-100 hover:cursor-pointer">
             <div className="flex flex-col">

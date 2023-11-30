@@ -74,12 +74,12 @@ function separatedOrders(orders) {
                   {ongoing.map((ongoing) => {
                     return (
                       <OnGoing
-                        key={ongoing.sale_id}
+                        key={`${ongoing.sale_id}-${ongoing.product_id}`}
                         sale_id={ongoing.sale_id}
                         sale_date={ongoing.sale_date}
                         sale_status={ongoing.sale_status}
                         name={ongoing.name}
-                        quantity={ongoing.quantity}
+                        quantity={ongoing.amount}
 
                       />
                     )

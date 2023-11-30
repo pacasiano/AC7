@@ -81,7 +81,7 @@ router.get('/sale_items/:id', (req, res) => {
     connection.query(q, [sale_id], (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.json({ error: 'Internal Server Error' });
         } else {
             res.json(results);
         }
