@@ -6,6 +6,8 @@ import Check from "../imgs/check.png";
 import { myContext } from '../context/adminContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
+import { parse, format, subDays, isValid, isToday } from 'date-fns';
+
 
 export default function Orders() {
 
@@ -62,8 +64,10 @@ export default function Orders() {
                     <span className="text-xl font-bold">Orders</span>
                     <Select options={options} className="w-96" onChange={(selectedOption) => setSelectedOrder(selectedOption)} />
                 </div>
-                <div className="flex flex-row justify-evenly w-full p-5">
-                  <DailySales sales={orders} />
+                <div className="flex flex-row justify-start gap-5 w-full">
+                  <DailySales orders={orders} />
+                  <DailyRevenue orders={orders} />
+                  <WeeklySales orders={orders} />
                 </div>
                 <div className="flex flex-col gap-3">
                     <div className="flex flex-row justify-between bg-gray-200 w-full p-5">
@@ -173,27 +177,148 @@ const Modal = ({ isOpen, children }) => {
     );
   };
 
-function DailySales(sales) {
+function DailySales({orders}) {
 
-const today = new Date();
+  const today = new Date().toLocaleDateString();
+  const dates = [];
 
-  // total number of sales for the day
-  const totalSales = sales.sales.length === 0 ? 0 : sales.sales.filter((sale) => sale.sale_date === today).length;
+  for (let i = 0; i < orders.length; i++) {
+    dates.push(orders[i].sale_date);
+  }
 
-  return( //64
-  <div className="flex flex-row justify-center p-5 bg-black/5 shadow-xl rounded-md">
+  const convertSaleDates = (dates) => {
+    return dates.map((saleDate, index) => {
+      if (saleDate) {
+        const parsedDate = parse(saleDate, "MMMM dd, yyyy '-' hh:mm:ss a", new Date());
+        const formattedDate = format(parsedDate, 'M/d/Y');
+        return formattedDate;
+      } else {
+        console.warn(`Sale date at index ${index} is missing or undefined:`, saleDate);
+        return null; // or handle the case when saleDate is missing
+      }
+    });
+  };
+ 
+  const formattedDates = convertSaleDates(dates);
+  const filteredDates = formattedDates.filter(date => date === today);
+  console.log(filteredDates);
+
+  return(
+  <div className="flex flex-col text-white w-72 gap-5 p-7 custom-gradient rounded-md">
     
-
-    <div className=" border-2">
-      
-    </div>
-
-    <div className="flex flex-row text-center justify-between w-34">
-      <div className="pr-2 text-md font-medium">
-        Sales for the last 7 days
+    <div className="flex flex-row justify-between">
+      <span className="text-xl font-bold">Daily Sales</span>
+      <div className="">
+        <FontAwesomeIcon icon={faCartShopping} size="2x" />
       </div>
     </div>
-    
+
+    <div className="flex flex-row justify-between items-center w-full" >
+      
+      <div>
+        <span className="text-2xl">{filteredDates.length}</span>
+      </div>
+    </div>
+
   </div>
   );
 }
+
+function WeeklySales({orders}) {
+
+  const dates = [];
+
+  for (let i = 0; i < orders.length; i++) {
+    dates.push(orders[i].sale_date);
+  }
+
+  const convertSaleDates = (dates) => {
+    return dates.map((saleDate, index) => {
+      if (saleDate) {
+        const parsedDate = parse(saleDate, "MMMM dd, yyyy '-' hh:mm:ss a", new Date());
+        const formattedDate = format(parsedDate, 'M/d/Y');
+        
+        // Check if the date is within the last 7 days
+        const isWithin7Days = subDays(new Date(), 7) <= parsedDate && parsedDate <= new Date();
+  
+        // Append time if the date is within the last 7 days, otherwise, return only the date
+        return isWithin7Days ? `${formattedDate} - ${format(parsedDate, 'hh:mm:ss a')}` : formattedDate;
+      } else {
+        console.warn(`Sale date at index ${index} is missing or undefined:`, saleDate);
+        return null; // or handle the case when saleDate is missing
+      }
+    });
+  };
+  
+  const formattedDates = convertSaleDates(dates);
+  console.log(formattedDates);
+
+  return(
+  <div className="flex flex-col text-white w-72 gap-5 p-7 custom-gradient rounded-md">
+    
+    <div className="flex flex-row justify-between">
+      <span className="text-xl font-bold">Weekly Sales</span>
+      <div className="">
+        <FontAwesomeIcon icon={faCartShopping} size="2x" />
+      </div>
+    </div>
+
+    <div className="flex flex-row justify-between items-center w-full" >
+      
+      <div>
+        <span className="text-2xl">{formattedDates.length}</span>
+      </div>
+    </div>
+
+  </div>
+  );
+}
+
+function DailyRevenue({orders}) {
+ 
+  // select all dates that are today and get the total price
+  const convertSaleDates = (orders) => {
+  
+    const filteredSales = orders.filter((order) => {
+      const parsedDate = parse(order.sale_date, "MMMM dd, yyyy '-' hh:mm:ss a", new Date(), {
+        additionalDigits: 2,
+      });
+      return isValid(parsedDate) && isToday(parsedDate);
+    });
+  
+    const totalSalesPrice = filteredSales.reduce((total, order) => total + parseFloat(order.price), 0);
+  
+    return {
+      filteredSales,
+      totalSalesPrice,
+    };
+  };
+  
+  // Example usage
+  const { filteredSales, totalSalesPrice } = convertSaleDates(orders);
+  console.log('Filtered Sales:', filteredSales);
+  console.log('Total Sales Price:', totalSalesPrice);
+  
+
+  return(
+  <div className="flex flex-col text-white w-72 gap-5 p-7 custom-gradient2 rounded-md">
+    
+    <div className="flex flex-row justify-between">
+      <span className="text-xl font-bold">Daily Revenue</span>
+      <div className="text-3xl -mt-2 font-bold">
+        ₱
+      </div>
+    </div>
+
+    <div className="flex flex-row justify-between items-center w-full" >
+      
+      <div>
+        <span className="text-2xl">₱ {totalSalesPrice}</span>
+      </div>
+    </div>
+
+  </div>
+  );
+}
+
+

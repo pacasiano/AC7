@@ -71,3 +71,11 @@
 .animate-bounce2 {
   animation: customBounce 1s infinite;
 }
+
+.custom-gradient {
+  background: linear-gradient(to right, #5F8FB1, #C16989);
+}
+
+.custom-gradient2 {
+  background: linear-gradient(to right, #C16989, #5F8FB1);
+}
