@@ -18,12 +18,13 @@ import InventoryTransactions from "../components/inventoryTransactions";
 import AddEmployee from "../components/addEmp";
 import ViewSuppliers from "../components/supplier";
 import AddSupplier from "../components/supplierAdd";
+import Returned from "../components/ordersReturns";
 import { myContext } from "../context/adminContext";
 import { Link } from "react-router-dom";
 
 export default function Admin() {
 
-    const [page, setPage] = useState("inventory");
+    const [page, setPage] = useState("orders");
 
     function removeCookie() {
         document.cookie = "account_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
@@ -40,31 +41,33 @@ export default function Admin() {
                     <div id="sideBar" className="fixed h-screen overflow-y-auto scrolling-sidebar flex flex-col bg-gray-200 w-52">
                         <img src={navlogo} alt="AC7 Logo" className="py-5 aspect-auto"></img>
                             <div className="flex flex-col justify-between h-full">
-                                <div className="flex flex-col pl-7 gap-5 ">
-                                    <div id="orders" className="">
-                                        <button onClick={() => setPage("orders")}>
-                                        <div className="text-xl font-semibold"><FontAwesomeIcon icon={faShoppingCart} /> Orders</div>
-                                        </button>
-                                    </div>
-                                    <div id="accounts" className="">
-                                        <button onClick={() => setPage("users")} >
-                                        <div className="text-xl font-semibold"><FontAwesomeIcon icon={faUsers} /> Accounts</div>
-                                        </button>
-                                    </div>
-                                    <div id="inventory" className="">
-                                        <button onClick={() => setPage("inventory")} >
-                                        <div className="text-xl font-semibold"><FontAwesomeIcon icon={faInbox} /> Inventory</div>
-                                        </button>
-                                    </div>
-                                    <div id="shipping" className="">
-                                        <button onClick={() => setPage("shipping")} >
-                                        <div className="text-xl font-semibold"><FontAwesomeIcon icon={faTruck} /> Shipping</div>
-                                        </button>
-                                    </div>
-                                    <div>
-                                        <button onClick={() => setPage("viewSuppliers")} >
-                                        <div className="text-xl font-semibold"><FontAwesomeIcon icon={faIndustry} /> Suppliers</div>
-                                        </button>
+                                <div className="px-7">
+                                    <div className="flex flex-col gap-1">
+                                        <div id="orders" className={`${page === "orders" && "bg-black/10"} transition-all hover:bg-black/10 active:bg-black/20 rounded-xl p-2`}>
+                                            <button onClick={() => setPage("orders")}>
+                                            <div className="text-xl font-semibold"><FontAwesomeIcon icon={faShoppingCart} /> Orders</div>
+                                            </button>
+                                        </div>
+                                        <div id="accounts" className={`${page === "users" && "bg-black/10"} transition-all hover:bg-black/10 active:bg-black/20 rounded-xl p-2`}>
+                                            <button onClick={() => setPage("users")} >
+                                            <div className="text-xl font-semibold"><FontAwesomeIcon icon={faUsers} /> Accounts</div>
+                                            </button>
+                                        </div>
+                                        <div id="inventory" className={`${page === "inventory" && "bg-black/10 "} transition-all hover:bg-black/10 active:bg-black/20 rounded-xl p-2`}>
+                                            <button onClick={() => setPage("inventory")} >
+                                            <div className="text-xl font-semibold"><FontAwesomeIcon icon={faInbox} /> Inventory</div>
+                                            </button>
+                                        </div>
+                                        <div id="shipping" className={`${page === "shipping" && "bg-black/10"} transition-all hover:bg-black/10 active:bg-black/20 rounded-xl p-2`}>
+                                            <button onClick={() => setPage("shipping")} >
+                                            <div className="text-xl font-semibold"><FontAwesomeIcon icon={faTruck} /> Shipping</div>
+                                            </button>
+                                        </div>
+                                        <div id="suppliers" className={`${(page === "viewSuppliers" || page === "addSupplier") && "bg-black/10 "} transition-all hover:bg-black/10 active:bg-black/20 rounded-xl p-2`}>
+                                            <button onClick={() => setPage("viewSuppliers")} >
+                                            <div className="text-xl font-semibold"><FontAwesomeIcon icon={faIndustry} /> Suppliers</div>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="flex w-full pl-7 pb-7">
@@ -98,6 +101,8 @@ export default function Admin() {
                                     return <ViewSuppliers />;
                                 case "addSupplier":
                                     return <AddSupplier />;
+                                case "returned":
+                                    return <Returned />;
                                 default:
                                     return <Inventory />;
                             }
