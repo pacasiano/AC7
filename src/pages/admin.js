@@ -32,7 +32,9 @@ export default function Admin() {
             window.location.reload();
         }, 0);
       }
-      
+
+    const inventory = ["inventory", "addItem", "inventoryIn", "inventoryOut", "inventoryTransactions"]
+    const isInInventory = inventory.some((item) => page.includes(item));
 
     return (
         <div className="transition-all ease-in">
@@ -43,17 +45,17 @@ export default function Admin() {
                             <div className="flex flex-col justify-between h-full">
                                 <div className="px-7">
                                     <div className="flex flex-col gap-1">
-                                        <div id="orders" className={`${page === "orders" && "bg-black/10"} transition-all hover:bg-black/10 active:bg-black/20 rounded-xl p-2`}>
+                                        <div id="orders" className={`${(page === "orders"||page==="returned") && "bg-black/10"} transition-all hover:bg-black/10 active:bg-black/20 rounded-xl p-2`}>
                                             <button onClick={() => setPage("orders")}>
                                             <div className="text-xl font-semibold"><FontAwesomeIcon icon={faShoppingCart} /> Orders</div>
                                             </button>
                                         </div>
-                                        <div id="accounts" className={`${page === "users" && "bg-black/10"} transition-all hover:bg-black/10 active:bg-black/20 rounded-xl p-2`}>
+                                        <div id="accounts" className={`${(page === "users"||page==="addEmployee") && "bg-black/10"} transition-all hover:bg-black/10 active:bg-black/20 rounded-xl p-2`}>
                                             <button onClick={() => setPage("users")} >
                                             <div className="text-xl font-semibold"><FontAwesomeIcon icon={faUsers} /> Accounts</div>
                                             </button>
                                         </div>
-                                        <div id="inventory" className={`${page === "inventory" && "bg-black/10 "} transition-all hover:bg-black/10 active:bg-black/20 rounded-xl p-2`}>
+                                        <div id="inventory" className={`${isInInventory && "bg-black/10 "} transition-all hover:bg-black/10 active:bg-black/20 rounded-xl p-2`}>
                                             <button onClick={() => setPage("inventory")} >
                                             <div className="text-xl font-semibold"><FontAwesomeIcon icon={faInbox} /> Inventory</div>
                                             </button>
