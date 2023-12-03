@@ -1,7 +1,7 @@
 import React, {useState,useEffect} from 'react';
 import Item1 from "../imgs/Item1.png";
 
-function CartItem({item}) {
+function CartItem({item, setReloadData, reloadData}) {
 
   //GET ACCOUNT_ID COOKIE
   const cookie = document.cookie;
@@ -29,10 +29,14 @@ function CartItem({item}) {
   const accountId = getAcctIdFromCookie(cookie);
 
   const {name, price, quantity, product_id} = item;
-  let displayQty = parseInt(quantity);
-
     
-  const [hookQty, setQuantity] = useState(displayQty);
+  const [hookQty, setQuantity] = useState(quantity);
+  const [submit, setSubmit] = useState(false);
+
+  useEffect(() => {
+    setQuantity(quantity);
+  }, []); // please dont change the dependencies
+  
   const [total, setTotal] = useState((price * quantity).toFixed(2));
 
   const [product, setProduct] = useState([]);
@@ -43,14 +47,9 @@ function CartItem({item}) {
       .then((data) => {
         setProduct(data);
       });
-  }, []);
+  }, [hookQty, product_id]);
 
   const {quantity: maxStockQty} = product || {};
-
-
-  useEffect(() => {
-    setQuantity(hookQty)
-  }, [hookQty])
   
   const incrementQuantity = () => {
     if (hookQty < maxStockQty) {
@@ -63,7 +62,7 @@ function CartItem({item}) {
   
   const decrementQuantity = () => {
     if (hookQty > 1) {
-      setQuantity(prevQty => prevQty - 1);
+      setQuantity(hookQty - 1);
       let totalCalc = parseInt(total) - parseInt(price); 
       setTotal(totalCalc.toFixed(2));
     }
@@ -71,6 +70,10 @@ function CartItem({item}) {
 
   //use useEffect to monitor change in hookQty. After some delay, record the qty in db 
   useEffect(() => {
+    
+    let timeoutId;
+
+    const makeFetch = () => {
 
       fetch(`/api/cart/${accountId}`, {
         method: 'POST',
@@ -81,10 +84,30 @@ function CartItem({item}) {
           product_id: product_id,
           quantity: hookQty
         })
-      });
-  
-  }, [accountId, hookQty, name, product_id]);
-  
+      })
+        .then(() => {
+          setReloadData(!reloadData);
+          console.log('Updated cart quantity in database')
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    };
+
+    timeoutId = setTimeout(makeFetch, 1000);
+    return () => clearTimeout(timeoutId);
+
+    
+  }, [submit]);// please dont change the depencies
+
+  // will only work if hookQty is not equal to quantity
+  useEffect(() => {
+    if (hookQty !== quantity) {
+      setSubmit(!submit);
+    }
+  }, [quantity, hookQty]); // please dont change the depencies
+
+
     return (
         <table className="table-fixed w-full">
           <tbody>

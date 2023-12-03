@@ -11,6 +11,9 @@ export default function Returns() {
     const [selectedReturn, setSelectedReturn] = useState(null);
     const [reloadData, setReloadData] = useState(false);
     const [options, setOptions] = useState([])
+    const [refundSucces, setRefundSucces] = useState(false);
+    const [returnRefundSucces, setReturnRefundSucces] = useState(false);
+    const [rejectSucces, setRejectSucces] = useState(false);
 
     useEffect(() => {
         fetch('/api/orders')
@@ -56,7 +59,7 @@ export default function Returns() {
                 <div className="flex flex-col gap-3">
                     <div className="flex flex-row justify-between bg-gray-200 w-full p-5">
                         <div className="flex flex-row justify-between w-full">
-                            <div className="text-md font-bold">Returned List</div>
+                            <div className="text-md font-bold">Requested Returns</div>
                             <button onClick={() => setPage("orders")}><span className=" text-md bg-gray-100 px-2 py-1 rounded-md font-bold">View All Orders</span></button>
                         </div>
                         <div className="flex flex-row gap-2">
@@ -72,7 +75,7 @@ export default function Returns() {
                                     {/* <th className="text-sm font-semibold border p-2 text-white">Product ID</th> */}
                                     <th className="sticky bg-gray-400 text-sm font-semibold border p-2 text-white">Full Name</th>
                                     <th className="sticky bg-gray-400 text-sm font-semibold border p-2 text-white">Date Delivered</th>
-                                    <th className="sticky bg-gray-400 text-sm font-semibold border p-2 text-white">Date Returned</th>
+                                    <th className="sticky bg-gray-400 text-sm font-semibold border p-2 text-white">Proof</th>
                                     <th className="sticky bg-gray-400 text-sm font-semibold border p-2 text-white">Reason for Returnnr</th>
                                     {/* <th className="text-sm font-semibold border p-2 text-white">Quantity</th> */}
                                     <th className="sticky bg-gray-400 text-sm font-semibold border p-2 text-white">Total</th>
@@ -80,7 +83,7 @@ export default function Returns() {
                                 </tr>
                             </thead>
                                 {filteredOrders.map((returns) => (
-                                <ReturnedRow key={returns.sale_id} returns={returns} setReloadData={setReloadData} reloadData={reloadData} />
+                                <ReturnedRow key={returns.sale_id} returns={returns} setReloadData={setReloadData} reloadData={reloadData} setRefundSucces={setRefundSucces} setReturnRefundSucces={setReturnRefundSucces} setRejectSucces={setRejectSucces} />
                                 ))}
                         </table>
                     </div>
@@ -90,7 +93,7 @@ export default function Returns() {
     );
 };
 
-function ReturnedRow({returns, setReloadData, reloadData}) {
+function ReturnedRow({returns, setReloadData, reloadData, setRefundSucces, setReturnRefundSucces, setRejectSucces}) {
 
     const [isExpanded, setIsExpanded] = useState(false);
 
@@ -108,43 +111,21 @@ function ReturnedRow({returns, setReloadData, reloadData}) {
             });
     }, [returns.sale_id]);
 
-    function stockIn(e) {
-        e.preventDefault();
-
-        fetch(`/api/returns/${returns.sale_id}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                new_sale_status: 'stocked-in'
-            })
-        })
-        .then(res => res.json())
-        .then((data) =>{
-            console.log(data);
-            setReloadData(!reloadData);
-        })
+    function refund() {
+      setRefundSucces(true);
+      setReloadData(!reloadData);
     }
 
-    function discard(e) {
-        e.preventDefault();
-
-        fetch(`/api/returns/${returns.sale_id}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                new_sale_status: 'discarded'
-            })
-        })
-        .then(res => res.json())
-        .then((data) =>{
-            console.log(data);
-            setReloadData(!reloadData);
-        })
+    function returnrefund() {
+      setReturnRefundSucces(true);
+      setReloadData(!reloadData);
     }
+
+    function reject() {
+      setRejectSucces(true);
+      setReloadData(!reloadData);
+    }
+
 
     return (
         <tbody>
@@ -153,14 +134,15 @@ function ReturnedRow({returns, setReloadData, reloadData}) {
         <td className="text-sm font-semibold border p-2">{returns.account_id}</td>
         <td className="text-sm font-semibold border p-2">{returns.full_name}</td>
         <td className="text-sm font-semibold border p-2">{returns.sale_date}</td>
-        <td className="text-sm font-semibold border p-2">{returns.date_returned}</td>
-        <td className="text-sm font-semibold border p-2">{returns.reason_for_return}</td>
+        <td className="text-sm font-semibold border p-2">{returns.proof}</td>
+        <td className="text-sm font-semibold border p-2">{returns.reason}</td>
         <td className="text-sm font-semibold border p-2">&#x20B1;{returns.price}</td>
         <td className="w-36 text-sm font-semibold border p-2">
           <div className="flex flex-col gap-1">
-            <button onClick={stockIn} className={` bg-green-500 text-white py-2 w-full rounded`}>Stock-in</button>
-            <button onClick={discard} className={` bg-red-500 text-white py-2 w-full rounded`}>Discard</button>
-            <button onClick={toggleExpand} className="bg-blue-500 text-white py-2 w-full rounded">{isExpanded ? 'Collapse' : 'Expand'}</button>
+            <button onClick={refund} className={` bg-green-500/90 hover:bg-green-600 text-white py-2 w-full rounded`}>Refund</button>
+            <button onClick={returnrefund} className={` bg-green-500/90 hover:bg-green-600 text-white py-2 w-full rounded`}>Return & Refund</button>
+            <button onClick={reject} className={` bg-red-500/90 hover:bg-red-600 text-white py-2 w-full rounded`}>Reject</button>
+            <button onClick={toggleExpand} className="bg-blue-500/90 hover:bg-blue-600 text-white py-2 w-full rounded">{isExpanded ? 'Collapse' : 'Expand'}</button>
           </div>
         </td>
       </tr>
@@ -195,3 +177,4 @@ function ReturnedRow({returns, setReloadData, reloadData}) {
     </tbody>
     )
 }
+

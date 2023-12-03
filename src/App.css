@@ -79,3 +79,11 @@
 .custom-gradient2 {
   background: linear-gradient(to right, #C16989, #5F8FB1);
 }
+
+.custom-gradient3 {
+  background: linear-gradient(to top, #C16989, #5F8FB1);
+}
+
+.custom-gradient4 {
+  background: linear-gradient(to bottom, #C16989, #5F8FB1);
+}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function Order({ order, setReloadData, setShipped, setReturned, setPacked, reloadData }) {
+function Order({ order, setReloadData, setShipped, setPacked, reloadData, setSelectedOrderToBeShipped }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpand = () => {
@@ -17,46 +17,9 @@ function Order({ order, setReloadData, setShipped, setReturned, setPacked, reloa
         });
 }, [order.sale_id]);
 
-  function sent(e) {
-    e.preventDefault();
-
-    fetch(`/api/orders/${order.sale_id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({
-        new_sale_status: 'shipped'
-      })
-    })
-    .then(res => res.json())
-    .then((data) =>{
-      console.log(data);
-      setShipped(true);
-      setReloadData(!reloadData);
-    })
-
-    
-  }
-
-  function returned(e) {
-    e.preventDefault();
-
-    fetch(`/api/orders/${order.sale_id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({
-        new_sale_status: 'returned'
-      })
-    })
-    .then(res => res.json())
-    .then((data) =>{
-      console.log(data);
-      setReturned(true);
-      setReloadData(!reloadData);
-    })
+  function ship() {
+    setSelectedOrderToBeShipped(order)
+    setShipped(true);
   }
 
   function packed(e) {
@@ -92,14 +55,9 @@ function Order({ order, setReloadData, setShipped, setReturned, setPacked, reloa
         <td className="text-sm font-semibold border p-2">&#x20B1;{order.price}</td>
         <td className="w-36 text-sm font-semibold border p-2">
           <div className="flex flex-col gap-1">
-            <div className="flex flex-row gap-1">
-              <button onClick={packed} disabled={!(order.sale_status === "cart")} className={`${!(order.sale_status === "cart") ? "bg-gray-200 text-gray-400" : "bg-green-500 text-white" } py-2 w-full rounded`}>Packed</button>
-              <button onClick={sent} disabled={order.sale_status !== "packaging"} className={`${order.sale_status !== "packaging" ? "bg-gray-200 text-gray-400" : "bg-green-500 text-white" } py-2 w-full rounded`}>Shipped</button>
-            </div>
-            <div className="flex flex-row gap-1">
-              <button onClick={returned} disabled={!(order.sale_status === "shipped")} className={`${!(order.sale_status === "shipped") ? "bg-gray-200 text-gray-400" : "bg-green-500 text-white" } py-2 w-full rounded`}>Returned</button>
-              <button onClick={toggleExpand} className="bg-blue-500 text-white py-2 w-full rounded">{isExpanded ? 'Collapse' : 'Expand'}</button>
-            </div>
+              <button onClick={packed} disabled={!(order.sale_status === "cart")} className={`${!(order.sale_status === "cart") ? "bg-gray-200 text-gray-400" : "bg-green-500/90 hover:bg-green-600 text-white" } py-2 w-full rounded`}>Packed</button>
+              <button onClick={ship} disabled={order.sale_status !== "packaging"} className={`${order.sale_status !== "packaging" ? "bg-gray-200 text-gray-400" : "bg-green-500/90 hover:bg-green-600 text-white" } py-2 w-full rounded`}>Shipped</button>
+              <button onClick={toggleExpand} className="bg-blue-500/90 hover:bg-blue-600 text-white py-2 w-full rounded">{isExpanded ? 'Collapse' : 'Expand'}</button>
           </div>
         </td>
       </tr>
