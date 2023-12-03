@@ -273,6 +273,7 @@ CREATE TABLE IF NOT EXISTS shipped_sale (
     employee_id BIGINT UNSIGNED NOT NULL,
     tracking_number VARCHAR(20) NOT NULL, -- tracking numbers are usually 12-20 in length in ph (esp with LBC and JRS). Wont exceed 20
     courier VARCHAR(50) NOT NULL, -- we can abbreviate names to about 4 letters but just to be safe we use 50 charlength
+    payment DECIMAL(10,2) NOT NULL, -- is this necessary?
     date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     -- received_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     status ENUM('active', 'inactive'),
