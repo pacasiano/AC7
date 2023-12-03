@@ -166,7 +166,7 @@ CREATE TABLE IF NOT EXISTS sale_item (
     sale_item_id BIGINT UNSIGNED AUTO_INCREMENT,
     sale_id BIGINT UNSIGNED NOT NULL,
     product_id BIGINT UNSIGNED NOT NULL,
-    -- quantity INT UNSIGNED NOT NULL DEFAULT 1,
+    quantity INT UNSIGNED NOT NULL DEFAULT 1,
     price DECIMAL(10,2) NOT NULL,
     PRIMARY KEY (sale_item_id),
     FOREIGN KEY (sale_id) REFERENCES sale(sale_id),
@@ -184,7 +184,10 @@ CREATE TABLE IF NOT EXISTS stock (
     FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
 
--- this is mainly used for stocking out orders, we know how much items from which batch #/s to stock out
+-- this table tells us which batch a product came from
+-- quantity in sale_item is the total number of items of a particular product ordered
+-- quantity in sale_item_stock is the number of items that came from a particular stock
+-- Ex., there could be 7 product 1's in sale_item - 2 of those are from batch 1, 5 of those are from batch 2
 CREATE TABLE IF NOT EXISTS sale_item_stock (
     stock_id BIGINT UNSIGNED NOT NULL,
     sale_item_id BIGINT UNSIGNED NOT NULL,

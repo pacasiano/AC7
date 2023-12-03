@@ -12,7 +12,7 @@ let connection = mysql.createConnection({
 
 router.get('/:id', (req, res) => {
     const { id: sale_id } = req.params;
-    let q = `SELECT shipped_sale.*, address.* FROM shipped_sale JOIN address ON shipment.address_id = address.address_id WHERE shipment.sale_id = ${sale_id}`;
+    let q = `SELECT shipped_sale.*, address.* FROM shipped_sale JOIN address ON shipped_sale.address_id = address.address_id WHERE shipped_sale.sale_id = ${sale_id}`;
     connection.query(q, function (err, results) {
         if (err) {
             console.log(err.message);

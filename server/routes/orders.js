@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
     let q = 'SELECT sale_id, account_id, CONCAT(first_name, \' \', last_name) AS full_name, DATE_FORMAT(sale_date, \'%M %d, %Y - %r\') AS sale_date, ' +
             'sale_status, SUM(price * quantity) AS price ' +
             'FROM sale LEFT JOIN sale_item USING (sale_id) ' +
-            'LEFT JOIN shipment USING (sale_id) ' +
+            'LEFT JOIN shipped_sale USING (sale_id) ' +
             'INNER JOIN customer USING (account_id) ' +
             'WHERE sale_status != \'cart\' ' +
             'GROUP BY sale_id, customer_id ' +
@@ -32,7 +32,7 @@ router.get('/orders/:id', (req, res) => {
     const { id: account_id } = req.params;
     let q = 'SELECT sale_id, DATE_FORMAT(sale_date, \'%M %d, %Y\') AS sale_date, sale_status, ' + //i removed received_date bc no longer in db
             'sale_payment.amount AS amount FROM sale ' +
-            'LEFT JOIN shipment USING (sale_id) ' +
+            'LEFT JOIN shipped_sale USING (sale_id) ' +
             'INNER JOIN sale_payment USING (sale_id) ' +
             `WHERE account_id = ${account_id}`;
     connection.query(q, function (err, results) {

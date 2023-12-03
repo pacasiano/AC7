@@ -47,21 +47,6 @@ router.post('/', (req, res) => {
         })
     }
 
-    //Query #? : Create shipment entry (temporary implementation)
-    const createShipmentQuery = `INSERT INTO shipment SET ` +
-                            `sale_id = (SELECT sale_id FROM sale WHERE account_id = ${account_id} AND sale_status = 'cart'), ` +
-                            `address_id = (SELECT address_id FROM address WHERE name = '${address_name}' AND ` +
-                                            `customer_id = (SELECT customer_id FROM customer WHERE account_id = ${account_id})), ` +
-                            `tracking_number = '123', courier = 'JNT'`;
-    connection.query(createShipmentQuery, (err, results) => {
-        if (err) {
-            console.error(err)
-        }
-        else {
-            console.log('Checkout: createShipmentQuery successful')
-        }
-    })
-
     //Query 3: Update the product table - stock out the products that were bought in the checkout
     items_purchased.forEach((item) => {
         const q3 = `UPDATE stock SET quantity = quantity - ${item.quantity} ` +
