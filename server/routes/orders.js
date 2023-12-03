@@ -30,7 +30,7 @@ router.get('/', (req, res) => {
 
 router.get('/orders/:id', (req, res) => {
     const { id: account_id } = req.params;
-    let q = 'SELECT sale_id, DATE_FORMAT(sale_date, \'%M %d, %Y\') AS sale_date, sale_status, DATE_FORMAT(received_date, \'%M %d, %Y\') AS received_date, ' +
+    let q = 'SELECT sale_id, DATE_FORMAT(sale_date, \'%M %d, %Y\') AS sale_date, sale_status, ' + //i removed received_date bc no longer in db
             'sale_payment.amount AS amount FROM sale ' +
             'LEFT JOIN shipment USING (sale_id) ' +
             'INNER JOIN sale_payment USING (sale_id) ' +

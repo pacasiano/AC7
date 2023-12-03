@@ -52,7 +52,7 @@ router.post('/', (req, res) => {
                             `sale_id = (SELECT sale_id FROM sale WHERE account_id = ${account_id} AND sale_status = 'cart'), ` +
                             `address_id = (SELECT address_id FROM address WHERE name = '${address_name}' AND ` +
                                             `customer_id = (SELECT customer_id FROM customer WHERE account_id = ${account_id})), ` +
-                            `tracking_number = '123', courier = 'JNT', shipment_status = 'in progress'`;
+                            `tracking_number = '123', courier = 'JNT'`;
     connection.query(createShipmentQuery, (err, results) => {
         if (err) {
             console.error(err)

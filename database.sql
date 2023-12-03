@@ -268,6 +268,7 @@ CREATE TABLE IF NOT EXISTS coupon (
 
 CREATE TABLE IF NOT EXISTS shipped_sale (
     -- everytime the shipment_status changes, received_date also changes until shipment_status is complete
+    shipped_sale_id BIGINT UNSIGNED AUTO_INCREMENT,
     sale_id BIGINT UNSIGNED NOT NULL,
     address_id BIGINT UNSIGNED NOT NULL,
     employee_id BIGINT UNSIGNED NOT NULL,
@@ -277,6 +278,7 @@ CREATE TABLE IF NOT EXISTS shipped_sale (
     date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     -- received_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     status ENUM('active', 'inactive'),
+    PRIMARY KEY (shipped_sale_id),
     FOREIGN KEY (sale_id) REFERENCES sale(sale_id),
     FOREIGN KEY (address_id) REFERENCES address(address_id),
     FOREIGN KEY (employee_id) REFERENCES employee(employee_id)
