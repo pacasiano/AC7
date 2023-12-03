@@ -20,7 +20,9 @@ export default function Orders() {
     const [returned, setReturned] = useState(false);
     const [packed, setPacked] = useState(false);
     const [options, setOptions] = useState([])
-    const { setPage } = useContext(myContext);
+    const [shippedSucces, setShippedSucces] = useState(false);
+    const [selectedOrderToBeShipped, setSelectedOrderToBeShipped] = useState(null);
+    const { setPage } = useContext(myContext); 
 
     useEffect(() => {
         fetch('/api/orders')
@@ -55,7 +57,8 @@ export default function Orders() {
     console.log(orders)
 
     return(<>
-        <Shipped isModalOpen={shipped} setModalOpen={setShipped} />
+        <ShippedForm isModalOpen={shipped} setIsModalOpen={setShipped} setShippedSucces={setShippedSucces} selectedOrderToBeShipped={selectedOrderToBeShipped} />
+        <Shipped isModalOpen={shippedSucces} setModalOpen={setShippedSucces} />
         <Returned isModalOpen={returned} setModalOpen={setReturned} />
         <Packed isModalOpen={packed} setModalOpen={setPacked} />
         <div className="h-screen px-8 pt-8">
@@ -76,7 +79,7 @@ export default function Orders() {
                         </div>
                         <div className="flex flex-row gap-2">
                             {/* <button><span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">View All</span></button> */}
-                            <button onClick={() => setPage("returned")}><span className=" text-md bg-gray-100 px-2 py-1 rounded-md font-bold">Returns</span></button>
+                            <button onClick={() => setPage("returned")}><span className=" text-md bg-gray-100 px-2 py-1 rounded-md font-bold">Return Request</span></button>
                         </div>
                     </div>
                     <div className="pb-10">
@@ -95,7 +98,7 @@ export default function Orders() {
                                 </tr>
                             </thead>
                             {filteredOrders.map((order) => (
-                            <Order key={order.sale_id} order={order} setReloadData={setReloadData} setShipped={setShipped} setReturned={setReturned} setPacked={setPacked} reloadData={reloadData} />
+                            <Order key={order.sale_id} order={order} setReloadData={setReloadData} setShipped={setShipped} setPacked={setPacked} reloadData={reloadData} setSelectedOrderToBeShipped={setSelectedOrderToBeShipped} />
                             ))}
                         </table>
                     </div>
@@ -120,6 +123,84 @@ const Modal = ({ isOpen, children }) => {
     );
   };
   
+  function ShippedForm({isModalOpen, setIsModalOpen, setShippedSucces, selectedOrderToBeShipped}) {
+      
+    const [shippedForm, setShippedForm] = useState({
+      tracknum: "",
+      courrier: "",
+      payment: "",
+    });
+
+    const handleChange = (e) => {
+      setShippedForm({
+        ...shippedForm,
+        [e.target.name]: e.target.value,
+      });
+    }
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+
+        console.log(selectedOrderToBeShipped)
+        console.log(shippedForm);
+        setIsModalOpen(false);
+        setShippedSucces(true);
+
+        // setReloadData(!reloadData);
+    }
+
+  
+    return (
+      <div className="fixed backdrop-blur-sm bg-black/20 drop-shadow-xl -ml-56 z-50">
+        <Modal isOpen={isModalOpen}>
+          <div className="h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-white/30 ">
+            <form onSubmit={handleSubmit} className="fixed bg-gray-100 pb-3 rounded-xl w-[40rem]">
+                <div className="flex flex-col gap-5 text-center py-5 px-10">
+                  <div className="text-2xl font-bold">
+                    Product Shipment Form
+                  </div>
+                  <div className="flex flex-col gap-5">
+
+                    <div className="flex flex-col gap-2">
+                      <div className="text-md text-left font-bold">
+                        Tracking number
+                      </div>
+                      <div>
+                        <input name="tracknum" onChange={handleChange} className="w-full border-2 border-black/60 rounded-md p-2" required/>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <div className="text-md text-left font-bold">
+                        Courrier
+                      </div>
+                      <div>
+                        <input name="courrier" onChange={handleChange} className="w-full border-2 border-black/60 rounded-md p-2 resize-none" required/>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <div className="text-md text-left font-bold">
+                        payment
+                      </div>
+                      <div>
+                        <input name="payment" onChange={handleChange} className="w-full border-2 border-black/60 rounded-md p-2 resize-none" required/>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-row gap-1">
+                    <button type="button" onClick={() => setIsModalOpen(false)} className="bg-black/80 hover:bg-black text-gray-50 p-2 rounded-md w-1/2 font-medium">Cancel</button>
+                    <button type="submit" className="bg-green-900/80 hover:bg-green-900 text-gray-50 p-2 rounded-md w-full font-medium">Submit</button>
+                    </div>
+                  </div>
+                </div>
+            </form>
+          </div>
+        </Modal>
+      </div>
+    );
+  };
+
   function Shipped({isModalOpen, setModalOpen}) {
   
     return (

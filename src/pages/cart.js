@@ -30,6 +30,7 @@ function Cart() {
 
   const cookie = document.cookie;
   const accountId = getAcctIdFromCookie(cookie);
+  const [reloadData, setReloadData] = useState(false);
 
   const [emptyCart, setEmptyCart] = useState(false);
 
@@ -51,8 +52,9 @@ function Cart() {
       .then((res) => res.json())
       .then((items) => {
         setItems(items);
+        console.log(items)
       });
-  }, []);
+  }, [accountId, reloadData]);
 
   let orderSubtotal = 0;
   items.forEach((item) => {
@@ -62,22 +64,24 @@ function Cart() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulating an asynchronous operation (e.g., fetching data)
-    const fetchData = async () => {
-      // Perform your asynchronous operation here
+    if (items.length > 0) {
+      setLoading(false);
+    }
+  }
+  , [items]);
 
-      // For example, use setTimeout to simulate a delay
+  const [reloadPrice, setReloadPrice] = useState(false);
+
+  useEffect(() => {
+      if (reloadPrice === false){
+      setReloadPrice(true);
       setTimeout(() => {
-        // Once the data is fetched or the operation is done, set loading to false
-        setLoading(false);
-      }, 3000); // Adjust the time as needed
-    };
+        setReloadPrice(false);
+      }, 1500);
+      }
+  }, [reloadData]); // dont change please
 
-    // Call the asynchronous function
-    fetchData();
-  }, []);
   
-
   return (
     <>
     <Invalid isModalOpen={emptyCart} />
@@ -118,7 +122,7 @@ function Cart() {
               )}
               </>
             ) : (
-              items.map((item) => <CartItem key={item.id} item={item} />)
+              items.map((item) => <CartItem key={item.id} item={item} setReloadData={setReloadData} reloadData={reloadData} />)
             )}
 
           </div>
@@ -130,7 +134,11 @@ function Cart() {
               <div className="text-xs font-light">Total:</div>
             </div>
             <div className="flex justify-end text-xl font-semibold">
-              {`₱${orderSubtotal.toFixed(2)}`}
+              {reloadPrice ? (
+                <div className="animate-spin mr-5 rounded-full h-5 w-5 border-t-2 border-black border-t-black border-b-0 border-r-0 border-l-0"></div>
+              ) : (
+                <div className="h-5 w-5 mr-20">{"₱" + orderSubtotal.toFixed(2)}</div>
+              )}
             </div>
               <button 
                 className={`transition-all w-full p-4 mt-7 text-xl ${emptyCart && 'animate-wiggle'} bg-black/80 hover:bg-black text-gray-50`} 

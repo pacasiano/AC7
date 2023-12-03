@@ -12,6 +12,8 @@ function Product() {
   const [orderStatus, setOrderStatus] = useState('');
   const [cancelled, setCancelled] = useState(false);
   const [received, setReceived] = useState(false);
+  const [returnOrder, setReturnOrder] = useState(false);
+  const [returnSucces, setReturnSuccess] = useState(false);
 
   useEffect(() => {
     fetch(`/api/order_item/${sale_id}`)
@@ -28,12 +30,15 @@ function Product() {
         setOrderStatus(order[0].sale_status);
       });
   }, [sale_id]);
+  console.log(orderStatus)
   
   return (
     <>
     <Cancelled isModalOpen={cancelled} />
     <Received isModalOpen={received} />
-    <div className="py-24  min-h-screen">
+    <ReturnSuccess isModalOpen={returnSucces} />
+    <Return isModalOpen={returnOrder} setisModalOpen={setReturnOrder} setReturnSuccess={setReturnSuccess} />
+    <div className="py-24 min-h-screen">
       <div className="flex flex-row justify-center gap-10">
         <div className="flex flex-col w-3/6">
           <div className="flex flex-col bg-gray-100 p-5">
@@ -60,7 +65,9 @@ function Product() {
         <div className="flex flex-col gap-5 w-1/3">
           <OrderTotal sale_id={sale_id} />
           {/* <ShippingInfo sale_id={sale_id} /> */}
-          <OrderActions orders={orderStatus} sale_id={sale_id} setCancelled={setCancelled} setReceived={setReceived} />
+          {(orderStatus === "shipped" || orderStatus === "packaging") &&
+          <OrderActions orders={orderStatus} sale_id={sale_id} setCancelled={setCancelled} setReceived={setReceived} setReturnOrder={setReturnOrder} />
+          }
         </div>
       </div>
     </div>
@@ -135,7 +142,17 @@ function OrderTotal({sale_id}) {
       {orders.map((item) => {
           return <CustomItem price={item.price} value={item.name} qty={item.quantity}></CustomItem>
         })}
-      <div className="pb-2 pt-3 bg-slate-100 text-right text-xl font-extrabold">Php {total}.00</div>
+        <div className="flex flex-col gap-2 pt-3">
+          <div className="flex flex-col gap-2">
+            <div className="flex justify-start text-md font-semibold">Shipping Fee</div>
+            <div className="pl-5 text-xs font-semibold whitespace-nowrap">Php 0.00</div>
+          </div>
+          <div className="pb-5 flex flex-col gap-2">
+            <div className="flex justify-start text-md font-semibold">Tax</div>
+            <div className="pl-5 text-xs font-semibold whitespace-nowrap">Php 0.00</div>
+          </div>
+        </div>
+      <div className="pb-2 bg-slate-100 text-right text-xl font-extrabold">Php {total}.00</div>
     </div>
   );
 };
@@ -199,7 +216,7 @@ function ShippingInfo(sale_id) {
   
 };
 
-function OrderActions({orders: sale_status, sale_id, setCancelled, setReceived}) {
+function OrderActions({orders: sale_status, sale_id, setCancelled, setReceived, setReturnOrder}) {
 
   function cancelOrder(e) {
     e.preventDefault();
@@ -254,8 +271,13 @@ function OrderActions({orders: sale_status, sale_id, setCancelled, setReceived})
       </div>
       <div className="flex flex-row gap-2 w-full">
         {/* currently disabled if order status is "cart" dapat it should be disabled when order status is "courrier" */}
-        <button onClick={cancelOrder} disabled={sale_status !== 'packaging'} className={`${sale_status !== 'packaging' ? "bg-neutral-50 text-gray-500" : "bg-neutral-200" } transition-all ${sale_status === 'packaging' && "hover:bg-black/20"} p-2 rounded-md w-full font-medium`}>Cancel order</button>
-        <button onClick={completedOrder} disabled={sale_status !== 'shipped'} className={`${sale_status !== 'shipped' ? "bg-neutral-50 text-gray-500" : "bg-neutral-200" } transition-all ${sale_status === 'shipped' && "hover:bg-black/20"} p-2 rounded-md w-full font-medium`}>Order Received</button>
+        {sale_status === "shipped" ? (
+        <button onClick={() => setReturnOrder(true)} disabled={sale_status !== 'shipped'} className={`${sale_status !== 'shipped' ? "bg-neutral-50 text-gray-500" : "bg-black/20" } transition-all ${sale_status === 'shipped' && "hover:bg-black/40"} p-2 rounded-md w-full font-medium`}>Return order</button>
+        ):(
+        <button onClick={cancelOrder} disabled={sale_status !== 'packaging'} className={`${sale_status !== 'packaging' ? "bg-neutral-50 text-gray-500" : "bg-black/20" } transition-all ${sale_status === 'packaging' && "hover:bg-black/40"} p-2 rounded-md w-full font-medium`}>Cancel order</button>
+        )}
+        <button onClick={completedOrder} disabled={sale_status !== 'shipped'} className={`${sale_status !== 'shipped' ? "bg-neutral-50 text-gray-500" : "bg-black/20" } transition-all ${sale_status === 'shipped' && "hover:bg-black/40"} p-2 rounded-md w-full font-medium`}>Order Received</button>
+        
       </div>
     </div>
   )
@@ -307,6 +329,108 @@ function Received({isModalOpen}) {
                       <Link to={"/orders"} className="bg-gray-200 p-2 text-center rounded-xl w-60">Continue</Link>
                   </div>
               </div>
+          </div>
+        </Modal>
+      </div>
+  );
+};
+
+function ReturnSuccess({isModalOpen}) {
+
+  return (
+    <div className="fixed backdrop-blur-sm bg-black/20 drop-shadow-xl z-50">
+        <Modal isOpen={isModalOpen}>
+          <div className="h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-white/30 ">
+              <div className="fixed bg-gray-100 -mt-20 rounded-xl w-96">
+                  <div className="p-5 flex flex-col justify-center items-center gap-2">
+                      <img src={Check} alt="check" className="w-32 h-32"/>
+                      <span className="text-xl font-bold">Return request sent!</span>
+                      <Link to={"/orders"} className="bg-gray-200 p-2 text-center rounded-xl w-60">Continue</Link>
+                  </div>
+              </div>
+          </div>
+        </Modal>
+      </div>
+  );
+};
+
+function Return({isModalOpen, setisModalOpen, setReturnSuccess}) {
+
+  const [returnSet, setReturnSet] = useState({
+    proof: '',
+    reason: ''
+  });
+
+  function handleChange(e) {
+    const { name, value, files } = e.target;
+  
+    if (name === 'proof') {
+      // Handle file input separately
+      const file = files[0];
+      setReturnSet((prev) => ({
+        ...prev,
+        [name]: file || '' // If no file is selected, set to an empty string or handle accordingly
+      }));
+    } else {
+      // Handle text input
+      setReturnSet((prev) => ({
+        ...prev,
+        [name]: value
+      }));
+    }
+  }
+  
+  // Dito yung return form submit function
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    
+    // lagay mo dito API
+
+    console.log('Form submitted!');
+    console.log(returnSet);
+    setisModalOpen(false);
+    setReturnSuccess(true);
+    // ipasok mo itong nasa taas sa .then ng API
+
+  }
+
+  return (
+    <div className="fixed backdrop-blur-sm bg-black/20 drop-shadow-xl z-50">
+        <Modal isOpen={isModalOpen}>
+          <div className="h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-white/30 ">
+            <form onSubmit={handleSubmit} className="fixed bg-gray-100 -mt-20 rounded-xl w-[40rem]">
+                <div className="flex flex-col gap-5 text-center py-5 px-10">
+                  <div className="text-2xl font-bold">
+                    Return Request Form
+                  </div>
+                  <div className="flex flex-col gap-5">
+
+                    <div className="flex flex-col gap-2">
+                      <div className="text-md text-left font-bold">
+                        Proof
+                      </div>
+                      <div>
+                        <input name="proof" id="proof" onChange={handleChange} accept="image/*" type="file" className="w-full border-2 border-black/60 rounded-md p-2" required/>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <div className="text-md text-left font-bold">
+                        Reason for return
+                      </div>
+                      <div>
+                        <textarea name="reason" onChange={handleChange} value={returnSet.reason} className="w-full h-44 border-2 border-black/60 rounded-md p-2 resize-none" required/>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-row gap-1">
+                    <button type="button" onClick={() =>  setisModalOpen(false)} className="bg-black/80 hover:bg-black text-gray-50 p-2 rounded-md w-1/2 font-medium">Cancel</button>
+                    <button type="submit" className="bg-green-900/80 hover:bg-green-900 text-gray-50 p-2 rounded-md w-full font-medium">Submit</button>
+                    </div>
+                  </div>
+                </div>
+            </form>
           </div>
         </Modal>
       </div>
