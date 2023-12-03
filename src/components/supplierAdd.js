@@ -136,9 +136,6 @@ export default function SupplierAdd() {
                     <thead>
                         <tr className="bg-gray-400">
                         <th className="text-md font-bold border p-2 text-white w-1/6" >
-                            Name
-                        </th>
-                        <th className="text-md font-bold border p-2 text-white w-1/6" >
                             Street
                         </th>
                         <th className="text-md font-bold border p-2 text-white w-1/6" >
@@ -157,9 +154,6 @@ export default function SupplierAdd() {
                     </thead>
                     <tbody>
                         <tr className="bg-gray-300">
-                            <td className="text-sm font-semibold border p-2">
-                                <input onChange={handleAddressInfo} name="name" className={`${(invalidInput && !value.name ) && "border border-red-500"} w-full h-10 text-center`} />
-                            </td>
                             <td className="text-sm font-semibold border p-2">
                                 <input onChange={handleAddressInfo} name="street" className={`${(invalidInput && !value.street ) && "border border-red-500"} w-full h-10 text-center`} />
                             </td>
