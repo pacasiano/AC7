@@ -250,12 +250,12 @@ CREATE TABLE IF NOT EXISTS returned_sale_item (
     FOREIGN KEY (sale_item_id) REFERENCES sale_item(sale_item_id)
 );
 
-CREATE TABLE IF NO EXISTS returned_sale_img (
+CREATE TABLE IF NOT EXISTS returned_sale_img (
     returned_sale_id BIGINT UNSIGNED NOT NULL,
     name ENUM('air waybill', 'product condition') NOT NULL,
     img_url VARCHAR(255) NOT NULL,
     date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (returned_sale) REFERENCES returned_sale(returned_sale_id)
+    FOREIGN KEY (returned_sale_id) REFERENCES returned_sale(returned_sale_id)
 );
 
 -- issued for refunds
@@ -285,14 +285,14 @@ CREATE TABLE IF NOT EXISTS cancelled_sale (
     sale_id BIGINT UNSIGNED NOT NULL,
     date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     status ENUM('active', 'inactive'),
-    FOREIGN KEY (sale_id) REFERENCES sale(sale_id),
+    FOREIGN KEY (sale_id) REFERENCES sale(sale_id)
 );
 
 CREATE TABLE IF NOT EXISTS completed_sale (
     sale_id BIGINT UNSIGNED NOT NULL,
     date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     status ENUM('active', 'inactive'),
-    FOREIGN KEY (sale_id) REFERENCES sale(sale_id),
+    FOREIGN KEY (sale_id) REFERENCES sale(sale_id)
 );
 
 CREATE TABLE IF NOT EXISTS gcash_payment (
@@ -353,12 +353,12 @@ VALUES (1),
 (4),
 (5);
 
-INSERT INTO sale_item(sale_id, product_id, quantity, price)
-VALUES (1, 1, 3, 36.33),
-(2, 1, 3, 36.33),
-(3, 1, 3, 36.33),
-(4, 2, 2, 150.00),
-(4, 1, 3, 100.00);
+INSERT INTO sale_item(sale_id, product_id, price)
+VALUES (1, 1, 50.00),
+(2, 1, 50.00),
+(3, 1, 50.00),
+(4, 2, 150.00),
+(4, 1, 50.00);
 
  INSERT INTO supplier(address_id, name, contact_info) VALUES (5, 'Taburnok Inc.', '8884700');
 
