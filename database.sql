@@ -114,17 +114,6 @@ CREATE TABLE IF NOT EXISTS inventory_in_item (
     FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
 
-CREATE TABLE IF NOT EXISTS stock (
-    batch_no BIGINT UNSIGNED NOT NULL DEFAULT 1,
-    product_id BIGINT UNSIGNED NOT NULL,
-    quantity INT UNSIGNED NOT NULL,
-    price DECIMAL(10,2) NOT NULL,
-    date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (product_id) REFERENCES product(product_id)
-);
-
-
-
 CREATE TABLE IF NOT EXISTS inventory_out (
     inventory_out_ref_num BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     employee_id BIGINT UNSIGNED NOT NULL,
@@ -164,9 +153,9 @@ CREATE TABLE IF NOT EXISTS sale (
     account_id BIGINT UNSIGNED NOT NULL,
     -- address_id BIGINT UNSIGNED NOT NULL,
     -- sale table probably doesn't need an address, no? We only get the address for shipment once the sale is checked out since they select an address there anyway
-    sale_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
+    sale_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
     -- the date updates when the sale_status is changed from in progress to 'complete' ryt?
-    sale_status ENUM('cart', 'packaging', 'shipped', 'complete', 'returned', 'cancelled') DEFAULT 'cart',
+    sale_status ENUM('cart', 'processing order', 'packed', 'shipped', 'completed', 'processing return', 'returned', 'cancelled') DEFAULT 'cart',
     PRIMARY KEY (sale_id),
     FOREIGN KEY (account_id) REFERENCES account(account_id)
     -- FOREIGN KEY (address_id) REFERENCES address(address_id)
@@ -177,11 +166,31 @@ CREATE TABLE IF NOT EXISTS sale_item (
     sale_item_id BIGINT UNSIGNED AUTO_INCREMENT,
     sale_id BIGINT UNSIGNED NOT NULL,
     product_id BIGINT UNSIGNED NOT NULL,
-    quantity INT UNSIGNED NOT NULL DEFAULT 1,
+    -- quantity INT UNSIGNED NOT NULL DEFAULT 1,
     price DECIMAL(10,2) NOT NULL,
     PRIMARY KEY (sale_item_id),
     FOREIGN KEY (sale_id) REFERENCES sale(sale_id),
     FOREIGN KEY (product_id) REFERENCES product(product_id)
+);
+
+CREATE TABLE IF NOT EXISTS stock (
+    stock_id BIGINT UNSIGNED AUTO_INCREMENT,
+    batch_no BIGINT UNSIGNED NOT NULL DEFAULT 1,
+    product_id BIGINT UNSIGNED NOT NULL,
+    quantity INT UNSIGNED NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (stock_id),
+    FOREIGN KEY (product_id) REFERENCES product(product_id)
+);
+
+-- this is mainly used for stocking out orders, we know how much items from which batch #/s to stock out
+CREATE TABLE IF NOT EXISTS sale_item_stock (
+    stock_id BIGINT UNSIGNED NOT NULL,
+    sale_item_id BIGINT UNSIGNED NOT NULL,
+    quantity INT UNSIGNED NOT NULL DEFAULT 1,
+    FOREIGN KEY (stock_id) REFERENCES stock(stock_id),
+    FOREIGN KEY (sale_item_id) REFERENCES sale_item(sale_item_id)
 );
 
 CREATE TABLE IF NOT EXISTS sale_payment (
@@ -195,7 +204,97 @@ CREATE TABLE IF NOT EXISTS sale_payment (
     FOREIGN KEY (sale_id) REFERENCES sale(sale_id)
 );
 
--- new table, not in diagram
+CREATE TABLE IF NOT EXISTS packed_sale (
+    sale_id BIGINT UNSIGNED NOT NULL,
+    employee_id BIGINT UNSIGNED NOT NULL,
+    date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('active', 'inactive'),
+    FOREIGN KEY (sale_id) REFERENCES sale(sale_id),
+    FOREIGN KEY (employee_id) REFERENCES employee(employee_id)
+);
+
+CREATE TABLE IF NOT EXISTS return_request(
+    return_request_id BIGINT UNSIGNED AUTO_INCREMENT,
+    sale_id BIGINT UNSIGNED NOT NULL,
+    comment VARCHAR(255) NOT NULL,
+    date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (return_request_id),
+    FOREIGN KEY (sale_id) REFERENCES sale(sale_id)
+);
+
+CREATE TABLE IF NOT EXISTS return_request_img (
+    return_request_id BIGINT UNSIGNED NOT NULL,
+    img_url VARCHAR(255) NOT NULL,
+    FOREIGN KEY (return_request_id) REFERENCES return_request(return_request_id)
+);
+
+CREATE TABLE IF NOT EXISTS returned_sale(
+    returned_sale_id BIGINT UNSIGNED AUTO_INCREMENT,
+    return_request_id BIGINT UNSIGNED NOT NULL,
+    employee_id BIGINT UNSIGNED NOT NULL,
+    date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    comment VARCHAR(255) NOT NULL,
+    action ENUM('refund', 'return and refund', 'reject') NOT NULL,
+    status ENUM('active', 'inactive') NOT NULL DEFAULT 'inactive',
+    refund_amount DECIMAL(10,2),
+    PRIMARY KEY (returned_sale_id),
+    FOREIGN KEY (return_request_id) REFERENCES return_request(return_request_id),
+    FOREIGN KEY (employee_id) REFERENCES employee(employee_id)
+);
+
+CREATE TABLE IF NOT EXISTS returned_sale_item (
+    returned_sale_id BIGINT UNSIGNED NOT NULL,
+    sale_item_id BIGINT UNSIGNED NOT NULL,
+    comment VARCHAR(255) NOT NULL,
+    FOREIGN KEY (returned_sale_id) REFERENCES returned_sale(returned_sale_id),
+    FOREIGN KEY (sale_item_id) REFERENCES sale_item(sale_item_id)
+);
+
+CREATE TABLE IF NO EXISTS returned_sale_img (
+    returned_sale_id BIGINT UNSIGNED NOT NULL,
+    name ENUM('air waybill', 'product condition') NOT NULL,
+    img_url VARCHAR(255) NOT NULL,
+    date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (returned_sale) REFERENCES returned_sale(returned_sale_id)
+);
+
+-- issued for refunds
+CREATE TABLE IF NOT EXISTS coupon (
+    discount_amount DECIMAL(10,2) NOT NULL,
+    expiry_date DATE NOT NULL DEFAULT (CURRENT_DATE + INTERVAL 1 YEAR),
+    code CHAR(12) NOT NULL,
+    quantity INT UNSIGNED DEFAULT 1
+);
+
+CREATE TABLE IF NOT EXISTS shipped_sale (
+    -- everytime the shipment_status changes, received_date also changes until shipment_status is complete
+    sale_id BIGINT UNSIGNED NOT NULL,
+    address_id BIGINT UNSIGNED NOT NULL,
+    employee_id BIGINT UNSIGNED NOT NULL,
+    tracking_number VARCHAR(20) NOT NULL, -- tracking numbers are usually 12-20 in length in ph (esp with LBC and JRS). Wont exceed 20
+    courier VARCHAR(50) NOT NULL, -- we can abbreviate names to about 4 letters but just to be safe we use 50 charlength
+    date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    -- received_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    status ENUM('active', 'inactive'),
+    FOREIGN KEY (sale_id) REFERENCES sale(sale_id),
+    FOREIGN KEY (address_id) REFERENCES address(address_id),
+    FOREIGN KEY (employee_id) REFERENCES employee(employee_id)
+);
+
+CREATE TABLE IF NOT EXISTS cancelled_sale (
+    sale_id BIGINT UNSIGNED NOT NULL,
+    date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('active', 'inactive'),
+    FOREIGN KEY (sale_id) REFERENCES sale(sale_id),
+);
+
+CREATE TABLE IF NOT EXISTS completed_sale (
+    sale_id BIGINT UNSIGNED NOT NULL,
+    date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('active', 'inactive'),
+    FOREIGN KEY (sale_id) REFERENCES sale(sale_id),
+);
+
 CREATE TABLE IF NOT EXISTS gcash_payment (
     reference_num CHAR(13) NOT NULL,
     sale_payment_id BIGINT UNSIGNED NOT NULL,
@@ -203,21 +302,22 @@ CREATE TABLE IF NOT EXISTS gcash_payment (
     -- not sure if a primary key is necessary
 );
 
-CREATE TABLE IF NOT EXISTS shipment (
-    -- once a shipment is made, it must be recorded so we get sent_date
-    -- everytime the shipment_status changes, received_date also changes until shipment_status is complete
-    shipment_id BIGINT UNSIGNED AUTO_INCREMENT,
-    sale_id BIGINT UNSIGNED NOT NULL,
-    address_id BIGINT UNSIGNED NOT NULL,
-    tracking_number VARCHAR(20) NOT NULL, -- tracking numbers are usually 12-20 in length in ph (esp with LBC and JRS). Wont exceed 20
-    courier VARCHAR(50) NOT NULL, -- we can abbreviate names to about 4 letters but just to be safe we use 50 charlength
-    sent_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    received_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    shipment_status ENUM('in progress', 'complete'),
-    PRIMARY KEY (shipment_id),
-    FOREIGN KEY (sale_id) REFERENCES sale(sale_id),
-    FOREIGN KEY (address_id) REFERENCES address(address_id)
-);
+-- converted to shipped_sale
+-- CREATE TABLE IF NOT EXISTS shipment (
+--     -- once a shipment is made, it must be recorded so we get sent_date
+--     -- everytime the shipment_status changes, received_date also changes until shipment_status is complete
+--     shipment_id BIGINT UNSIGNED AUTO_INCREMENT,
+--     sale_id BIGINT UNSIGNED NOT NULL,
+--     address_id BIGINT UNSIGNED NOT NULL,
+--     tracking_number VARCHAR(20) NOT NULL, -- tracking numbers are usually 12-20 in length in ph (esp with LBC and JRS). Wont exceed 20
+--     courier VARCHAR(50) NOT NULL, -- we can abbreviate names to about 4 letters but just to be safe we use 50 charlength
+--     sent_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--     received_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+--     shipment_status ENUM('in progress', 'complete'),
+--     PRIMARY KEY (shipment_id),
+--     FOREIGN KEY (sale_id) REFERENCES sale(sale_id),
+--     FOREIGN KEY (address_id) REFERENCES address(address_id)
+-- );
 
 -- DUMMY data
 INSERT INTO account(username, password, account_type) 
