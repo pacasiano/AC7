@@ -23,7 +23,7 @@ router.get('/:id', (req, res) => {
 
 router.get('/:id/all', (req, res) => {
     const {id: product_id} = req.params;
-    const q = `SELECT * FROM stock WHERE product_id = ${product_id}`;
+    const q = `SELECT batch_no, price, quantity, DATE_FORMAT(date, '%M %d, %Y') AS date FROM stock WHERE product_id = ${product_id}`;
     connection.query(q, (err, results) => {
         if (err) {
             console.error(err)

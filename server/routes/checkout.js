@@ -177,8 +177,8 @@ router.post('/', (req, res) => {
           promises.push(handleWhileLoop(cartItemQty, cartItemId));
         });
       
-        await Promise.all(promises);
-        return 'fuckAsync';
+        await Promise.all(promises); //ensures all promises in the promises array have been fulfilled
+        return 'fuckAsync'; //return a promise 
     }
 
     //Query 6: Update the sale_status of the current sale from 'cart' to 'packaging'
@@ -216,8 +216,6 @@ router.post('/', (req, res) => {
             })
         })
     }
-
-    let manageStockExecuted = false;
 
     async function main() {
         await queryOne();

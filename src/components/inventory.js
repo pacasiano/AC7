@@ -141,6 +141,7 @@ function InventoryCard({ product }) {
             <th className="text-sm font-semibold p-2 text-neutral-800">Batch no.</th>
             <th className="text-sm font-semibold p-2 text-neutral-800">Price</th>
             <th className="text-sm font-semibold p-2 text-neutral-800">Quantity</th>
+            <th className="text-sm font-semibold p-2 text-neutral-800">Date</th>
           </tr>
         </thead>
         <tbody>
@@ -150,6 +151,7 @@ function InventoryCard({ product }) {
               <td className="text-sm font-normal">{batch.batch_no}</td>
               <td className="text-sm font-normal">&#x20B1;{batch.price}</td>
               <td className="text-sm font-normal">{batch.quantity}</td>
+              <td className="text-sm font-normal">{batch.date}</td>
             </tr>
           ))}
         </tbody>
