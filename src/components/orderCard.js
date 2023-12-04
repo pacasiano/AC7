@@ -38,7 +38,7 @@ function OrderCard({sale_id, sale_date, sale_status, shipped_date, received_date
                             </div>
                             <div className="flex flex-col justify-start items-start pl-2 border-l-2 h-full">
                                 <p className="text-xs font-normal text-start">Date ordered: <span className="text-xs font-semibold">{sale_date}</span></p>
-                                <p className="text-xs font-normal text-start">Order Status: <span className="text-xs font-semibold">{sale_status}</span></p>
+                                <p className="text-xs font-normal text-start">Order Status: <span className="text-xs font-semibold 	text-transform: capitalize">{sale_status}</span></p>
                                 {!(sale_status === "packaging" || sale_status === "cancelled") && <p className="text-xs font-normal text-start">Shipped Date: <span className="text-xs font-semibold">{shipped_date}</span></p>}
                                 {sale_status === "cancelled" && <p className="text-xs font-normal text-start">Cancelled Date: <span className="text-xs font-semibold">cancel date</span></p>}
                                 {(sale_status ===  "complete") && <p className="text-xs font-normal text-start">Received Date: <span className="text-xs font-semibold">{received_date}</span></p>}

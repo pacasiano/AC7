@@ -45,9 +45,9 @@ function separatedOrders(orders) {
   let returned = [];
 
   for (let i = 0; i < orders.length; i++) {
-    if (orders[i].sale_status === 'packaging' || orders[i].sale_status === 'shipped') {
+    if (orders[i].sale_status === 'packed' || orders[i].sale_status === 'shipped' || orders[i].sale_status === 'processing order') {
       onGoing.push(orders[i]);
-    } else if (orders[i].sale_status === 'complete') {
+    } else if (orders[i].sale_status === 'completed') {
       complete.push(orders[i]);
     } else if (orders[i].sale_status === 'cancelled') {
       cancelled.push(orders[i]);

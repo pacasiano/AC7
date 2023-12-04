@@ -41,8 +41,7 @@ router.get('/categories/all', (req, res) => {
 //Retrieve a particular product's data (To display in pages/product.js)
 router.get('/:id', (req, res) => {
     const {id: product_id} = req.params;
-    const q = `SELECT * FROM product INNER JOIN stock USING (product_id) WHERE product_id = ${product_id} ` +
-            `AND batch_no = (SELECT MIN(batch_no) FROM stock WHERE quantity > 0 AND product_id = ${product_id})`;
+    const q = `SELECT product.*, SUM(quantity) AS quantity FROM product INNER JOIN stock USING (product_id) WHERE product_id = ${product_id}`;
     connection.query(q, (err, results) => {
         if (err) {
             console.error(err)

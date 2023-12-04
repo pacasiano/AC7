@@ -76,7 +76,6 @@ router.patch('/:id', (req, res) => {
 router.get('/sale_items/:id', (req, res) => {
     const { id: sale_id } = req.params;
     let q = `SELECT sale_item.*, product.name FROM sale_item JOIN product ON sale_item.product_id = product.product_id WHERE sale_item.sale_id = ${sale_id}`;
-    console.log('Query:', q);
 
     connection.query(q, function (err, results) {
         if (err) {
