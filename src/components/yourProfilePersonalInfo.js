@@ -62,12 +62,12 @@ export default function PersonalInfo({accountId, first_name, middle_name, last_n
     }
 
     return (
-
+        <form onSubmit={editPersonalInfo}>
         <div className="px-1">
             <div className="flex flex-row pb-4 gap-2 pt-4">
                 <div className="text-md font-bold">Personal Information</div>
-                <button onClick={()=> setEditPersonalInfo(!isEditPersonalInfo)} className="bg-slate-800 text-white px-2 text-xs rounded">{isEditPersonalInfo ? 'Cancel' : 'Edit'}</button>
-                {isEditPersonalInfo && <button onClick={editPersonalInfo} className="bg-slate-800 text-white px-2 text-xs rounded" >Save</button>}
+                <button type="button" onClick={()=> setEditPersonalInfo(!isEditPersonalInfo)} className="bg-slate-800 text-white px-2 text-xs rounded">{isEditPersonalInfo ? 'Cancel' : 'Edit'}</button>
+                {isEditPersonalInfo && <button type="submit" className="bg-slate-800 text-white px-2 text-xs rounded" >Save</button>}
             </div>
 
             {!isEditPersonalInfo ? ( 
@@ -115,6 +115,7 @@ export default function PersonalInfo({accountId, first_name, middle_name, last_n
             </>
             )}
         </div>
+        </form>
 
     )
 }

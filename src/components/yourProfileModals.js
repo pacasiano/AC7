@@ -119,4 +119,19 @@ const Modal = ({ isOpen, children }) => {
     );
   };
 
-export {Success, Error, SuccessAddressEdit, SuccessAddressAdd, FailAddressAdd, AddressDeleted, ErrorTaken};
+  function ErrorAddressNameTaken({isModalOpen}) {
+  
+    return (
+      <div className="fixed pt-16">
+        <Modal isOpen={isModalOpen}>
+          <div className="w-screen flex justify-center items-center ">
+              <div className="bg-gray-50 p-3 rounded-xl w-1/2 shadow-md border animate-bounce2">
+                <div className="text-red-500 text-md font-semibold text-center">Error, Address name is already taken!</div>
+              </div>
+          </div>
+        </Modal>
+      </div>
+    );
+  };
+
+export {Success, Error, SuccessAddressEdit, SuccessAddressAdd, FailAddressAdd, AddressDeleted, ErrorTaken, ErrorAddressNameTaken};

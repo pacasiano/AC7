@@ -1,6 +1,5 @@
 import React, { useEffect, useState} from "react";
 import { passwordStrength } from "check-password-strength";
-import { set } from "date-fns";
 
 export default function AccountInfo({accountId, email, username, password, setReloadData, setSuccessAccInfo, setError, errorUserNameTaken, setErrorUsernameTaken}) {
 
@@ -134,15 +133,16 @@ export default function AccountInfo({accountId, email, username, password, setRe
             setTimeout(() => {
                 setSuccessAccInfo(false);
             }, 3000);
-            
+            return;
         })
         .catch(err => console.error(err))
     }else {
         setError(true);
         setEditAccInfo(false);
-            setTimeout(() => {
-                setError(false);
-            }, 3000);
+        setTimeout(() => {
+            setError(false);
+        }, 3000);
+        return;
     }
     
     setReloadData((prev) => !prev);
@@ -167,11 +167,12 @@ export default function AccountInfo({accountId, email, username, password, setRe
     };
 
     return (
+    <form onSubmit={editAccountInfo}>
     <div className="px-1">
         <div className="flex flex-row pb-4 gap-2">
             <div className="text-md font-bold">Account Information</div>
-            <button onClick={toggleEditAccInfo} className="bg-slate-800 text-white px-2 text-xs rounded">{isEditAccInfo ? 'Cancel' : 'Edit'}</button>
-            {isEditAccInfo && <button onClick={editAccountInfo} className={`${errorUserNameTaken && "animate-wiggle"} bg-slate-800 text-white px-2 text-xs rounded`} >Save</button>}
+            <button type="button" onClick={toggleEditAccInfo} className="bg-slate-800 text-white px-2 text-xs rounded">{isEditAccInfo ? 'Cancel' : 'Edit'}</button>
+            {isEditAccInfo && <button type="submit" className={`${errorUserNameTaken && "animate-wiggle"} bg-slate-800 text-white px-2 text-xs rounded`} >Save</button>}
         </div>
 
         {!isEditAccInfo ? ( 
@@ -203,9 +204,9 @@ export default function AccountInfo({accountId, email, username, password, setRe
             <span className="text-sm font-semibold">Username</span>
             <input placeholder={username} onChange={handleAccountInfo} name="username" className={`${(errorUserNameTaken || usernameTaken) && "border border-red-500"} rounded-sm w-full pl-1`}/>
             {usernameTaken && ( 
-            <span className="fixed translate-y-10 pl-1 text-sm font-light text-red-500">
+            <div className="fixed translate-y-11 pl-1 text-sm font-light text-red-500">
                 Username is already taken
-            </span>
+            </div>
             )}
             </label> 
             <label className="flex flex-col max-w-sm">
@@ -218,5 +219,6 @@ export default function AccountInfo({accountId, email, username, password, setRe
         )}
 
     </div>
+    </form>
     );
 }
