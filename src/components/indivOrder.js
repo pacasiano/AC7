@@ -13,6 +13,7 @@ function Product() {
   const [received, setReceived] = useState(false);
   const [returnOrder, setReturnOrder] = useState(false);
   const [returnSucces, setReturnSuccess] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     fetch(`/api/order_item/${sale_id}`)
@@ -37,7 +38,8 @@ function Product() {
     <Received isModalOpen={received} />
     <ReturnSuccess isModalOpen={returnSucces} />
     <Return sale_id={sale_id} isModalOpen={returnOrder} setisModalOpen={setReturnOrder} setReturnSuccess={setReturnSuccess} />
-    <div className="b-24 min-h-screen">
+    <CopiedSucces isModalOpen={copied} />
+    <div className="pb-24 min-h-screen">
       <div className=" text-2xl font-light py-20 -mb-10 flex flex-row gap-5 items-center justify-center">
         <Link to="/orders" className="transition-all text-black/50 hover:text-black">Orders</Link><span className='text-black/30'>{">"}</span><div>{sale_id}</div>
       </div>
@@ -66,7 +68,8 @@ function Product() {
         </div>
         <div className="flex flex-col gap-5 w-1/3">
           <OrderTotal sale_id={sale_id} />
-          {/* <ShippingInfo sale_id={sale_id} /> */}
+          {(orderStatus === "shipped" || orderStatus === "completed") &&
+          <ShippingInfo sale_id={sale_id} setCopied={setCopied} copied={copied} orderStatus={orderStatus} />}
           {(orderStatus === "shipped" || orderStatus === "packed" || orderStatus === "processing order") &&
           <OrderActions orders={orderStatus} sale_id={sale_id} setCancelled={setCancelled} setReceived={setReceived} setReturnOrder={setReturnOrder} />
           }
@@ -164,52 +167,68 @@ function CustomItem({price, value, qty}){
 }
 
 // Shipping info
-function ShippingInfo(sale_id) {
+function ShippingInfo({sale_id, setCopied, orderStatus}) {
 
-  const [address, setAddress] = useState();
-  
+  function copieds() {
+    navigator.clipboard.writeText(address.tracking_number)
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 3000);
+  }
+
+  const [address, setAddress] = useState({}); // Provide an initial value
+
   useEffect(() => {
     const getAddress = async () => {
-      const response = await fetch(`/api/shipment/${sale_id}`);
-      const data = await response.json();
-      if (data) {
-        setAddress(data);
+      try {
+        const response = await fetch(`/api/shipment/${sale_id}`);
+        const data = await response.json();
+        if (data) {
+          setAddress(data[0]);
+          console.log(data)
+        }
+      } catch (error) {
+        console.error('Error fetching address data:', error);
       }
     };
     getAddress();
   }, [sale_id]);
+
+  // converts address.sent_date and received_date to mmmm, d, yyy
+
+
   console.log(address);
   
   return (
-    <div className="">
-      <div className="bg-gray-100 text-xl font-bold pt-5 px-5 pb-2 flex items-center">
+    <div className="bg-gray-100 p-5">
+      <div className="text-xl font-bold flex items-center">
         Shipping
       </div>
-      <div className="flex-col  pb-5 pl-10 bg-slate-100">
-        <div className="font-medium">
-          {address && (
-            <p>{address[0].name}</p>)}
+      <div className="pl-2 flex flex-row justify-between border-b-2 pt-2 pb-1">
+        <div className="font-medium">tracking_number</div>
+        <div className="font-medium">{address.tracking_number}
+        <button className="pl-2 text-blue-600/80 font-medium hover:text-blue-600 active:translate-y-[1px]" onClick={copieds}>
+          COPY 
+        </button>
         </div>
-        <div className="font-light pl-1">
-          {address && (
-            <p>{address[0].province}</p>)}
+      </div>
+      <div className="flex flex-row pt-2">
+        <div className="w-2/3 flex flex-col gap-1 pl-2 text-sm font-medium">
+          <div>Courrier: {address.courier}</div>
+          <div>Date Shipped: {address.shipped_date}</div>
+          {orderStatus === "completed" &&
+          <div>Date Received: {address.completed_date}</div>}
         </div>
-        <div className="font-light pl-1">
-          {address && (
-            <p>{address[0].city}</p>)}
+        <div className=" flex flex-col gap-1 pl-2 border-l-2 text-sm font-medium">
+          <div>{address.name}</div>
+          <div>{address.street}</div>
+          <div>{address.barangay}</div>
+          <div>{address.city}</div>
+          <div>{address.province}</div>
+          <div>{address.zip_code}</div>
         </div>
-        <div className="font-light pl-1">
-          {address && (
-            <p>{address[0].barangay}</p>)}
-        </div>
-        <div className="font-light pl-1">
-          {address && (
-            <p>{address[0].zip_code}</p>)}
-        </div>
-        <div className="font-light pl-1">
-          {address && (
-            <p>{address[0].street}</p>)}
-        </div>
+
       </div>
     </div>
   );
@@ -290,7 +309,7 @@ const Modal = ({ isOpen, children }) => {
 
   return (
     <div className="modal-overlay">
-      <div className="modal-content">
+      <div className="modal-content transition-all">
         {children}
       </div>
     </div>
@@ -439,6 +458,21 @@ function Return({sale_id, isModalOpen, setisModalOpen, setReturnSuccess}) {
           </div>
         </Modal>
       </div>
+  );
+};
+
+function CopiedSucces({isModalOpen}) {
+  
+  return (
+    <div className="fixed pt-16">
+      <Modal isOpen={isModalOpen}>
+        <div className="w-screen flex justify-center items-center ">
+            <div className="bg-gray-50 p-3 rounded-xl w-1/2 shadow-md border">
+              <div className="text-green-500 text-md font-semibold text-center">Successfully Copied Tracking Number!</div>
+            </div>
+        </div>
+      </Modal>
+    </div>
   );
 };
 

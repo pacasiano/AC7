@@ -11,6 +11,7 @@ function Search() {
   const [searchResults, setSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [products, setProducts] = useState([]);
+  const [batch, setBatch] = useState([]);
 
   useEffect(() => {
     fetch('/api/product')
@@ -18,12 +19,20 @@ function Search() {
     .then((products) => {
         setProducts(products);
     });
-}, []);
+  }, []);
 
-const someDataArray = useMemo(() => [
-    // ...otherData
-    ...products.map((product) => ({ id: product.product_id, name: product.name })),
-], [products]);
+  useEffect(() => {
+    fetch('/api/stock')
+        .then(res => res.json())
+        .then(data => {
+            setBatch(data)
+        })
+  }, []);
+
+  const someDataArray = useMemo(() => [
+      // ...otherData
+      ...products.map((product) => ({ id: product.product_id, name: product.name })),
+  ], [products]);
 
 
   useEffect(() => {
@@ -64,7 +73,7 @@ const someDataArray = useMemo(() => [
                   <span className="backdrop-blur-sm">Loading...</span>
                 </div>
               ) : (
-                searchResults.length > 0 ? (
+                batch.length > 0 ? (
                     <div className="flex flex-col bg-white w-full rounded-md p-2">
                       {searchResults.map(item =>  (
                         <Link onClick={() => redirectToProductPage(item.id)} className=" hover:font-semibold cursor-pointer font-normal whitespace-nowrap">

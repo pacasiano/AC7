@@ -14,15 +14,29 @@ let connection = mysql.createConnection({
 
 router.get('/:id', (req, res) => {
     const { id: sale_id } = req.params;
-    let q = `SELECT shipped_sale.*, address.* FROM shipped_sale JOIN address ON shipped_sale.address_id = address.address_id WHERE shipped_sale.sale_id = ${sale_id}`;
+    let q = `SELECT *, DATE_FORMAT(shipped_sale.date, '%M %d, %Y') AS shipped_date, DATE_FORMAT(completed_sale.date, '%M %d, %Y') AS completed_date 
+    FROM sale 
+    INNER JOIN address USING (address_id) 
+    INNER JOIN shipped_sale USING (sale_id)
+    LEFT JOIN completed_sale USING (sale_id)
+    WHERE sale_id = ${sale_id}`;
     connection.query(q, function (err, results) {
         if (err) {
             console.log(err.message);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
         }
-        // console.log(results);
+
+        if (!results || results.length === 0) {
+            res.status(404).json({ error: 'Not Found' });
+            return;
+        }
+
         res.json(results);
     });
 });
+
+
 
 router.get('/', (req, res) => {
     let q = `SELECT tracking_number FROM shipped_sale`;
