@@ -167,22 +167,22 @@ function Landing() {
                                         {/* first name */}
                                         <div>
                                             <label for="firstName" className="block mb-2 text-sm font-medium text-gray-900">First Name</label>
-                                            <input onChange={handleAccountInformation} minLength={5} maxlength={25} type="text" name="first_name" id="firstName" className={`${(buttonError && !value.first_name) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} placeholder="First Name" />
+                                            <input onChange={handleAccountInformation} minLength={3} maxlength={25} type="text" name="first_name" id="firstName" className={`${(buttonError && !value.first_name) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} placeholder="First Name" />
                                         </div>
                                         {/* Middle name */}
                                         <div>
                                             <label for="middleName" className="block mb-2 text-sm font-medium text-gray-900">Middle Name</label>
-                                            <input onChange={handleAccountInformation} minLength={5} maxlength={25} type="text" name="middle_name" id="midldeName" placeholder="Middle Name" className={`${(buttonError && !value.middle_name) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} />
+                                            <input onChange={handleAccountInformation} minLength={3} maxlength={25} type="text" name="middle_name" id="midldeName" placeholder="Middle Name" className={`${(buttonError && !value.middle_name) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} />
                                         </div>
                                         {/* Last name */}
                                         <div>
                                             <label for="lastName" className="block mb-2 text-sm font-medium text-gray-900">Last Name</label>
-                                            <input onChange={handleAccountInformation} minLength={5} maxlength={25} type="text" name="last_name" id="lastName" placeholder="Last Name" className={`${(buttonError && !value.last_name) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} />
+                                            <input onChange={handleAccountInformation} minLength={3} maxlength={25} type="text" name="last_name" id="lastName" placeholder="Last Name" className={`${(buttonError && !value.last_name) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} />
                                         </div>
                                         {/* Email */}
                                         <div>
                                             <label for="email" className="block mb-2 text-sm font-medium text-gray-900">Email</label>
-                                            <input onChange={handleAccountInformation} minLength={5} maxlength={25} type="text" name="email" id="email" placeholder="Email" className={`${(buttonError && !value.email) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} />
+                                            <input onChange={handleAccountInformation} minLength={3} maxlength={25} type="text" name="email" id="email" placeholder="Email" className={`${(buttonError && !value.email) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} />
                                         </div>
                                         {/* contact information */}
                                         <div>
@@ -204,12 +204,12 @@ function Landing() {
                                                 {/* Address Name */}
                                                 <div>
                                                     <label for="addressName" className="block mb-2 text-sm font-medium text-gray-900">Address Name</label>
-                                                    <input onChange={handleAccountInformation} minLength={5} maxlength={25} type="text" name="address_name" id="addressName" className={`${(buttonError && !value.address_name) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} placeholder="Address Name" />
+                                                    <input onChange={handleAccountInformation} minLength={3} maxlength={25} type="text" name="address_name" id="addressName" className={`${(buttonError && !value.address_name) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} placeholder="Address Name" />
                                                 </div>
                                                 {/* Street */}
                                                 <div>
                                                     <label for="street" className="block mb-2 text-sm font-medium text-gray-900">Street</label>
-                                                    <input onChange={handleAccountInformation} minLength={5} maxlength={25} type="text" name="street" id="street" placeholder="Street" className={`${(buttonError && !value.street) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} />
+                                                    <input onChange={handleAccountInformation} minLength={3} maxlength={25} type="text" name="street" id="street" placeholder="Street" className={`${(buttonError && !value.street) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} />
                                                 </div>
                                                 {/* Barangay */}
                                                 <div>
@@ -221,13 +221,13 @@ function Landing() {
                                                 {/* Province */}
                                                 <div>
                                                     <label for="province" className="block mb-2 text-sm font-medium text-gray-900">Province</label>
-                                                    <input onChange={handleAccountInformation} minLength={5} maxlength={25} type="text" name="province" id="province" className={`${(buttonError && !value.province) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} placeholder="Province" />
+                                                    <input onChange={handleAccountInformation} minLength={3} maxlength={25} type="text" name="province" id="province" className={`${(buttonError && !value.province) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} placeholder="Province" />
                                                 </div>
                                                 
                                                 {/* City */}
                                                 <div>
                                                     <label for="city" className="block mb-2 text-sm font-medium text-gray-900">City</label>
-                                                    <input onChange={handleAccountInformation} minLength={5} maxlength={25} type="text" name="city" id="city" className={`${(buttonError && !value.city) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} placeholder="City" />
+                                                    <input onChange={handleAccountInformation} minLength={3} maxlength={25} type="text" name="city" id="city" className={`${(buttonError && !value.city) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} placeholder="City" />
                                                 </div>
                                                 {/* Zip-code */}
                                                 <div>

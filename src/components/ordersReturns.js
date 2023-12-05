@@ -151,7 +151,7 @@ function ReturnedRow({returns, setReloadData, reloadData, setRefundSucces, setRe
       </tr>
       {isExpanded && (
         <tr className="bg-slate-100">
-          <td colSpan={7}>
+          <td colSpan={8}>
 
             {/* ito yung mag ulit */}
             <table className="w-full">
