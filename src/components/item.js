@@ -11,6 +11,7 @@ function Item(props) {
     fetch(`/api/stock/${props.product_obj.product_id}`)
       .then(res => res.json())
       .then(data => setPrice(data.price))
+      .catch(err => console.log("Item with Quantity 0"));
 
   }, [props.product_obj.product_id])
 
@@ -36,6 +37,8 @@ function Item(props) {
 
 
   return (
+    <>
+    {price !== 0 &&
     <form onSubmit={submitForm}>
       <div className="item shadow-md rounded-md">
         <div className="flex flex-col justify-center items-center gap-3 w-auto">
@@ -61,6 +64,8 @@ function Item(props) {
         </div>
       </div>
     </form>
+    }
+    </>
   );
 }
 

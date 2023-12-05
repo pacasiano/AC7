@@ -49,12 +49,15 @@ export default function Returns() {
 
     console.log(orders)
 
-    return(
+    return(<>
+        <Refund isModalOpen={refundSucces} setIsModalOpen={setRefundSucces} />
+        <ReturnRefund isModalOpen={returnRefundSucces} setIsModalOpen={setReturnRefundSucces} />
+        <Reject isModalOpen={rejectSucces} setIsModalOpen={setRejectSucces} />
         <div className="h-screen px-8 pt-8">
             <div className="flex flex-col gap-5 ">
                 <div id="header" className="flex flex-row justify-between">
                     <span className="text-xl font-bold">Orders</span>
-                    <Select options={options} onChange={(selectedOption) => setSelectedReturn(selectedOption)} className="w-96" />
+                    <Select options={options} onChange={(selectedOption) => setSelectedReturn(selectedOption)} className="w-96 z-0" />
                 </div>
                 <div className="flex flex-col gap-3">
                     <div className="flex flex-row justify-between bg-gray-200 w-full p-5">
@@ -90,6 +93,7 @@ export default function Returns() {
                 </div>
             </div>   
         </div>
+        </>
     );
 };
 
@@ -125,7 +129,6 @@ function ReturnedRow({returns, setReloadData, reloadData, setRefundSucces, setRe
       setRejectSucces(true);
       setReloadData(!reloadData);
     }
-
 
     return (
         <tbody>
@@ -178,3 +181,80 @@ function ReturnedRow({returns, setReloadData, reloadData, setRefundSucces, setRe
     )
 }
 
+const Modal = ({ isOpen, children }) => {
+  if (!isOpen) {
+    return null;
+  }
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        {children}
+        </div>
+      </div>
+  );
+};
+
+function Refund({isModalOpen, setIsModalOpen}) {
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsModalOpen(false)
+    }, 2000)
+  }, [isModalOpen, setIsModalOpen])
+
+  return (
+    <div className="fixed pt-5 z-50">
+      <Modal isOpen={isModalOpen}>
+        <div className="w-screen flex justify-center items-center -translate-x-52">
+            <div className="bg-gray-50 p-3 rounded-xl w-1/3 shadow-md border">
+              <div className="text-green-500 text-md font-semibold text-center">Refund accepted!</div>
+            </div>
+        </div>
+      </Modal>
+    </div>
+  );
+};
+
+function ReturnRefund({isModalOpen, setIsModalOpen}) {
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsModalOpen(false)
+    }, 2000)
+  }, [isModalOpen, setIsModalOpen])
+
+  return (
+    <div className="fixed pt-5 z-50">
+      <Modal isOpen={isModalOpen}>
+        <div className="w-screen flex justify-center items-center -translate-x-52">
+            <div className="bg-gray-50 p-3 rounded-xl w-1/3 shadow-md border">
+              <div className="text-green-500 text-md font-semibold text-center">Refund and Return Accepted!</div>
+            </div>
+        </div>
+      </Modal>
+    </div>
+  );
+};
+
+
+function Reject({isModalOpen, setIsModalOpen}) {
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsModalOpen(false)
+    }, 2000)
+  }, [isModalOpen, setIsModalOpen])
+
+  return (
+    <div className="fixed pt-5 z-50">
+      <Modal isOpen={isModalOpen}>
+        <div className="w-screen flex justify-center items-center -translate-x-52">
+            <div className="bg-gray-50 p-3 rounded-xl w-1/3 shadow-md border">
+              <div className="text-green-500 text-md font-semibold text-center">Order Rejected!</div>
+            </div>
+        </div>
+      </Modal>
+    </div>
+  );
+};
