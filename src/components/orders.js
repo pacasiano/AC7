@@ -57,7 +57,7 @@ export default function Orders() {
     console.log(orders)
 
     return(<>
-        <ShippedForm isModalOpen={shipped} setIsModalOpen={setShipped} setShippedSucces={setShippedSucces} selectedOrderToBeShipped={selectedOrderToBeShipped} />
+        <ShippedForm isModalOpen={shipped} setIsModalOpen={setShipped} setShippedSucces={setShippedSucces} selectedOrderToBeShipped={selectedOrderToBeShipped} setReloadData={setReloadData} reloadData={reloadData} />
         <Shipped isModalOpen={shippedSucces} setModalOpen={setShippedSucces} />
         <Returned isModalOpen={returned} setModalOpen={setReturned} />
         <Packed isModalOpen={packed} setModalOpen={setPacked} />
@@ -123,8 +123,11 @@ const Modal = ({ isOpen, children }) => {
     );
   };
   
-  function ShippedForm({isModalOpen, setIsModalOpen, setShippedSucces, selectedOrderToBeShipped}) {
+  function ShippedForm({isModalOpen, setIsModalOpen, setShippedSucces, selectedOrderToBeShipped, setReloadData, reloadData}) {
       
+    const [trackNums, setTrackNums] = useState([]);
+    const [taken, setTaken] = useState(false);
+  
     const [shippedForm, setShippedForm] = useState({
       tracknum: "",
       courrier: "",
@@ -145,10 +148,30 @@ const Modal = ({ isOpen, children }) => {
         console.log(shippedForm);
         setIsModalOpen(false);
         setShippedSucces(true);
-
-        // setReloadData(!reloadData);
+        setReloadData(!reloadData);
     }
 
+    useEffect(() => {
+      fetch('/api/shipment')
+          .then((res) => res.json())
+          .then((orders) => {
+              setTrackNums(orders);
+          });
+    },[]);
+
+    // useEffect that checks if the tracking number is already taken
+    
+    useEffect(() => {
+      const trackNumsArr = [];
+      for(let i = 0; i < trackNums.length; i++){
+        trackNumsArr.push(trackNums[i].tracking_number);
+      }
+      if (trackNumsArr.includes(shippedForm.tracknum)) {
+        setTaken(true);
+      }else{;
+        setTaken(false);
+      }
+    }, [shippedForm.tracking_number, shippedForm.tracknum, trackNums]);
   
     return (
       <div className="fixed backdrop-blur-sm bg-black/20 drop-shadow-xl -ml-56 z-50">
@@ -165,8 +188,9 @@ const Modal = ({ isOpen, children }) => {
                       <div className="text-md text-left font-bold">
                         Tracking number
                       </div>
-                      <div>
+                      <div className="flex flex-col">
                         <input name="tracknum" onChange={handleChange} className="w-full border-2 border-black/60 rounded-md p-2" required/>
+                        {taken && <span className="fixed translate-y-11 text-red-500 text-sm">Tracking number is already taken</span>  }
                       </div>
                     </div>
 

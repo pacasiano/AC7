@@ -22,4 +22,15 @@ router.get('/:id', (req, res) => {
     });
 });
 
+router.get('/', (req, res) => {
+    let q = `SELECT tracking_number FROM shipment`;
+    connection.query(q, function (err, results) {
+        if (err) {
+            console.log(err.message);
+        }
+        // console.log(results);
+        res.json(results);
+    });
+});
+
 module.exports = router;
