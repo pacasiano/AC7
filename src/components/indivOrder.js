@@ -38,7 +38,10 @@ function Product() {
     <Received isModalOpen={received} />
     <ReturnSuccess isModalOpen={returnSucces} />
     <Return isModalOpen={returnOrder} setisModalOpen={setReturnOrder} setReturnSuccess={setReturnSuccess} />
-    <div className="py-24 min-h-screen">
+    <div className="b-24 min-h-screen">
+      <div className=" text-2xl font-light py-20 -mb-10 flex flex-row gap-5 items-center justify-center">
+        <Link to="/orders" className="transition-all text-black/50 hover:text-black">Orders</Link><span className='text-black/30'>{">"}</span><div>{sale_id}</div>
+      </div>
       <div className="flex flex-row justify-center gap-10">
         <div className="flex flex-col w-3/6">
           <div className="flex flex-col bg-gray-100 p-5">
@@ -208,8 +211,6 @@ function ShippingInfo(sale_id) {
           {address && (
             <p>{address[0].street}</p>)}
         </div>
-      
-  
       </div>
     </div>
   );
@@ -272,11 +273,11 @@ function OrderActions({orders: sale_status, sale_id, setCancelled, setReceived, 
       <div className="flex flex-row gap-2 w-full">
         {/* currently disabled if order status is "cart" dapat it should be disabled when order status is "courier" */}
         {sale_status === "shipped" ? (
-        <button onClick={() => setReturnOrder(true)} disabled={sale_status !== 'shipped'} className={`${sale_status !== 'shipped' ? "bg-neutral-50 text-gray-500" : "bg-black/20" } transition-all ${sale_status === 'shipped' && "hover:bg-black/40"} p-2 rounded-md w-full font-medium`}>Return order</button>
+        <button onClick={() => setReturnOrder(true)} disabled={sale_status !== 'shipped'} className={`${sale_status !== 'shipped' ? "bg-neutral-50 text-gray-500" : "bg-black/10" } transition-all ${sale_status === 'shipped' && "hover:bg-black/20"} p-2 rounded-md w-full font-medium`}>Return order</button>
         ):(
-        <button onClick={cancelOrder} disabled={sale_status !== 'packed' && sale_status !== 'processing order'} className={`${sale_status !== 'packed' && sale_status !== 'processing order' ? "bg-neutral-50 text-gray-500" : "bg-black/20" } transition-all ${(sale_status === 'packed' || sale_status === 'processing order') && "hover:bg-black/40"} p-2 rounded-md w-full font-medium`}>Cancel order</button>
+        <button onClick={cancelOrder} disabled={sale_status !== 'packed' && sale_status !== 'processing order'} className={`${sale_status !== 'packed' && sale_status !== 'processing order' ? "bg-neutral-50 text-gray-500" : "bg-black/10" } transition-all ${(sale_status === 'packed' || sale_status === 'processing order') && "hover:bg-black/20"} p-2 rounded-md w-full font-medium`}>Cancel order</button>
         )}
-        <button onClick={completedOrder} disabled={sale_status !== 'shipped'} className={`${sale_status !== 'shipped' ? "bg-neutral-50 text-gray-500" : "bg-black/20" } transition-all ${sale_status === 'shipped' && "hover:bg-black/40"} p-2 rounded-md w-full font-medium`}>Order Received</button>
+        <button onClick={completedOrder} disabled={sale_status !== 'shipped'} className={`${sale_status !== 'shipped' ? "bg-neutral-50 text-gray-500" : "bg-black/10" } transition-all ${sale_status === 'shipped' && "hover:bg-black/20"} p-2 rounded-md w-full font-medium`}>Order Received</button>
         
       </div>
     </div>

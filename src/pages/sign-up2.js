@@ -75,24 +75,39 @@ function Landing() {
     
       useEffect(() => {
         const validateField = (field, value) => {
+          let isValid = false;
+      
+          switch (field) {
+            case 'zip_code':
+              isValid = value.length === 4;
+              break;
+            case 'contact_info':
+              isValid = value.length === 11;
+              break;
+            default:
+              isValid = value.length >= 3;
+              break;
+          }
+      
           setValue((prevValue) => ({
             ...prevValue,
-            [field]: !!value, // Set to true if value exists, false otherwise
+            [field]: isValid,
           }));
         };
-    
-        validateField("first_name", accountInformation.first_name);
-        validateField("middle_name", accountInformation.middle_name);
-        validateField("last_name", accountInformation.last_name);
-        validateField("email", accountInformation.email);
-        validateField("contact_info", accountInformation.contact_info);
-        validateField("address_name", accountInformation.address_name);
-        validateField("street", accountInformation.street);
-        validateField("barangay", accountInformation.barangay);
-        validateField("province", accountInformation.province);
-        validateField("city", accountInformation.city);
-        validateField("zip_code", accountInformation.zip_code);
+      
+        validateField('first_name', accountInformation.first_name);
+        validateField('middle_name', accountInformation.middle_name);
+        validateField('last_name', accountInformation.last_name);
+        validateField('email', accountInformation.email);
+        validateField('contact_info', accountInformation.contact_info);
+        validateField('address_name', accountInformation.address_name);
+        validateField('street', accountInformation.street);
+        validateField('barangay', accountInformation.barangay);
+        validateField('province', accountInformation.province);
+        validateField('city', accountInformation.city);
+        validateField('zip_code', accountInformation.zip_code);
       }, [accountInformation]);
+      
 
     function handleAccountInformation(event) {
         setAccountInformation({...accountInformation, [event.target.name]: event.target.value});
@@ -105,7 +120,7 @@ function Landing() {
     // Check if all fields are inputted
     const isFormValid = Object.values(accountInformation).every((field) => Boolean(field));
 
-    if (isFormValid) {
+    if (isFormValid && Object.values(value).every((v) => v === true)) {
 
         fetch(`/api/customer`, {
             method: 'POST',
@@ -186,7 +201,7 @@ function Landing() {
                                         {/* contact information */}
                                         <div>
                                             <label for="contactInfo" className="block mb-2 text-sm font-medium text-gray-900">Contact Information</label>
-                                            <input onChange={handleAccountInformation} type="text" maxlength={11} name="contact_info" id="contactInfo" placeholder="Contact Information" className={`${(buttonError && !value.contact_info) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} />
+                                            <input onChange={handleAccountInformation} type="number" name="contact_info" id="contactInfo" placeholder="Contact Information" className={`${((buttonError && !value.contact_info)||(buttonError && accountInformation.contact_info.length !== 11)) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} />
                                         </div>
                                     </div>
                                 </div>
@@ -203,35 +218,35 @@ function Landing() {
                                                 {/* Address Name */}
                                                 <div>
                                                     <label for="addressName" className="block mb-2 text-sm font-medium text-gray-900">Address Name</label>
-                                                    <input onChange={handleAccountInformation} maxlength={25} type="text" name="address_name" id="addressName" className={`${(buttonError && !value.address_name) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} placeholder="Address Name" />
+                                                    <input onChange={handleAccountInformation} minLength={5} maxlength={25} type="text" name="address_name" id="addressName" className={`${(buttonError && !value.address_name) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} placeholder="Address Name" />
                                                 </div>
                                                 {/* Street */}
                                                 <div>
                                                     <label for="street" className="block mb-2 text-sm font-medium text-gray-900">Street</label>
-                                                    <input onChange={handleAccountInformation} maxlength={25} type="text" name="street" id="street" placeholder="Street" className={`${(buttonError && !value.street) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} />
+                                                    <input onChange={handleAccountInformation} minLength={5} maxlength={25} type="text" name="street" id="street" placeholder="Street" className={`${(buttonError && !value.street) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} />
                                                 </div>
                                                 {/* Barangay */}
                                                 <div>
                                                     <label for="barangay" className="block mb-2 text-sm font-medium text-gray-900">Barangay</label>
-                                                    <input onChange={handleAccountInformation} maxlength={25} type="text" name="barangay" id="barangay" placeholder="Barangay" className={`${(buttonError && !value.barangay) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} />
+                                                    <input onChange={handleAccountInformation} minLength={3} maxlength={25} type="text" name="barangay" id="barangay" placeholder="Barangay" className={`${(buttonError && !value.barangay) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} />
                                                 </div>
                                             </div>
                                             <div className="flex flex-col gap-4 w-1/2">
                                                 {/* Province */}
                                                 <div>
                                                     <label for="province" className="block mb-2 text-sm font-medium text-gray-900">Province</label>
-                                                    <input onChange={handleAccountInformation} maxlength={25} type="text" name="province" id="province" className={`${(buttonError && !value.province) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} placeholder="Province" />
+                                                    <input onChange={handleAccountInformation} minLength={5} maxlength={25} type="text" name="province" id="province" className={`${(buttonError && !value.province) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} placeholder="Province" />
                                                 </div>
                                                 
                                                 {/* City */}
                                                 <div>
                                                     <label for="city" className="block mb-2 text-sm font-medium text-gray-900">City</label>
-                                                    <input onChange={handleAccountInformation} maxlength={25} type="text" name="city" id="city" className={`${(buttonError && !value.city) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} placeholder="City" />
+                                                    <input onChange={handleAccountInformation} minLength={5} maxlength={25} type="text" name="city" id="city" className={`${(buttonError && !value.city) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} placeholder="City" />
                                                 </div>
                                                 {/* Zip-code */}
                                                 <div>
                                                     <label for="zipCode" className="block mb-2 text-sm font-medium text-gray-900">Zip-code</label>
-                                                    <input onChange={handleAccountInformation} maxlength={5} type="text" name="zip_code" id="zipCode" maxLength="4" className={`${(buttonError && !value.zip_code) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} placeholder="Zip Code" />
+                                                    <input onChange={handleAccountInformation} type="number" name="zip_code" id="zipCode" maxLength="4" className={`${((buttonError && !value.zip_code)||(buttonError && accountInformation.zip_code.length !== 5)) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} placeholder="Zip Code" />
                                                 </div>
                                             </div>
                                         </div>

@@ -1,24 +1,17 @@
 import React, { useState, useEffect } from "react";
+import {
+    Success,
+    Error,
+    SuccessAddressEdit,
+    SuccessAddressAdd,
+    FailAddressAdd,
+    AddressDeleted,
+    ErrorTaken,
+  } from '../components/yourProfileModals';
+import YourProfileAccountInfo from "../components/yourProfileAccountInfo";
+import YourProfilePersonalInfo from "../components/yourProfilePersonalInfo";
 
 export default function Settings() {
-
-    const [isAdd, setAdd] = useState(false);
-
-    const toggleAdd = () => {
-        setAdd(!isAdd);
-    };
-
-    const [isEditAccInfo, setEditAccInfo] = useState(false);
-    const [isSuccessAccInfo, setSuccessAccInfo] = useState(false);
-
-    const toggleEditAccInfo = () => {
-        setEditAccInfo(!isEditAccInfo);
-    }
-    const [isEditPersonalInfo, setEditPersonalInfo] = useState(false);
-
-    const toggleEditPersonalInfo = () => {
-        setEditPersonalInfo(!isEditPersonalInfo);
-    }
 
     //GET ACCOUNT_ID COOKIE
     const cookie = document.cookie;
@@ -31,200 +24,82 @@ export default function Settings() {
                 if (cookiesArray[i].indexOf('account_id') > 0) {
                     //find the cookie with 'account_id' substring
                     const id = cookiesArray[i].replace('account_id=', '').trim();
-                    // console.log(id)
                     return id;
                 }
             }
         }
         else {
             const id = cookie.slice(cookie.indexOf('=')+1);
-            // console.log(id)
             return id;
         }
     }
 
     const accountId = getAcctIdFromCookie(cookie);
 
-    const [userData, setUserData] = useState([]);
-    const [reloadData, setReloadData] = useState(false);
-     //the userData[0] || {} syntax ensures that we only destructure once userData contains some data returned by fetch
-    //if it is still undefined (fetch has not returned anything), it will default to an empty object - this prevents errors related to undefined values
-    const { email, username, password, first_name, middle_name, last_name, contact_info } = userData.length > 0 ? userData[0] : {};
-
-    // gets user data from db
-    useEffect(() => {
-        fetch(`/api/profile/${accountId}`)
-        .then((res) => res.json())
-        .then((userData) => {
-            setUserData(userData);
-            console.log(userData)
-        });
-    }, [accountId, reloadData]);
-
-    const toggleReloadData = () => {
-        setReloadData((prev) => !prev)
-    }
-
-    const [addresses, setAddresses] = useState([]);
-    const [addSuccess, setAddSuccess] = useState(false);
-    const [addFail, setAddFail] = useState(false);
-    const [deleteSuccess, setDeleteSuccess] = useState(false);
+    // RELOADS ALL DATA
     const [reloadAddData, setReloadAddData] = useState(false);
-    const [resultSuccess, setResultSuccess] = useState(false);
+    const [reloadData, setReloadData] = useState(false);
 
+
+    // Open close for add address form
+    const [isAdd, setAdd] = useState(false);
+    const toggleAdd = () => {
+        setAdd(!isAdd);
+    };
+
+    // Account/Personal info succesfully edited
+    const [isSuccessAccInfo, setSuccessAccInfo] = useState(false);
+
+    // Succesful Address Delete
+    const [deleteSuccess, setDeleteSuccess] = useState(false);
+    // Succesful Address Edit
+    const [resultSuccess, setResultSuccess] = useState(false);
+    // Succesful Address Add
+    const [addSuccess, setAddSuccess] = useState(false);
+
+    // Error modals 
+    const [errorUserNameTaken, setErrorUsernameTaken] = useState(false);
+    const [error, setError] = useState(false);
+    const [addFail, setAddFail] = useState(false);
+
+    // data's
+    const [addresses, setAddresses] = useState([]);
+    const [userData, setUserData] = useState({
+        email: null,
+        username: null,
+        password: null,
+        first_name: null,
+        middle_name: null,
+        last_name: null,
+        contact_info: null
+    });
+
+    // address verification
+    const [addressTaken, setAddressTaken] = useState(false);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`/api/profile/${accountId}`);
+                const userData = await response.json();
+                setUserData(userData[0]);
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            }
+        };
+    
+        fetchData();
+    }, [accountId, reloadData]);
+    
+
+    // gets user addresses from db
     useEffect(() => {
         fetch(`/api/address/${accountId}`)
         .then((res) => res.json())
         .then((data) => {
             setAddresses(data);
-            console.log(data);
         });
     }, [accountId, reloadAddData]);
-
-    //
-    // 
-    // FOR ACCOUNT INFORMATION
-    // 
-    // 
-
-    //useStates, useEffects, and eventHandlers for editting account information
-    const [accountInfo, setAccountInfo] = useState({
-        email: email,
-        username: username,
-        password: password
-    });
-    
-    const handleAccountInfo = (e) => {
-        if(e.target.name === 'username'){
-            handleUsernameInput(e);
-        }
-        setAccountInfo({...accountInfo, [e.target.name]: e.target.value});
-    }
-
-    const [users, setUsers] = useState([]);
-    const [errorUserNameTaken, setErrorUsernameTaken] = useState(false);
-
-    useEffect(() => {
-        fetch('/api/account')
-            .then((res) => res.json())
-            .then((data) => {
-                setUsers(data);
-            });
-    }, []);
-
-  const [usernameTaken, setUsernameTaken] = useState(false);
-  function handleUsernameInput(event) {
-    const enteredUsername = event.target.value;
-
-    // Check if the entered username already exists
-    const isUsernameTaken = users.some(user => user.username === enteredUsername);
-
-    if (isUsernameTaken) {
-        setUsernameTaken(true);
-    } else {
-        setUsernameTaken(false);
-        setAccountInfo(enteredUsername);
-    }
-  }
-
-    // edit account info
-    function editAccountInfo(e) {
-        e.preventDefault();
-
-        if(usernameTaken){
-            setErrorUsernameTaken(true);
-            setTimeout(() => {
-                setErrorUsernameTaken(false);
-            }, 3000);
-            return;
-        }
-
-        if((accountInfo.email !== email || accountInfo.username !== username || accountInfo.password !== password) && usernameTaken === false) {
-        fetch(`/api/account/${accountId}`, {
-            method: 'PATCH',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                email: accountInfo.email,
-                username: accountInfo.username,
-                password: accountInfo.password
-            })
-        })
-        .then(res => res.json)
-        .then(data => {
-            console.log(data)
-            setReloadAddData((prev) => !prev);
-            setEditAccInfo(false);
-            setSuccessAccInfo(true);
-            setTimeout(() => {
-                setSuccessAccInfo(false);
-            }, 3000);
-            toggleReloadData();
-        })
-        .catch(err => console.error(err))
-    }else {
-        setEditAccInfo(false);
-    }
-
-    }
-
-    //
-    // 
-    // FOR EDITTING PERSONAL INFORMATION
-    // 
-    // 
-    
-    const [personalInfo, setPersonalInfo] = useState({
-        first_name: first_name,
-        middle_name: middle_name,
-        last_name: last_name,
-        contactNo: contact_info
-    });
-
-    const handlePersonalInfo = (e) => {
-        setPersonalInfo({...personalInfo, [e.target.name]: e.target.value});
-    }
-
-    // edit personal info
-    function editPersonalInfo(e) {
-        e.preventDefault();
-
-        if(personalInfo.first_name !== first_name || personalInfo.last_name !== last_name || personalInfo.middle_name !== middle_name || personalInfo.contactNo !== contact_info) {
-        fetch(`/api/customer/${accountId}`, {
-            method: 'PATCH',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                first_name: personalInfo.first_name,
-                middle_name: personalInfo.middle_name,
-                last_name: personalInfo.last_name,
-                contact_info: personalInfo.contactNo
-            })
-        })
-        .then(res => res.json)
-        .then(data => {
-            console.log(data)
-            setReloadAddData((prev) => !prev);
-            setEditPersonalInfo(false);
-            setSuccessAccInfo(true);
-            setTimeout(() => {
-                setSuccessAccInfo(false);
-            }, 3000);
-            toggleReloadData();
-        })
-        .catch(err => console.error(err))
-        }else {
-            setEditPersonalInfo(false);
-        }
-    }
-
-    //
-    // 
-    // FOR NEW ADDRESS
-    // 
-    // 
 
     //useStates, useEffects, and eventHandlers for adding new address
 
@@ -251,6 +126,14 @@ export default function Settings() {
     }, [reloadNewAddress]);
 
     const handleAddressInfo = (e) => {
+        if(e.target.id === "name"){
+            // check if name is taken
+            if(addresses.some((address) => address.name === e.target.value)){
+                setAddressTaken(true);
+            }else{
+                setAddressTaken(false);
+            }
+        }
         setNewAddress({...newAddress, [e.target.id]: e.target.value});
     }
 
@@ -258,8 +141,10 @@ export default function Settings() {
     function submitNewAddressForm(e) {
         e.preventDefault();
 
+
+
         // only works if all inputs are not null
-        if(newAddress.name && newAddress.barangay && newAddress.street && newAddress.province && newAddress.city && newAddress.zipcode) {
+        if((newAddress.name && newAddress.barangay && newAddress.street && newAddress.province && newAddress.city && newAddress.zipcode) && (newAddress.name.length > 3 && newAddress.barangay.length > 3 && newAddress.street.length > 3 && newAddress.province.length > 3 && newAddress.city.length > 3 && newAddress.zipcode.length === 4) && (!addressTaken)) {
         fetch(`/api/address/${accountId}`, {
             method: "POST",
             headers: {
@@ -276,7 +161,6 @@ export default function Settings() {
         })
         .then((res) => res.json())
         .then((data) => {
-            console.log(data);
             setReloadNewAddress((prev) => !prev)
             setReloadAddData((prev) => !prev);
             setAdd(false);
@@ -290,6 +174,7 @@ export default function Settings() {
             console.error('Error adding new address:', error);
         }); 
         }else{
+            setAddressTaken(false);
             setAddFail(true);
             setTimeout(() => {
                 setAddFail(false);
@@ -297,17 +182,8 @@ export default function Settings() {
         }
     }
 
-    // should be true when password or username is incorrect
-  const [incorrect, setIncorrect] = useState(false);
-  
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setIncorrect(false);
-    }, 2000);
-
-    // Clear the timeout if component unmounts or if incorrect becomes false before the timeout
-    return () => clearTimeout(timeoutId);
-  }, [incorrect]); 
+    
+ 
 
   return(
     <>
@@ -317,117 +193,19 @@ export default function Settings() {
     <FailAddressAdd isModalOpen={addFail}/>
     <AddressDeleted isModalOpen={deleteSuccess}/>
     <ErrorTaken isModalOpen={errorUserNameTaken}/>
+    <Error isModalOpen={error}/>
+
     <div className="w-full min-h-screen py-16">
         <div className="pt-12 flex flex-row justify-center gap-5">
             <div className="bg-gray-100 w-1/4 px-5 pt-6 pb-10">
-                <div className="text-2xl font-bold pb-4">Profile</div>
+                <div className="text-2xl font-bold pb-4">Profile</div> 
 
                 {/* Account Information */}
-                <div className="px-1">
-                    <div className="flex flex-row pb-4 gap-2">
-                        <div className="text-md font-bold">Account Information</div>
-                        <button onClick={toggleEditAccInfo} className="bg-slate-800 text-white px-2 text-xs rounded">{isEditAccInfo ? 'Cancel' : 'Edit'}</button>
-                        {isEditAccInfo && <button onClick={editAccountInfo} className={`${errorUserNameTaken && "animate-wiggle"} bg-slate-800 text-white px-2 text-xs rounded`} >Save</button>}
-                    </div>
-
-                    {!isEditAccInfo ? ( 
-                    <>
-                    <div className="flex flex-col gap-3 pb-3">
-                        <label className="flex flex-col max-w-sm">
-                        <span className="text-sm font-semibold">Email</span>
-                        <span className="border-b-2">{email}</span>
-                        </label> 
-                        <label className="flex flex-col max-w-sm">
-                        <span className="text-sm font-semibold">Username</span>
-                        <span className="border-b-2">{username}</span>
-                        </label> 
-                        <label className="flex flex-col max-w-sm">
-                        <span className="text-sm font-semibold">Password</span>
-                        <span className="border-b-2">{password ? '*'.repeat(25) : '*'}</span>
-                        </label>
-                    </div>
-                    </>
-                    ):(
-                    <>
-                    {/* Edit Account Information*/}
-                    <div className="flex flex-col gap-3 pb-3">
-                        <label className="flex flex-col max-w-sm">
-                        <span className="text-sm font-semibold">Email</span>
-                        <input placeholder={email} onChange={handleAccountInfo} name="email" className="rounded-sm w-full pl-1"/>
-                        </label> 
-                        <label className="flex flex-col max-w-sm">
-                        <span className="text-sm font-semibold">Username</span>
-                        <input placeholder={username} onChange={handleAccountInfo} name="username" className={`${(errorUserNameTaken || usernameTaken) && "border border-red-500"} rounded-sm w-full pl-1`}/>
-                        {usernameTaken && ( 
-                        <span className="fixed translate-y-[43px] text-sm font-light text-red-500">
-                            Username is already taken
-                        </span>
-                        )}
-                        </label> 
-                        <label className="flex flex-col max-w-sm">
-                        <span className="text-sm font-semibold">Password</span>
-                        <input placeholder={password ? '*'.repeat(25) : '*'} onChange={handleAccountInfo} name="password" className="rounded-sm w-full pl-1"/>
-                        </label>
-                    </div>
-                    </>
-                    )}
-
-                </div>
-
+                <YourProfileAccountInfo reload={reloadData} accountId={accountId} email={userData.email} username={userData.username} password={userData.password} setReloadData={setReloadData} setSuccessAccInfo={setSuccessAccInfo} errorUserNameTaken={errorUserNameTaken} setError={setError}  setErrorUsernameTaken={setErrorUsernameTaken}  />
+                
                 {/* Personal Information */}
-                <div className="px-1">
-                    <div className="flex flex-row pb-4 gap-2 pt-4">
-                        <div className="text-md font-bold">Personal Information</div>
-                        <button onClick={toggleEditPersonalInfo} className="bg-slate-800 text-white px-2 text-xs rounded">{isEditPersonalInfo ? 'Cancel' : 'Edit'}</button>
-                        {isEditPersonalInfo && <button onClick={editPersonalInfo} className="bg-slate-800 text-white px-2 text-xs rounded" >Save</button>}
-                    </div>
-
-                    {!isEditPersonalInfo ? ( 
-                    <>
-                    <div className="flex flex-col gap-3">
-                        <label className="flex flex-col max-w-sm">
-                        <span className="text-sm font-semibold">First name</span>
-                        <span className="border-b-2">{first_name}</span>
-                        </label> 
-                        <label className="flex flex-col max-w-sm">
-                        <span className="text-sm font-semibold">Middle name</span>
-                        <span className="border-b-2">{middle_name === null ? '-' : middle_name === 'null' ? '-' : middle_name}</span>
-                        </label> 
-                        <label className="flex flex-col max-w-sm">
-                        <span className="text-sm font-semibold">Last name</span>
-                        <span className="border-b-2">{last_name}</span>
-                        </label>
-                        <label className="flex flex-col max-w-sm">
-                        <span className="text-sm font-semibold">Contact number</span>
-                        <span className="border-b-2">{contact_info}</span>
-                        </label>
-                    </div>
-                    </>
-                    ):(
-                    <>
-                    {/* Edit Personal Information */}
-                    <div className="flex flex-col gap-3">
-                        <label className="flex flex-col max-w-sm">
-                        <span className="text-sm font-semibold">First name</span>
-                        <input placeholder={first_name} onChange={handlePersonalInfo} name="first_name" className="rounded-sm w-full pl-1"/>
-                        </label> 
-                        <label className="flex flex-col max-w-sm">
-                        <span className="text-sm font-semibold">Middle name</span>
-                        <input placeholder={middle_name} onChange={handlePersonalInfo} name="middle_name" className="rounded-sm w-full pl-1"/>
-                        </label> 
-                        <label className="flex flex-col max-w-sm">
-                        <span className="text-sm font-semibold">Last name</span>
-                        <input placeholder={last_name} onChange={handlePersonalInfo} name="last_name" className="rounded-sm w-full pl-1"/>
-                        </label>
-                        <label className="flex flex-col max-w-sm">
-                        <span className="text-sm font-semibold">Contact number</span>
-                        <input placeholder={contact_info} onChange={handlePersonalInfo} name="contactNo" className="rounded-sm w-full pl-1"/>
-                        </label>
-                    </div>
-                    </>
-                    )}
-                </div>
-
+                <YourProfilePersonalInfo accountId={accountId} first_name={userData.first_name} middle_name={userData.middle_name} last_name={userData.last_name} contact_info={userData.contact_info} setReloadData={setReloadData} setSuccessAccInfo={setSuccessAccInfo} error={error} setError={setError} />
+                
             </div>
             <div className="flex flex-col gap-5 w-3/5">
                 <div className="flex flex-col">
@@ -442,6 +220,7 @@ export default function Settings() {
                             <div className="flex flex-col">
                                 <span for="name" className="flex justify-start font-bold">Name</span>
                                 <input id="name" onChange={handleAddressInfo} className={`${addFail ? "border-red-500 border" : "border"} w-full pl-1 rounded-md`} maxLength={25}></input>
+                                {addressTaken && <span className="fixed text-xs translate-y-8 text-red-500">Name already taken</span>}
                             </div>
                             <div className="flex flex-col">
                                 <span for="barangay" className="flex justify-start font-bold">Barangay</span>
@@ -471,7 +250,7 @@ export default function Settings() {
 
                 <div className="flex flex-col gap-5">
                     {addresses.map((address) => (
-                        <AddressCard key={address.address_id} addresses={addresses} address={address} setReloadAddData={setReloadAddData} setAddSuccess={setAddSuccess} setDeleteSuccess={setDeleteSuccess} setResultSuccess={setResultSuccess}/>
+                        <AddressCard key={address.address_id} addresses={addresses} address={address} setReloadAddData={setReloadAddData} setAddSuccess={setAddSuccess} setDeleteSuccess={setDeleteSuccess} setResultSuccess={setResultSuccess} setError={setError}/>
                     ))}
                 </div>
             </div>
@@ -481,7 +260,7 @@ export default function Settings() {
     );
 }
 
-function AddressCard({ addresses, address, setReloadAddData, setAddSuccess, setDeleteSuccess, setResultSuccess }) {
+function AddressCard({ addresses, address, setReloadAddData, setAddSuccess, setDeleteSuccess, setResultSuccess, setError }) {
 
     function deleteAddress(address_id) {
         fetch(`/api/address/${address_id}`, {
@@ -489,7 +268,6 @@ function AddressCard({ addresses, address, setReloadAddData, setAddSuccess, setD
         })
         .then(res => res.json())
         .then(data => {
-            console.log(data);
             setReloadAddData((prev) => !prev);
             setAddSuccess(false);
             setDeleteSuccess(true);
@@ -500,19 +278,27 @@ function AddressCard({ addresses, address, setReloadAddData, setAddSuccess, setD
     }
 
     const [edit, setEdit] = useState(false);
-    const [resultFail, setResultFail] = useState(false);
 
     // ito yung updated detailz
     const [updatedAddress, setUpdatedAddress] = useState(address);
+    const [addressTaken, setAddressTaken] = useState(false);
 
     function handleEditAddress(event) {
+        if(event.target.name === "name"){
+            // check if name is taken
+            if(addresses.some((address) => address.name === event.target.value)){
+                setAddressTaken(true);
+            }else{
+                setAddressTaken(false);
+            }
+        }
         setUpdatedAddress({...updatedAddress, [event.target.name]: event.target.value});
     }
 
     function submitEditAddressForm(e) {
         e.preventDefault();
 
-        if (!deepEqual(updatedAddress, address)) {
+        if (!deepEqual(updatedAddress, address)&&(updatedAddress.zip_code.length === 4)&&(!addressTaken)) {
 
             fetch(`/api/address/${address.address_id}`, {
                 method: 'PATCH',
@@ -542,13 +328,15 @@ function AddressCard({ addresses, address, setReloadAddData, setAddSuccess, setD
                 setResultSuccess(false);
             }, 3000);
         } else {
+            setAddressTaken(false);
             console.log("no changes");
             setResultSuccess(false);
-            setResultFail(true);
             setEdit(false);
+            setError(true);
             setTimeout(() => {
-                setResultFail(false);
+                setError(false);
             }, 3000);
+            
         }
     }
 
@@ -564,10 +352,11 @@ function AddressCard({ addresses, address, setReloadAddData, setAddSuccess, setD
                 ) : (
                 <input name="name" onChange={handleEditAddress} placeholder={address.name} className="bg-transparent border rounded-md"/>
                 )}
+                {addressTaken && <span className="fixed text-xs translate-y-7 text-red-500">Name already taken</span>}
                 </div>
 
                 <div className="flex flex-row gap-2">
-                <button type="button" onClick={() => {setEdit(!edit); console.log(edit)}} className="text-xs font-normal bg-slate-800 px-2 py-1 rounded-md text-white">{edit ? 'Cancel' : 'Edit'}</button>
+                <button type="button" onClick={() => {setEdit(!edit)}} className="text-xs font-normal bg-slate-800 px-2 py-1 rounded-md text-white">{edit ? 'Cancel' : 'Edit'}</button>
                 {(!edit && addresses.length > 1) &&
                 <button onClick={() => deleteAddress(address.address_id)} className="text-xs font-normal bg-slate-800 px-2 py-1 rounded-md text-white">Delete</button>
                 }
@@ -639,107 +428,3 @@ function deepEqual(obj1, obj2) {
     return true;
   }
 
-  const Modal = ({ isOpen, children }) => {
-    if (!isOpen) {
-      return null;
-    }
-  
-    return (
-      <div className="modal-overlay">
-        <div className="modal-content">
-          {children}
-        </div>
-      </div>
-    );
-  };
-  
-  function Success({isModalOpen}) {
-  
-    return (
-      <div className="transition-all ease-in fixed pt-16">
-        <Modal isOpen={isModalOpen}>
-          <div className="w-screen flex justify-center items-center ">
-              <div className="bg-gray-50 p-3 rounded-xl w-1/2 shadow-md border">
-                <div className="text-green-500 text-md font-semibold text-center">Successfully edited account Information!</div>
-              </div>
-          </div>
-        </Modal>
-      </div>
-    );
-  };
-
-  function SuccessAddressEdit({isModalOpen}) {
-  
-    return (
-      <div className="fixed pt-16">
-        <Modal isOpen={isModalOpen}>
-          <div className="w-screen flex justify-center items-center ">
-              <div className="bg-gray-50 p-3 rounded-xl w-1/2 shadow-md border">
-                <div className="text-green-500 text-md font-semibold text-center">Successfully edited Address Information!</div>
-              </div>
-          </div>
-        </Modal>
-      </div>
-    );
-  };
-
-  function SuccessAddressAdd({isModalOpen}) {
-  
-    return (
-      <div className="fixed pt-16">
-        <Modal isOpen={isModalOpen}>
-          <div className="w-screen flex justify-center items-center ">
-              <div className="bg-gray-50 p-3 rounded-xl w-1/2 shadow-md border">
-                <div className="text-green-500 text-md font-semibold text-center">Successfully Added Address!</div>
-              </div>
-          </div>
-        </Modal>
-      </div>
-    );
-  };
-
-  function FailAddressAdd({isModalOpen}) {
-  
-    return (
-      <div className="fixed pt-16">
-        <Modal isOpen={isModalOpen}>
-          <div className="w-screen flex justify-center items-center ">
-              <div className="bg-gray-50 p-3 rounded-xl w-1/2 shadow-md border animate-bounce2">
-                <div className="text-red-500 text-md font-semibold text-center">Error, please fill in all details!</div>
-              </div>
-          </div>
-        </Modal>
-      </div>
-    );
-  };
-
-  function AddressDeleted({isModalOpen}) {
-  
-    return (
-      <div className="fixed pt-16">
-        <Modal isOpen={isModalOpen}>
-          <div className="w-screen flex justify-center items-center ">
-              <div className="bg-gray-50 p-3 rounded-xl w-1/2 shadow-md border">
-                <div className="text-green-500 text-md font-semibold text-center">Address has been successfully deleted!</div>
-              </div>
-          </div>
-        </Modal>
-      </div>
-    );
-  };
-
-  function ErrorTaken({isModalOpen}) {
-  
-    return (
-      <div className="fixed pt-16">
-        <Modal isOpen={isModalOpen}>
-          <div className="w-screen flex justify-center items-center ">
-              <div className="bg-gray-50 p-3 rounded-xl w-1/2 shadow-md border animate-bounce2">
-                <div className="text-red-500 text-md font-semibold text-center">Error, Username is alredy taken!</div>
-              </div>
-          </div>
-        </Modal>
-      </div>
-    );
-  };
-  
