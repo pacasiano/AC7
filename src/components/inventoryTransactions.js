@@ -54,7 +54,7 @@ export default function InventoryTransactions() {
                     </tr>
                 {isExpanded && (
                     <tr className="bg-slate-100 border-collapse border">
-                        <td colSpan={7}>
+                        <td colSpan={8}>
                             {/* ito yung mag ulit */}
                             <div className="flex flex-row justify-evenly">
                             <div className="text-sm font-semibold p-2 text-black">Item Id</div>

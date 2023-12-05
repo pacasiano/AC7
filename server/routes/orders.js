@@ -28,6 +28,28 @@ router.get('/', (req, res) => {
     });
 });
 
+//For ordersReturn.js (Return Requests)
+router.get('/return_request', (req, res) => {
+
+    const q = 'SELECT sale.sale_id AS sale_id, account_id, return_request_id, CONCAT(first_name, \' \', last_name) AS full_name, ' +
+                'DATE_FORMAT(sale_date, \'%M %d, %Y - %r\') AS sale_date, SUM(price * quantity) AS price, ' +
+                'return_request.comment AS comment, return_request_img.img_url AS img ' +
+                'FROM return_request ' +
+                'INNER JOIN return_request_img USING (return_request_id) ' +
+                'INNER JOIN sale USING (sale_id) ' +
+                'INNER JOIN sale_item USING (sale_id) ' +
+                'INNER JOIN customer USING (account_id) ' +
+                'WHERE sale_status = \'processing return\' ' +
+                'GROUP BY sale_id, return_request_id, return_request_img.img_url, customer_id ' +
+                'ORDER BY sale_date';
+    connection.query(q, (err, results) => {
+        if (err) console.log(err)
+        else {
+            res.json(results)
+        }
+    })
+})
+
 router.get('/orders/:id', (req, res) => {
     const { id: account_id } = req.params;
     let q = 'SELECT sale_id, DATE_FORMAT(sale_date, \'%M %d, %Y\') AS sale_date, sale_status, ' + 

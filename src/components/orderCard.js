@@ -19,6 +19,8 @@ function OrderCard({sale_id, sale_date, sale_status, shipped_date, received_date
         });
     }, [sale_id]); 
 
+    // const imgPath = require(`../img/product-${sale_id}.png`)
+
     return (
         <Link to={`/orders/${sale_id}`} className="bg-gray-100 p-5 h-34 hover:shadow-md hover:cursor-pointer transition-all">
             <div className="flex flex-col">

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Item1 from "../imgs/Item1.png";
 import "../App.css";
 import { useParams } from 'react-router-dom';
 import Check from "../imgs/check.png";
@@ -61,7 +60,7 @@ function Product() {
           </div>
           <div className="pt-5">
             <div className="bg-gray-100 py-5 flex flex-col gap-5">
-            {orders.map((order) => {return <ProductItem name={order.name} price={order.price} quantity={order.quantity}  />})}
+            {orders.map((order) => {return <ProductItem id={order.product_id} name={order.name} price={order.price} quantity={order.quantity}  />})}
             </div>
           </div>
         </div>
@@ -79,7 +78,7 @@ function Product() {
 };
 
 // the Product Item component
-function ProductItem({name, price, quantity}) {
+function ProductItem({id, name, price, quantity}) {
 
     let subTotal = (quantity  * price);
     return (
@@ -89,8 +88,8 @@ function ProductItem({name, price, quantity}) {
           <tr>
             <td className="w-1/4">
               <img
-                src={Item1}
-                className="object-cover rounded-md h-36"
+                src={require(`../imgs/product-${id}.png`)}
+                className="object-cover rounded-md w-full h-36"
                 alt="Item1"
               />
             </td>

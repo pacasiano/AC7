@@ -16,12 +16,12 @@ export default function Returns() {
     const [rejectSucces, setRejectSucces] = useState(false);
 
     useEffect(() => {
-        fetch('/api/orders')
+        fetch('/api/orders/return_request')
             .then((res) => res.json())
             .then((orders) => {
-                // select only orders with status returned
-                const returnedOrders = orders.filter((order) => order.sale_status === "returned")
-                setOrders(returnedOrders);
+                // select only orders with status processing return
+                // const returnedOrders = orders.filter((order) => order.sale_status === "processing return")
+                setOrders(orders);
             });
     }, [reloadData]);
 
@@ -77,9 +77,9 @@ export default function Returns() {
                                     <th className="sticky bg-gray-400 text-sm font-semibold border p-2 text-white">User ID</th>
                                     {/* <th className="text-sm font-semibold border p-2 text-white">Product ID</th> */}
                                     <th className="sticky bg-gray-400 text-sm font-semibold border p-2 text-white">Full Name</th>
-                                    <th className="sticky bg-gray-400 text-sm font-semibold border p-2 text-white">Date Delivered</th>
+                                    <th className="sticky bg-gray-400 text-sm font-semibold border p-2 text-white">Order Date</th>
                                     <th className="sticky bg-gray-400 text-sm font-semibold border p-2 text-white">Proof</th>
-                                    <th className="sticky bg-gray-400 text-sm font-semibold border p-2 text-white">Reason for Returnnr</th>
+                                    <th className="sticky bg-gray-400 text-sm font-semibold border p-2 text-white">Reason for Return</th>
                                     {/* <th className="text-sm font-semibold border p-2 text-white">Quantity</th> */}
                                     <th className="sticky bg-gray-400 text-sm font-semibold border p-2 text-white">Total</th>
                                     <th className="sticky bg-gray-400 text-sm font-semibold border p-2 text-white">Actions</th>
@@ -115,6 +115,12 @@ function ReturnedRow({returns, setReloadData, reloadData, setRefundSucces, setRe
             });
     }, [returns.sale_id]);
 
+    //Get cookie
+    const accountId = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("account_id="))
+    ?.split("=")[1];
+
     function refund() {
       setRefundSucces(true);
       setReloadData(!reloadData);
@@ -126,58 +132,74 @@ function ReturnedRow({returns, setReloadData, reloadData, setRefundSucces, setRe
     }
 
     function reject() {
+
+      fetch(`/api/return/${returns.return_request_id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          action: 'reject',
+          account_id: accountId
+        })
+      })
       setRejectSucces(true);
       setReloadData(!reloadData);
     }
 
-    return (
-        <tbody>
-      <tr className="bg-gray-300">
-        <td className="text-sm font-semibold border p-2">{returns.sale_id}</td>
-        <td className="text-sm font-semibold border p-2">{returns.account_id}</td>
-        <td className="text-sm font-semibold border p-2">{returns.full_name}</td>
-        <td className="text-sm font-semibold border p-2">{returns.sale_date}</td>
-        <td className="text-sm font-semibold border p-2">{returns.proof}</td>
-        <td className="text-sm font-semibold border p-2">{returns.reason}</td>
-        <td className="text-sm font-semibold border p-2">&#x20B1;{returns.price}</td>
-        <td className="w-36 text-sm font-semibold border p-2">
-          <div className="flex flex-col gap-1">
-            <button onClick={refund} className={` bg-green-500/90 hover:bg-green-600 text-white py-2 w-full rounded`}>Refund</button>
-            <button onClick={returnrefund} className={` bg-green-500/90 hover:bg-green-600 text-white py-2 w-full rounded`}>Return & Refund</button>
-            <button onClick={reject} className={` bg-red-500/90 hover:bg-red-600 text-white py-2 w-full rounded`}>Reject</button>
-            <button onClick={toggleExpand} className="bg-blue-500/90 hover:bg-blue-600 text-white py-2 w-full rounded">{isExpanded ? 'Collapse' : 'Expand'}</button>
-          </div>
-        </td>
-      </tr>
-      {isExpanded && (
-        <tr className="bg-slate-100">
-          <td colSpan={7}>
+    const imgPath = require(`../imgs/${returns.img}`)
 
-            {/* ito yung mag ulit */}
-            <table className="w-full">
-              <thead>
-                <tr className="bg-slate-200">
-                  <th className="text-sm font-semibold p-2 text-black w-1/3">Product Id</th>
-                  <th className="text-sm font-semibold p-2 text-black w-1/3">Quantity</th>
-                  <th className="text-sm font-semibold p-2 text-black w-1/3">Price</th>
-                </tr>
-              </thead>
-              <tbody>
-              {order_items.map((order_item) => (
-                <tr className="text-middle border-t border-white">
-                  <th className="text-sm font-normal p-2 text-black">{order_item.product_id}</th>
-                  <th className="text-sm font-normal p-2 text-black">{order_item.quantity}</th>
-                  <th className="text-sm font-normal p-2 text-black">{order_item.price}</th>
-                </tr>
-              ))}
-              </tbody>
-            </table>
-            {/* dito mag end */}
-            
-          </td>
-        </tr>
-      )}
-    </tbody>
+    return (
+
+        <tbody>
+          <tr className="bg-gray-300">
+            <td className="text-sm font-semibold border p-2">{returns.sale_id}</td>
+            <td className="text-sm font-semibold border p-2">{returns.account_id}</td>
+            <td className="text-sm font-semibold border p-2">{returns.full_name}</td>
+            <td className="text-sm font-semibold border p-2">{returns.sale_date}</td>
+            <td className="text-sm font-semibold border p-2">
+              <img src={imgPath} style={{ maxWidth: '200px' }}></img>  
+            </td>
+            <td className="text-sm font-semibold border p-2">{returns.comment}</td>
+            <td className="text-sm font-semibold border p-2">&#x20B1;{returns.price}</td>
+            <td className="w-36 text-sm font-semibold border p-2">
+              <div className="flex flex-col gap-1">
+                <button onClick={refund} className={` bg-green-500/90 hover:bg-green-600 text-white py-2 w-full rounded`}>Refund</button>
+                <button onClick={returnrefund} className={` bg-green-500/90 hover:bg-green-600 text-white py-2 w-full rounded`}>Return & Refund</button>
+                <button onClick={reject} className={` bg-red-500/90 hover:bg-red-600 text-white py-2 w-full rounded`}>Reject</button>
+                <button onClick={toggleExpand} className="bg-blue-500/90 hover:bg-blue-600 text-white py-2 w-full rounded">{isExpanded ? 'Collapse' : 'Expand'}</button>
+              </div>
+            </td>
+          </tr>
+          {isExpanded && (
+            <tr className="bg-slate-100">
+              <td colSpan={7}>
+
+                {/* ito yung mag ulit */}
+                <table className="w-full">
+                  <thead>
+                    <tr className="bg-slate-200">
+                      <th className="text-sm font-semibold p-2 text-black w-1/3">Product Id</th>
+                      <th className="text-sm font-semibold p-2 text-black w-1/3">Quantity</th>
+                      <th className="text-sm font-semibold p-2 text-black w-1/3">Price</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {order_items.map((order_item) => (
+                    <tr className="text-middle border-t border-white">
+                      <th className="text-sm font-normal p-2 text-black">{order_item.product_id}</th>
+                      <th className="text-sm font-normal p-2 text-black">{order_item.quantity}</th>
+                      <th className="text-sm font-normal p-2 text-black">{order_item.price}</th>
+                    </tr>
+                  ))}
+                  </tbody>
+                </table>
+                {/* dito mag end */}
+                
+              </td>
+            </tr>
+          )}
+      </tbody>
     )
 }
 

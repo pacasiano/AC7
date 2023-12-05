@@ -364,5 +364,11 @@ VALUES (1, 1, 50.00),
 (4, 2, 150.00),
 (4, 1, 50.00);
 
- INSERT INTO supplier(name, contact_info, city, zip_code, barangay, province, street) VALUES ('Taburnok Inc.', '8884700', 'Davao City', '8000', 'Brgy 19-A', 'Davao del Sur', 'Diversion Rd');
+INSERT INTO supplier(name, contact_info, city, zip_code, barangay, province, street) VALUES ('Taburnok Inc.', '8884700', 'Davao City', '8000', 'Brgy 19-A', 'Davao del Sur', 'Diversion Rd');
 
+SELECT *, DATE_FORMAT(shipped_sale.date, '%M %d, %Y') AS shipped_date, DATE_FORMAT(completed_sale.date, '%M %d, %Y') AS completed_date 
+FROM sale 
+INNER JOIN address USING (address_id) 
+INNER JOIN shipped_sale USING (sale_id)
+LEFT JOIN completed_sale USING (sale_id)
+WHERE sale_id = ${sale_id}

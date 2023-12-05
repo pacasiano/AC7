@@ -64,5 +64,4 @@ router.post('/:id', upload.single('img'), (req, res) => {
     res.json({message: 'Goods'})
 })
 
-
 module.exports = router;

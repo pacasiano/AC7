@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import Item1 from "../imgs/Item1.png";
 import {Link} from "react-router-dom";
 import "../App.css";
 
@@ -35,6 +34,7 @@ function Item(props) {
     })
   }
 
+  const imgPath = require(`../imgs/product-${props.product_obj.product_id}.png`)
 
   return (
     <>
@@ -44,7 +44,7 @@ function Item(props) {
         <div className="flex flex-col justify-center items-center gap-3 w-auto">
           <div className="w-11/12 h-52 pt-3">
             <Link to={`/product/${props.product_obj.product_id}`}>
-              <img className="object-none w-full h-full rounded-md" src={Item1} alt="Item1" />
+              <img className="object-cover w-full h-full rounded-md" src={imgPath} alt="Item1" />
             </Link>
           </div>
           <div className="flex flex-col px-2 justify-start gap-2 w-full">

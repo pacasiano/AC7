@@ -107,6 +107,7 @@ function CartItem({item, setReloadData, reloadData}) {
     }
   }, [quantity, hookQty]); // please dont change the depencies
 
+  const imgPath = require(`../imgs/product-${product_id}.png`)
 
     return (
         <table className="table-fixed w-full">
@@ -115,8 +116,8 @@ function CartItem({item, setReloadData, reloadData}) {
               <td className="p-2">
                 <div className="flex justify-center">
                 <img  
-                  src={Item1}
-                  className="object-scale-down rounded-md w-full h-36"
+                  src={imgPath}
+                  className="object-cover rounded-md w-full h-36"
                   alt="Item1"
                 />
                 </div>

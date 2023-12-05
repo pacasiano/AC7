@@ -18,6 +18,7 @@ const inventory_out = require('./routes/inventory_out.js');
 const shipping = require('./routes/shipment.js');
 const stock = require('./routes/stock.js');
 const returnRequest = require('./routes/return_request.js');
+const returnOrder = require('./routes/return.js')
 
 
 app.use(express.urlencoded( { extended: true } ));
@@ -62,6 +63,8 @@ app.use('/api/shipment', shipping);
 app.use('/api/stock', stock);
 
 app.use('/api/return_request', returnRequest);
+
+app.use('/api/return', returnOrder);
 
 
 app.listen(8080, () => {
