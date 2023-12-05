@@ -64,11 +64,14 @@ CREATE TABLE IF NOT EXISTS employee (
 
 CREATE TABLE IF NOT EXISTS supplier (
     supplier_id BIGINT UNSIGNED AUTO_INCREMENT,
-    address_id BIGINT UNSIGNED NOT NULL,
     name VARCHAR(128) NOT NULL,
     contact_info VARCHAR(15) NOT NULL,
-    PRIMARY KEY (supplier_id),
-    FOREIGN KEY (address_id) REFERENCES address(address_id)
+    city VARCHAR(25) NOT NULL,
+    zip_code CHAR(4) NOT NULL,
+    barangay VARCHAR(25) NOT NULL,
+    province VARCHAR(25) NOT NULL,
+    street VARCHAR(255) NOT NULL,
+    PRIMARY KEY (supplier_id)
 );
 
 CREATE TABLE IF NOT EXISTS inventory_in (
@@ -151,14 +154,13 @@ which means that we can store sale_id to the sale_item table
 CREATE TABLE IF NOT EXISTS sale (
     sale_id BIGINT UNSIGNED AUTO_INCREMENT,
     account_id BIGINT UNSIGNED NOT NULL,
-    -- address_id BIGINT UNSIGNED NOT NULL,
-    -- sale table probably doesn't need an address, no? We only get the address for shipment once the sale is checked out since they select an address there anyway
+    address_id BIGINT UNSIGNED DEFAULT NULL,
     sale_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
     -- the date updates when the sale_status is changed from in progress to 'complete' ryt?
     sale_status ENUM('cart', 'processing order', 'packed', 'shipped', 'completed', 'processing return', 'returned', 'cancelled') DEFAULT 'cart',
     PRIMARY KEY (sale_id),
-    FOREIGN KEY (account_id) REFERENCES account(account_id)
-    -- FOREIGN KEY (address_id) REFERENCES address(address_id)
+    FOREIGN KEY (account_id) REFERENCES account(account_id),
+    FOREIGN KEY (address_id) REFERENCES address(address_id)
 );
 
 -- this is the order_item table from the diagram
@@ -211,7 +213,6 @@ CREATE TABLE IF NOT EXISTS packed_sale (
     sale_id BIGINT UNSIGNED NOT NULL,
     employee_id BIGINT UNSIGNED NOT NULL,
     date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    status ENUM('active', 'inactive'),
     FOREIGN KEY (sale_id) REFERENCES sale(sale_id),
     FOREIGN KEY (employee_id) REFERENCES employee(employee_id)
 );
@@ -275,12 +276,11 @@ CREATE TABLE IF NOT EXISTS shipped_sale (
     sale_id BIGINT UNSIGNED NOT NULL,
     address_id BIGINT UNSIGNED NOT NULL,
     employee_id BIGINT UNSIGNED NOT NULL,
-    tracking_number VARCHAR(20) NOT NULL, -- tracking numbers are usually 12-20 in length in ph (esp with LBC and JRS). Wont exceed 20
+    tracking_number VARCHAR(20) UNIQUE NOT NULL , -- tracking numbers are usually 12-20 in length in ph (esp with LBC and JRS). Wont exceed 20
     courier VARCHAR(50) NOT NULL, -- we can abbreviate names to about 4 letters but just to be safe we use 50 charlength
     payment DECIMAL(10,2) NOT NULL, -- is this necessary?
     date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     -- received_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    status ENUM('active', 'inactive'),
     PRIMARY KEY (shipped_sale_id),
     FOREIGN KEY (sale_id) REFERENCES sale(sale_id),
     FOREIGN KEY (address_id) REFERENCES address(address_id),
@@ -290,14 +290,12 @@ CREATE TABLE IF NOT EXISTS shipped_sale (
 CREATE TABLE IF NOT EXISTS cancelled_sale (
     sale_id BIGINT UNSIGNED NOT NULL,
     date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    status ENUM('active', 'inactive'),
     FOREIGN KEY (sale_id) REFERENCES sale(sale_id)
 );
 
 CREATE TABLE IF NOT EXISTS completed_sale (
     sale_id BIGINT UNSIGNED NOT NULL,
     date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    status ENUM('active', 'inactive'),
     FOREIGN KEY (sale_id) REFERENCES sale(sale_id)
 );
 
@@ -366,6 +364,5 @@ VALUES (1, 1, 50.00),
 (4, 2, 150.00),
 (4, 1, 50.00);
 
- INSERT INTO supplier(address_id, name, contact_info) VALUES (5, 'Taburnok Inc.', '8884700');
+ INSERT INTO supplier(name, contact_info, city, zip_code, barangay, province, street) VALUES ('Taburnok Inc.', '8884700', 'Davao City', '8000', 'Brgy 19-A', 'Davao del Sur', 'Diversion Rd');
 
--- sale table might not need address_id since it already has account_id and account is connected to address

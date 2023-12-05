@@ -38,6 +38,23 @@ router.post('/', (req, res) => {
         })
     }
 
+    //Query 1.2: Add the selected address_id during checkout to the sale
+    async function queryOneTwo() {
+        const setAddressIdQuery = `UPDATE sale SET address_id = ` +
+                        `(SELECT address_id FROM address WHERE customer_id = ` + 
+                                `(SELECT customer_id FROM customer WHERE account_id = ${account_id}) AND name = '${address_name}') ` +
+                    `WHERE sale_status = 'cart' AND account_id = ${account_id}`;
+        return new Promise((resolve, reject) => {
+            connection.query(setAddressIdQuery, (err, results) => {
+                if (err) reject(err)
+                else {
+                    console.log('[Checkout] Query 1.2 Goods')
+                    resolve(results)
+                }
+            })
+        })
+    }
+
     //Query 2: Store Gcash reference number
     async function queryTwo() {
         const q2 = `INSERT INTO gcash_payment SET ` +
@@ -68,10 +85,10 @@ router.post('/', (req, res) => {
 
     async function handleWhileLoop(cartItemQty, cartItemId) {
         while (cartItemQty > 0) {
-            console.log('INSIDE WHILE LOOP')
-            console.log('Cart Item Qty: ' + cartItemQty)
+            // console.log('INSIDE WHILE LOOP')
+            // console.log('Cart Item Qty: ' + cartItemQty)
             cartItemQty = await queryThree(cartItemQty, cartItemId);
-            console.log('While loop: Cart Item QTY: ' + cartItemQty)
+            // console.log('While loop: Cart Item QTY: ' + cartItemQty)
         }
     }
 
@@ -167,12 +184,12 @@ router.post('/', (req, res) => {
         let promises = [];
       
         items_purchased.forEach((item) => {
-          console.log('INSIDE FOR EACH LOOP');
+        //   console.log('INSIDE FOR EACH LOOP');
       
           let cartItemQty = item.quantity;
           const cartItemId = item.product_id;
       
-          console.log('IIFE async function');
+        //   console.log('IIFE async function');
       
           promises.push(handleWhileLoop(cartItemQty, cartItemId));
         });
@@ -219,13 +236,14 @@ router.post('/', (req, res) => {
 
     async function main() {
         await queryOne();
+        await queryOneTwo();
         if (payment_method === 'gcash') await queryTwo();
         
         let doneMsg = await manageStock();
 
 
         if (doneMsg === 'fuckAsync') {
-            console.log('Inside fuck async: ' + doneMsg)
+            // console.log('Inside fuck async: ' + doneMsg)
             await querySix();
             await querySeven();
         }

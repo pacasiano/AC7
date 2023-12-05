@@ -251,7 +251,7 @@ function OrderActions({orders: sale_status, sale_id, setCancelled, setReceived, 
         'Content-type': 'application/json'
       },
       body: JSON.stringify({
-        new_sale_status: 'complete'
+        new_sale_status: 'completed'
       })
     })
     .then(() => {

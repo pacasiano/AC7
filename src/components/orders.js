@@ -123,11 +123,11 @@ const Modal = ({ isOpen, children }) => {
     );
   };
   
-  function ShippedForm({isModalOpen, setIsModalOpen, setShippedSucces, selectedOrderToBeShipped}) {
+  function ShippedForm({orderId, isModalOpen, setIsModalOpen, setShippedSucces, selectedOrderToBeShipped}) {
       
     const [shippedForm, setShippedForm] = useState({
       tracknum: "",
-      courrier: "",
+      courier: "",
       payment: "",
     });
 
@@ -138,11 +138,28 @@ const Modal = ({ isOpen, children }) => {
       });
     }
 
-    const handleSubmit = (e) => {
-      e.preventDefault();
+    const {sale_id} = selectedOrderToBeShipped || {};
 
-        console.log(selectedOrderToBeShipped)
-        console.log(shippedForm);
+    //Get cookie
+    const accountId = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("account_id="))
+    ?.split("=")[1];
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        // console.log(selectedOrderToBeShipped)
+        // console.log(shippedForm);
+
+        fetch(`/api/shipment/${sale_id}`, {
+            method: 'POST',
+            headers: {
+              'Content-type': 'application/json'
+            },
+            body: JSON.stringify({...shippedForm, account_id: accountId})
+        })
+
         setIsModalOpen(false);
         setShippedSucces(true);
 
@@ -172,10 +189,10 @@ const Modal = ({ isOpen, children }) => {
 
                     <div className="flex flex-col gap-2">
                       <div className="text-md text-left font-bold">
-                        Courrier
+                        Courier
                       </div>
                       <div>
-                        <input name="courrier" onChange={handleChange} className="w-full border-2 border-black/60 rounded-md p-2 resize-none" required/>
+                        <input name="courier" onChange={handleChange} className="w-full border-2 border-black/60 rounded-md p-2 resize-none" required/>
                       </div>
                     </div>
 
