@@ -30,9 +30,14 @@ router.get('/', (req, res) => {
 
 router.get('/orders/:id', (req, res) => {
     const { id: account_id } = req.params;
-    let q = 'SELECT sale_id, DATE_FORMAT(sale_date, \'%M %d, %Y\') AS sale_date, sale_status, ' + //i removed received_date bc no longer in db
-            'sale_payment.amount AS amount FROM sale ' +
+    let q = 'SELECT sale_id, DATE_FORMAT(sale_date, \'%M %d, %Y\') AS sale_date, sale_status, ' + 
+            'sale_payment.amount AS amount, DATE_FORMAT(shipped_sale.date, \'%M %d, %Y\') AS shipped_date, ' +
+            'DATE_FORMAT(completed_sale.date, \'%M %d, %Y\') AS received_date, ' +
+            'DATE_FORMAT(cancelled_sale.date, \'%M %d, %Y\') AS cancelled_date ' +
+            'FROM sale ' +
             'LEFT JOIN shipped_sale USING (sale_id) ' +
+            'LEFT JOIN completed_sale USING (sale_id) ' +
+            'LEFT JOIN cancelled_sale USING (sale_id) ' +
             'INNER JOIN sale_payment USING (sale_id) ' +
             `WHERE account_id = ${account_id}`;
     connection.query(q, function (err, results) {
@@ -56,10 +61,10 @@ router.get('/:id', (req, res) => {
     });
 });
 
-//Update sale_status
+//Update sale_status -- only use this end point when changing the sale_status to 'packed, completed, or cancelled'
 router.patch('/:id', (req, res) => {
     const {id: sale_id} = req.params;
-    const {new_sale_status} = req.body;
+    const {new_sale_status, account_id} = req.body;
     const q = `UPDATE sale SET sale_status = '${new_sale_status}' WHERE sale_id = ${sale_id}`;
     connection.query(q, (err, results) => {
         if (err) {
@@ -68,9 +73,32 @@ router.patch('/:id', (req, res) => {
         }
         else {
             console.log(`Sale_status of Sale with ID ${sale_id} has been changed to ${new_sale_status}`)
-            res.json({message: `Sale_status of Sale with ID ${sale_id} has been changed to ${new_sale_status}`})
         }
     })
+
+    if (new_sale_status === 'packed') {
+        const q2 = `INSERT INTO packed_sale SET sale_id = ${sale_id}, ` +
+                    `employee_id = (SELECT employee_id FROM employee WHERE account_id = ${account_id})`;
+        connection.query(q2, (err, results) => {
+            if (err) console.error(err)
+            else {
+                console.log(`New entry in packed_sale table: Sale ID of ${sale_id}`)
+            }
+        })
+    }
+    else {
+        const q2 = `INSERT INTO ${new_sale_status}_sale SET sale_id = ${sale_id}`
+        connection.query(q2, (err, results) => {
+            if (err) {
+                console.error(err) 
+            }
+            else {
+                console.log(`New entry in ${new_sale_status}_sale table: Sale ID of ${sale_id}`)
+            }
+        })
+    }
+
+    res.json({message: `Sale_status of Sale with ID ${sale_id} has been changed to ${new_sale_status}`})
 })
 
 router.get('/sale_items/:id', (req, res) => {

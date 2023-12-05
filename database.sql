@@ -263,8 +263,8 @@ CREATE TABLE IF NOT EXISTS returned_sale_img (
 );
 
 -- issued for refunds
-CREATE TABLE IF NOT EXISTS coupon (
-    discount_amount DECIMAL(10,2) NOT NULL,
+CREATE TABLE IF NOT EXISTS voucher (
+    amount DECIMAL(10,2) NOT NULL,
     expiry_date DATE NOT NULL DEFAULT (CURRENT_DATE + INTERVAL 1 YEAR),
     code CHAR(12) NOT NULL,
     quantity INT UNSIGNED DEFAULT 1

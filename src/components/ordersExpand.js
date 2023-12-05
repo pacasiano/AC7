@@ -22,6 +22,12 @@ function Order({ order, setReloadData, setShipped, setPacked, reloadData, setSel
     setShipped(true);
   }
 
+  //Get cookie
+  const accountId = document.cookie
+  .split("; ")
+  .find((row) => row.startsWith("account_id="))
+  ?.split("=")[1];
+
   function packed(e) {
     e.preventDefault();
 
@@ -31,7 +37,8 @@ function Order({ order, setReloadData, setShipped, setPacked, reloadData, setSel
         'Content-type': 'application/json'
       },
       body: JSON.stringify({
-        new_sale_status: 'packed'
+        new_sale_status: 'packed',
+        account_id: accountId
       })
     })
     .then(res => res.json())

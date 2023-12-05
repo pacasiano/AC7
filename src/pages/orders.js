@@ -122,6 +122,7 @@ function separatedOrders(orders) {
                   sale_status={cancelled.sale_status}
                   shipped_date={cancelled.shipped_date}
                   received_date={cancelled.received_date}
+                  cancelled_date={cancelled.cancelled_date}
                   total={cancelled.amount}
                 />
               )

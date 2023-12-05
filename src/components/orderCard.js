@@ -3,7 +3,7 @@ import "../App.css";
 import Item1 from "../imgs/Item1.png";
 import { Link } from "react-router-dom";
 
-function OrderCard({sale_id, sale_date, sale_status, shipped_date, received_date, total}) {
+function OrderCard({sale_id, sale_date, sale_status, shipped_date, received_date, cancelled_date, total}) {
 
     const [items, setItems] = useState([]);
 
@@ -39,8 +39,8 @@ function OrderCard({sale_id, sale_date, sale_status, shipped_date, received_date
                             <div className="flex flex-col justify-start items-start pl-2 border-l-2 h-full">
                                 <p className="text-xs font-normal text-start">Date ordered: <span className="text-xs font-semibold">{sale_date}</span></p>
                                 <p className="text-xs font-normal text-start">Order Status: <span className="text-xs font-semibold 	text-transform: capitalize">{sale_status}</span></p>
-                                {!(sale_status === "packed" || sale_status === "cancelled") && <p className="text-xs font-normal text-start">Shipped Date: <span className="text-xs font-semibold">{shipped_date}</span></p>}
-                                {sale_status === "cancelled" && <p className="text-xs font-normal text-start">Cancelled Date: <span className="text-xs font-semibold">cancel date</span></p>}
+                                {!(sale_status === "packed" || sale_status === "cancelled" || sale_status === "processing order") && <p className="text-xs font-normal text-start">Shipped Date: <span className="text-xs font-semibold">{shipped_date}</span></p>}
+                                {sale_status === "cancelled" && <p className="text-xs font-normal text-start">Cancelled Date: <span className="text-xs font-semibold">{cancelled_date}</span></p>}
                                 {(sale_status ===  "completed") && <p className="text-xs font-normal text-start">Received Date: <span className="text-xs font-semibold">{received_date}</span></p>}
                                 <p className="text-xs font-normal text-start">Total: <span className="text-xs font-semibold">{total}</span></p>
                             </div>
