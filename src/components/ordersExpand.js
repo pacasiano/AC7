@@ -55,8 +55,8 @@ function Order({ order, setReloadData, setShipped, setPacked, reloadData, setSel
         <td className="text-sm font-semibold border p-2">&#x20B1;{order.price}</td>
         <td className="w-36 text-sm font-semibold border p-2">
           <div className="flex flex-col gap-1">
-              <button onClick={packed} disabled={!(order.sale_status === "cart")} className={`${!(order.sale_status === "cart") ? "bg-gray-200 text-gray-400" : "bg-green-500/90 hover:bg-green-600 text-white" } py-2 w-full rounded`}>Packed</button>
-              <button onClick={ship} disabled={order.sale_status !== "packaging"} className={`${order.sale_status !== "packaging" ? "bg-gray-200 text-gray-400" : "bg-green-500/90 hover:bg-green-600 text-white" } py-2 w-full rounded`}>Shipped</button>
+              <button onClick={packed} disabled={!(order.sale_status === "processing order")} className={`${!(order.sale_status === "processing order") ? "bg-gray-200 text-gray-400" : "bg-green-500/90 hover:bg-green-600 text-white" } py-2 w-full rounded`}>Packed</button>
+              <button onClick={ship} disabled={order.sale_status !== "packed"} className={`${order.sale_status !== "packed" ? "bg-gray-200 text-gray-400" : "bg-green-500/90 hover:bg-green-600 text-white" } py-2 w-full rounded`}>Shipped</button>
               <button onClick={toggleExpand} className="bg-blue-500/90 hover:bg-blue-600 text-white py-2 w-full rounded">{isExpanded ? 'Collapse' : 'Expand'}</button>
           </div>
         </td>

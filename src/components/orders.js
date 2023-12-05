@@ -181,7 +181,7 @@ const Modal = ({ isOpen, children }) => {
 
                     <div className="flex flex-col gap-2">
                       <div className="text-md text-left font-bold">
-                        payment
+                        Payment
                       </div>
                       <div>
                         <input name="payment" onChange={handleChange} className="w-full border-2 border-black/60 rounded-md p-2 resize-none" required/>

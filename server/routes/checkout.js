@@ -181,7 +181,7 @@ router.post('/', (req, res) => {
         return 'fuckAsync'; //return a promise 
     }
 
-    //Query 6: Update the sale_status of the current sale from 'cart' to 'packaging'
+    //Query 6: Update the sale_status of the current sale from 'cart' to 'processing order'
     async function querySix() {
         const q6 = `UPDATE sale SET sale_status = 'processing order' WHERE account_id = ${account_id} AND sale_status = 'cart'`;
 

@@ -65,7 +65,7 @@ function Product() {
         <div className="flex flex-col gap-5 w-1/3">
           <OrderTotal sale_id={sale_id} />
           {/* <ShippingInfo sale_id={sale_id} /> */}
-          {(orderStatus === "shipped" || orderStatus === "packaging") &&
+          {(orderStatus === "shipped" || orderStatus === "packed") &&
           <OrderActions orders={orderStatus} sale_id={sale_id} setCancelled={setCancelled} setReceived={setReceived} setReturnOrder={setReturnOrder} />
           }
         </div>
@@ -274,7 +274,7 @@ function OrderActions({orders: sale_status, sale_id, setCancelled, setReceived, 
         {sale_status === "shipped" ? (
         <button onClick={() => setReturnOrder(true)} disabled={sale_status !== 'shipped'} className={`${sale_status !== 'shipped' ? "bg-neutral-50 text-gray-500" : "bg-black/20" } transition-all ${sale_status === 'shipped' && "hover:bg-black/40"} p-2 rounded-md w-full font-medium`}>Return order</button>
         ):(
-        <button onClick={cancelOrder} disabled={sale_status !== 'packaging'} className={`${sale_status !== 'packaging' ? "bg-neutral-50 text-gray-500" : "bg-black/20" } transition-all ${sale_status === 'packaging' && "hover:bg-black/40"} p-2 rounded-md w-full font-medium`}>Cancel order</button>
+        <button onClick={cancelOrder} disabled={sale_status !== 'packed'} className={`${sale_status !== 'packed' ? "bg-neutral-50 text-gray-500" : "bg-black/20" } transition-all ${sale_status === 'packed' && "hover:bg-black/40"} p-2 rounded-md w-full font-medium`}>Cancel order</button>
         )}
         <button onClick={completedOrder} disabled={sale_status !== 'shipped'} className={`${sale_status !== 'shipped' ? "bg-neutral-50 text-gray-500" : "bg-black/20" } transition-all ${sale_status === 'shipped' && "hover:bg-black/40"} p-2 rounded-md w-full font-medium`}>Order Received</button>
         
