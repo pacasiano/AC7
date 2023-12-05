@@ -45,7 +45,7 @@ function separatedOrders(orders) {
   let returned = [];
 
   for (let i = 0; i < orders.length; i++) {
-    if (orders[i].sale_status === 'packed' || orders[i].sale_status === 'shipped' || orders[i].sale_status === 'processing order') {
+    if (orders[i].sale_status === 'packed' || orders[i].sale_status === 'shipped' || orders[i].sale_status === 'processing order' || orders[i].sale_status === 'processing return') {
       onGoing.push(orders[i]);
     } else if (orders[i].sale_status === 'completed') {
       complete.push(orders[i]);
@@ -94,6 +94,7 @@ function separatedOrders(orders) {
                   sale_status={ongoing.sale_status}
                   shipped_date={ongoing.shipped_date}
                   received_date={ongoing.received_date}
+                  return_request_date={ongoing.return_request_date}
                   total={ongoing.amount}
                 />
               )

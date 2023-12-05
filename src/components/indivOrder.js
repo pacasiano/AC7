@@ -37,7 +37,7 @@ function Product() {
     <Cancelled isModalOpen={cancelled} />
     <Received isModalOpen={received} />
     <ReturnSuccess isModalOpen={returnSucces} />
-    <Return isModalOpen={returnOrder} setisModalOpen={setReturnOrder} setReturnSuccess={setReturnSuccess} />
+    <Return sale_id={sale_id} isModalOpen={returnOrder} setisModalOpen={setReturnOrder} setReturnSuccess={setReturnSuccess} />
     <div className="b-24 min-h-screen">
       <div className=" text-2xl font-light py-20 -mb-10 flex flex-row gap-5 items-center justify-center">
         <Link to="/orders" className="transition-all text-black/50 hover:text-black">Orders</Link><span className='text-black/30'>{">"}</span><div>{sale_id}</div>
@@ -355,10 +355,10 @@ function ReturnSuccess({isModalOpen}) {
   );
 };
 
-function Return({isModalOpen, setisModalOpen, setReturnSuccess}) {
+function Return({sale_id, isModalOpen, setisModalOpen, setReturnSuccess}) {
 
   const [returnSet, setReturnSet] = useState({
-    proof: '',
+    img: '',
     reason: ''
   });
 
@@ -385,22 +385,27 @@ function Return({isModalOpen, setisModalOpen, setReturnSuccess}) {
   function handleSubmit(e) {
     e.preventDefault();
 
-    
-    // lagay mo dito API
+    const reqForm = document.getElementById('reqForm')
+    const formData = new FormData(reqForm);
 
-    console.log('Form submitted!');
-    console.log(returnSet);
-    setisModalOpen(false);
-    setReturnSuccess(true);
-    // ipasok mo itong nasa taas sa .then ng API
-
+    fetch(`/api/return_request/${sale_id}`, {
+      method: 'POST',
+      body: formData
+    })
+    .then(req => req.json())
+    .then(data => {
+      console.log('Form submitted!');
+      console.log(returnSet);
+      setisModalOpen(false);
+      setReturnSuccess(true);
+    })
   }
 
   return (
     <div className="fixed backdrop-blur-sm bg-black/20 drop-shadow-xl z-50">
         <Modal isOpen={isModalOpen}>
           <div className="h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-white/30 ">
-            <form onSubmit={handleSubmit} className="fixed bg-gray-100 -mt-20 rounded-xl w-[40rem]">
+            <form onSubmit={handleSubmit} id="reqForm" enctype="multipart/form-data" className="fixed bg-gray-100 -mt-20 rounded-xl w-[40rem]">
                 <div className="flex flex-col gap-5 text-center py-5 px-10">
                   <div className="text-2xl font-bold">
                     Return Request Form
@@ -412,7 +417,7 @@ function Return({isModalOpen, setisModalOpen, setReturnSuccess}) {
                         Proof
                       </div>
                       <div>
-                        <input name="proof" id="proof" onChange={handleChange} accept="image/*" type="file" className="w-full border-2 border-black/60 rounded-md p-2" required/>
+                        <input name="img" id="proof" onChange={handleChange} accept="image/*" type="file" className="w-full border-2 border-black/60 rounded-md p-2" required/>
                       </div>
                     </div>
 

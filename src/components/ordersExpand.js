@@ -58,7 +58,7 @@ function Order({ order, setReloadData, setShipped, setPacked, reloadData, setSel
         <td className="text-sm font-semibold border p-2">{order.account_id}</td>
         <td className="text-sm font-semibold border p-2">{order.full_name}</td>
         <td className="text-sm font-semibold border p-2">{order.sale_date}</td>
-        <td className="text-sm font-semibold border p-2">{order.sale_status}</td>
+        <td className="text-sm font-semibold border p-2 text-transform: capitalize">{order.sale_status}</td>
         <td className="text-sm font-semibold border p-2">&#x20B1;{order.price}</td>
         <td className="w-36 text-sm font-semibold border p-2">
           <div className="flex flex-col gap-1">

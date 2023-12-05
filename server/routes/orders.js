@@ -33,11 +33,13 @@ router.get('/orders/:id', (req, res) => {
     let q = 'SELECT sale_id, DATE_FORMAT(sale_date, \'%M %d, %Y\') AS sale_date, sale_status, ' + 
             'sale_payment.amount AS amount, DATE_FORMAT(shipped_sale.date, \'%M %d, %Y\') AS shipped_date, ' +
             'DATE_FORMAT(completed_sale.date, \'%M %d, %Y\') AS received_date, ' +
-            'DATE_FORMAT(cancelled_sale.date, \'%M %d, %Y\') AS cancelled_date ' +
+            'DATE_FORMAT(cancelled_sale.date, \'%M %d, %Y\') AS cancelled_date, ' +
+            'DATE_FORMAT(return_request.date, \'%M %d, %Y\') AS return_request_date ' +
             'FROM sale ' +
             'LEFT JOIN shipped_sale USING (sale_id) ' +
             'LEFT JOIN completed_sale USING (sale_id) ' +
             'LEFT JOIN cancelled_sale USING (sale_id) ' +
+            'LEFT JOIN return_request USING (sale_id) ' +
             'INNER JOIN sale_payment USING (sale_id) ' +
             `WHERE account_id = ${account_id}`;
     connection.query(q, function (err, results) {
