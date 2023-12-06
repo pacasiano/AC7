@@ -63,8 +63,8 @@ router.get('/orders/:id', (req, res) => {
             'LEFT JOIN cancelled_sale USING (sale_id) ' +
             'LEFT JOIN return_request USING (sale_id) ' +
             'INNER JOIN sale_payment USING (sale_id) ' +
-            `WHERE account_id = ${account_id}`;
-    connection.query(q, function (err, results) {
+            `WHERE account_id = ?`;
+    connection.query(q, [account_id], function (err, results) {
         if (err) {
             console.log(err.message);
         }
@@ -75,8 +75,8 @@ router.get('/orders/:id', (req, res) => {
 
 router.get('/:id', (req, res) => {
     const { id: sale_id } = req.params;
-    let q = 'SELECT sale_status FROM sale WHERE sale_id = ' + sale_id;
-    connection.query(q, function (err, results) {
+    let q = 'SELECT sale_status FROM sale WHERE sale_id = ?';
+    connection.query(q, [sale_id], function (err, results) {
         if (err) {
             console.log(err.message);
         }
@@ -89,8 +89,8 @@ router.get('/:id', (req, res) => {
 router.patch('/:id', (req, res) => {
     const {id: sale_id} = req.params;
     const {new_sale_status, account_id} = req.body;
-    const q = `UPDATE sale SET sale_status = '${new_sale_status}' WHERE sale_id = ${sale_id}`;
-    connection.query(q, (err, results) => {
+    const q = `UPDATE sale SET sale_status = ? WHERE sale_id = ?`;
+    connection.query(q, [new_sale_status, sale_id], (err, results) => {
         if (err) {
             console.error(err)
             res.json({message: err.message})
@@ -101,9 +101,9 @@ router.patch('/:id', (req, res) => {
     })
 
     if (new_sale_status === 'packed') {
-        const q2 = `INSERT INTO packed_sale SET sale_id = ${sale_id}, ` +
-                    `employee_id = (SELECT employee_id FROM employee WHERE account_id = ${account_id})`;
-        connection.query(q2, (err, results) => {
+        const q2 = `INSERT INTO packed_sale SET sale_id = ?, ` +
+                    `employee_id = (SELECT employee_id FROM employee WHERE account_id = ?)`;
+        connection.query(q2, [sale_id, account_id], (err, results) => {
             if (err) console.error(err)
             else {
                 console.log(`New entry in packed_sale table: Sale ID of ${sale_id}`)
@@ -111,8 +111,8 @@ router.patch('/:id', (req, res) => {
         })
     }
     else {
-        const q2 = `INSERT INTO ${new_sale_status}_sale SET sale_id = ${sale_id}`
-        connection.query(q2, (err, results) => {
+        const q2 = `INSERT INTO ?_sale SET sale_id = ?`
+        connection.query(q2, [new_sale_status, sale_id], (err, results) => {
             if (err) {
                 console.error(err) 
             }
@@ -127,9 +127,9 @@ router.patch('/:id', (req, res) => {
 
 router.get('/sale_items/:id', (req, res) => {
     const { id: sale_id } = req.params;
-    let q = `SELECT sale_item.*, product.name FROM sale_item JOIN product ON sale_item.product_id = product.product_id WHERE sale_item.sale_id = ${sale_id}`;
+    let q = `SELECT sale_item.*, product.name FROM sale_item JOIN product ON sale_item.product_id = product.product_id WHERE sale_item.sale_id = ?`;
 
-    connection.query(q, function (err, results) {
+    connection.query(q, [sale_id], function (err, results) {
         if (err) {
             console.error('Error:', err);
             res.json({ error: 'Internal Server Error' });

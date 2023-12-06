@@ -30,8 +30,8 @@ router.post('/:id', upload.single('img'), (req, res) => {
     const {filename: img_name} = req.file; 
     //the name is just numbers now, name is composed of: the date it was submitted + the original img name (it encodes the imgName to numbers??)
 
-    const q1 = `INSERT INTO return_request(sale_id, comment) VALUES (${sale_id}, '${reason}')`;
-    connection.query(q1, (err, results) => {
+    const q1 = `INSERT INTO return_request(sale_id, comment) VALUES (?, ?)`;
+    connection.query(q1, [sale_id, reason], (err, results) => {
         if (err) {
             console.error(err)
         }
@@ -40,9 +40,9 @@ router.post('/:id', upload.single('img'), (req, res) => {
         }
     })
 
-    const q2 = `INSERT INTO return_request_img SET return_request_id = (SELECT return_request_id FROM return_request WHERE sale_id = ${sale_id} LIMIT 1), ` +
-                `img_url = '${img_name}'`
-    connection.query(q2, (err, results) => {
+    const q2 = `INSERT INTO return_request_img SET return_request_id = (SELECT return_request_id FROM return_request WHERE sale_id = ? LIMIT 1), ` +
+                `img_url = ?`
+    connection.query(q2, [sale_id, img_name], (err, results) => {
         if (err) {
             console.error(err)
         }
@@ -51,8 +51,8 @@ router.post('/:id', upload.single('img'), (req, res) => {
         }
     })
 
-    const q3 = `UPDATE sale SET sale_status = 'processing return' WHERE sale_id = ${sale_id}`;
-    connection.query(q3, (err, results) => {
+    const q3 = `UPDATE sale SET sale_status = 'processing return' WHERE sale_id = ?`;
+    connection.query(q3, [sale_id], (err, results) => {
         if (err) {
             console.error(err)
         }

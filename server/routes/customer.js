@@ -45,9 +45,9 @@ router.post('/', (req, res) => {
     const {first_name, middle_name, last_name, contact_info, email, address_name, street, barangay, province, city, zip_code} = req.body;
 
     //Query 1: Insert new customer entry
-    const q1 = `INSERT INTO customer SET account_id = (SELECT account_id FROM account WHERE username = '${username}'), ` +
-                `first_name = '${first_name}', middle_name = '${middle_name}', last_name = '${last_name}', contact_info = '${contact_info}', email = '${email}'`;
-    connection.query(q1, (err, results) => {
+    const q1 = `INSERT INTO customer SET account_id = (SELECT account_id FROM account WHERE username = ?), ` +
+                `first_name = ?, middle_name = ?, last_name = ?, contact_info = ?, email = ?`;
+    connection.query(q1, [username, first_name, middle_name, last_name, contact_info, email], (err, results) => {
         if (err) {
             console.error(err);
             //should display something when there's an error
@@ -58,9 +58,9 @@ router.post('/', (req, res) => {
     })
 
     //Query 2: Insert new address entry
-    const q2 = `INSERT INTO address SET customer_id = (SELECT customer_id FROM customer INNER JOIN account USING (account_id) WHERE username = '${username}'), ` +
-                `name = '${address_name}', street = '${street}', city = '${city}', barangay = '${barangay}', province = '${province}', zip_code = '${zip_code}'`;
-    connection.query(q2, (err, results) => {
+    const q2 = `INSERT INTO address SET customer_id = (SELECT customer_id FROM customer INNER JOIN account USING (account_id) WHERE username = ?), ` +
+                `name = ?, street = ?, city = ?, barangay = ?, province = ?, zip_code = ?`;
+    connection.query(q2, [username, address_name, street, city, barangay, province, zip_code], (err, results) => {
         if (err) {
             console.error(err);
             //should display something when there's an error
@@ -77,9 +77,9 @@ router.patch('/:id', (req, res) => {
     console.log("Edit Personal Info")
     const {first_name, middle_name, last_name, contact_info} = req.body;
     const {id: account_id} = req.params;
-    const q1 = `UPDATE customer SET first_name = '${first_name}', middle_name = '${middle_name}', last_name = '${last_name}', ` + 
-                `contact_info = '${contact_info}' WHERE account_id = ${account_id} `;
-    connection.query(q1, (err, results) => {
+    const q1 = `UPDATE customer SET first_name = ?, middle_name = ?, last_name = ?, ` + 
+                `contact_info = ? WHERE account_id = ?`;
+    connection.query(q1, [first_name, middle_name, last_name, contact_info, account_id], (err, results) => {
         if(err) {
             console.error(err)
         }

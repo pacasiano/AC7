@@ -14,10 +14,11 @@ const connection = mysql.createConnection({
 
 router.get('/:id', (req, res) => {
     const {id : account_id} = req.params;
+
     const q = 'SELECT * FROM address ' + 
-                `WHERE customer_id = (SELECT customer_id FROM customer WHERE account_id = ${account_id}) ` +
+                `WHERE customer_id = (SELECT customer_id FROM customer WHERE account_id = ?) ` +
                 'AND address_status = \'active\'';
-    connection.query(q, (err, results) => {
+    connection.query(q, [account_id], (err, results) => {
         res.json(results)
     })
 })
@@ -26,9 +27,10 @@ router.post('/:id', (req, res) => {
     //Address table needs all the properties below + customer_id
     const {id: account_id} = req.params;
     const {name, barangay, street, province, city, zip_code} = req.body
-    const q = `INSERT INTO address SET customer_id = (SELECT customer_id FROM customer WHERE account_id = ${account_id}), ` +
-            `name = '${name}', barangay = '${barangay}', street = '${street}', province = '${province}', city = '${city}', zip_code = '${zip_code}'`;
-    connection.query(q, (err, results) => {
+
+    const q = `INSERT INTO address SET customer_id = (SELECT customer_id FROM customer WHERE account_id = ?), ` +
+            `name = ?, barangay = ?, street = ?, province = ?, city = ?', zip_code = ?`;
+    connection.query(q, [account_id, name, barangay, street, province, city, zip_code], (err, results) => {
         if (err) {
             console.error(err)
             res.json( {Error: err.message} )
@@ -41,8 +43,8 @@ router.post('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
     const {id: address_id} = req.params;
-    const q1 = `UPDATE address SET address_status = 'inactive' WHERE address_id = ${address_id}`;
-    connection.query(q1, (err, results) => {
+    const q1 = `UPDATE address SET address_status = 'inactive' WHERE address_id = ?`;
+    connection.query(q1, [address_id], (err, results) => {
         if(err) {console.error(err)}
         else {
             res.json({message: `Successfully deleted Address with ID of ${address_id}👍`})
@@ -53,10 +55,11 @@ router.delete('/:id', (req, res) => {
 router.patch('/:id', (req, res) => {
     const {id: address_id} = req.params;
     const {name, barangay, street, province, city, zip_code} = req.body;
-    const q = `UPDATE address SET name = '${name}', barangay = '${barangay}', street = '${street}', ` +
-                `province = '${province}', city = '${city}', zip_code = '${zip_code}'` +
+
+    const q = `UPDATE address SET name = ?, barangay = ?, street = ?, ` +
+                `province = ?, city = ?, zip_code = ?` +
                 `WHERE address_id = ${address_id}`;
-    connection.query(q, (err, results) => {
+    connection.query(q, [name, barangay, street, province, city, zip_code], (err, results) => {
         if (err) {
             console.error(err.message)
         }

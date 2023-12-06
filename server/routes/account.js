@@ -22,8 +22,8 @@ router.post('/', (req, res) => {
     //Encrypt password
     bcrypt.hash(password, saltRounds, function(err, hash) {
         // Query 1: Create new account
-        const q1 = `INSERT INTO account SET username = '${username}', password = '${hash}', account_type = '${account_type}'`;
-        connection.query(q1, (err, results) => {
+        const q1 = `INSERT INTO account SET username = ?, password = ?, account_type = ?`;
+        connection.query(q1, [username, hash, account_type], (err, results) => {
             if (err) {console.error(err)}
             else {
                 console.log('Step 1.1: Account creation successful')
@@ -37,8 +37,8 @@ router.post('/', (req, res) => {
         
         if(account_type === "customer") {
             //Query 2: Create and assign sale entry for new customer account
-            const q2 = `INSERT INTO sale SET account_id = (SELECT account_id FROM account WHERE username = '${username}')`
-            connection.query(q2, (err, results) => {
+            const q2 = `INSERT INTO sale SET account_id = (SELECT account_id FROM account WHERE username = ?)`
+            connection.query(q2, [username], (err, results) => {
                 if (err) {
                     console.error(err)
                 }
@@ -57,8 +57,8 @@ router.post('/', (req, res) => {
 router.get('/:id', (req, res) => {
     const {id: account_id} = req.params;
     try {
-        const q1 = `SELECT account_type FROM account WHERE account_id = ${account_id}`;
-        connection.query(q1, (err, results) => {
+        const q1 = `SELECT account_type FROM account WHERE account_id = ?`;
+        connection.query(q1, [account_id], (err, results) => {
             if(err) {
                 console.error(err)
                 res.json({message: 'No account logged in'})
@@ -109,8 +109,8 @@ router.patch('/:id', (req, res) => {
     const saltRounds = 10;
 
     bcrypt.hash(password, saltRounds, function(err, hash) {
-        const q1 = `UPDATE account SET username = '${username}', password = '${hash}' WHERE account_id = ${account_id}`;
-        connection.query(q1, (err, results) => {
+        const q1 = `UPDATE account SET username = ?, password = ? WHERE account_id = ?`;
+        connection.query(q1, [username, hash, account_id], (err, results) => {
             if (err) {
                 console.error(err)
             } 
@@ -120,8 +120,8 @@ router.patch('/:id', (req, res) => {
         })
     })
 
-    const q2 = `UPDATE customer SET email = '${email}' WHERE account_id = ${account_id}`
-    connection.query(q2, (err, results) => {
+    const q2 = `UPDATE customer SET email = ? WHERE account_id = ?`
+    connection.query(q2, [email, account_id], (err, results) => {
         if (err) {
             console.error(err)
         }

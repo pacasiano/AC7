@@ -1,3 +1,4 @@
+const { faArrowCircleUp } = require('@fortawesome/free-solid-svg-icons');
 const express = require('express');
 const app = express();
 const router = express.Router();
@@ -21,11 +22,11 @@ router.post('/', (req, res) => {
 
     //Query 1: Create a sale_payment entry
     async function queryOne() {
-        const q1 = `INSERT INTO sale_payment SET sale_id = (SELECT sale_id FROM sale WHERE account_id = ${account_id} AND sale_status = 'cart'), ` +
-                    `mode_of_payment = '${payment_method}', amount = ${amount}`;
+        const q1 = `INSERT INTO sale_payment SET sale_id = (SELECT sale_id FROM sale WHERE account_id = ? AND sale_status = 'cart'), ` +
+                    `mode_of_payment = ?, amount = ?`;
 
         return new Promise((resolve, reject) => {
-            connection.query(q1, (err, results) => {
+            connection.query(q1, [account_id, payment_method, amount], (err, results) => {
                 if (err) {
                     console.error(err)
                     reject(err)
@@ -42,10 +43,10 @@ router.post('/', (req, res) => {
     async function queryOneTwo() {
         const setAddressIdQuery = `UPDATE sale SET address_id = ` +
                         `(SELECT address_id FROM address WHERE customer_id = ` + 
-                                `(SELECT customer_id FROM customer WHERE account_id = ${account_id}) AND name = '${address_name}') ` +
-                    `WHERE sale_status = 'cart' AND account_id = ${account_id}`;
+                                `(SELECT customer_id FROM customer WHERE account_id = ?) AND name = ?) ` +
+                        `WHERE sale_status = 'cart' AND account_id = ?`;
         return new Promise((resolve, reject) => {
-            connection.query(setAddressIdQuery, (err, results) => {
+            connection.query(setAddressIdQuery, [account_id, address_name, account_id], (err, results) => {
                 if (err) reject(err)
                 else {
                     console.log('[Checkout] Query 1.2 Goods')
@@ -58,12 +59,12 @@ router.post('/', (req, res) => {
     //Query 2: Store Gcash reference number
     async function queryTwo() {
         const q2 = `INSERT INTO gcash_payment SET ` +
-                    `reference_num = ${gcash_ref_num}, ` +
+                    `reference_num = ?, ` +
                     `sale_payment_id = (SELECT sale_payment_id FROM sale_payment INNER JOIN sale USING (sale_id) ` +
-                                        `WHERE account_id = ${account_id} AND sale_status = 'cart')`; 
+                                        `WHERE account_id = ? AND sale_status = 'cart')`; 
 
         return new Promise((resolve, reject) => {
-            connection.query(q2, (err, results) => {
+            connection.query(q2, [gcash_ref_num, account_id], (err, results) => {
                 if (err) {
                     console.error(err)
                     reject(err)
@@ -94,10 +95,10 @@ router.post('/', (req, res) => {
 
     async function queryThree(cartItemQty, cartItemId) {
         //Query 3: Get stock_id and quantity of the product with the least batch_no
-        const q3 = `SELECT * FROM stock WHERE product_id = ${cartItemId} AND quantity > 0 ORDER BY batch_no LIMIT 1`;
+        const q3 = `SELECT * FROM stock WHERE product_id = ? AND quantity > 0 ORDER BY batch_no LIMIT 1`;
 
         return new Promise(async (resolve, reject) => {
-            connection.query(q3, async (err, results) => {
+            connection.query(q3, [cartItemId], async (err, results) => {
                 if (err) {
                     console.error(err.message)
                     reject(err)
@@ -144,12 +145,12 @@ router.post('/', (req, res) => {
 
     async function queryFour(saleItemStockQty, stockId, accountId, cartItemId) {
         //INSERT into sale_item_stock SET quantity = cartItemQty 
-        const q4 = `INSERT INTO sale_item_stock SET quantity = ${saleItemStockQty}, stock_id = ${stockId}, ` +
+        const q4 = `INSERT INTO sale_item_stock SET quantity = ?, stock_id = ?, ` +
                     'sale_item_id = (SELECT sale_item_id FROM sale_item INNER JOIN sale USING (sale_id) ' +
-                    `WHERE account_id = ${accountId} AND sale_status = 'cart' AND product_id = ${cartItemId})`;
+                    `WHERE account_id = ? AND sale_status = 'cart' AND product_id = ?)`;
         
         return new Promise((resolve, reject) => {
-            connection.query(q4, (err, results) => {
+            connection.query(q4, [saleItemStockQty, stockId, accountId, cartItemId], (err, results) => {
                 if (err) {
                     console.error(err.message)
                     reject(err)
@@ -163,10 +164,10 @@ router.post('/', (req, res) => {
     }
 
     async function queryFive(qty, stockId) {
-        const q5 = `UPDATE stock SET quantity = ${qty} WHERE stock_id = ${stockId}`;
+        const q5 = `UPDATE stock SET quantity = ? WHERE stock_id = ?`;
 
         return new Promise((resolve, reject) => {
-            connection.query(q5, (err, results) => {
+            connection.query(q5, [qty, stockId], (err, results) => {
                 if (err) {
                     console.error(err.message)
                     reject(err)
@@ -200,10 +201,10 @@ router.post('/', (req, res) => {
 
     //Query 6: Update the sale_status of the current sale from 'cart' to 'processing order'
     async function querySix() {
-        const q6 = `UPDATE sale SET sale_status = 'processing order' WHERE account_id = ${account_id} AND sale_status = 'cart'`;
+        const q6 = `UPDATE sale SET sale_status = 'processing order' WHERE account_id = ? AND sale_status = 'cart'`;
 
         return new Promise((resolve, reject) => {
-            connection.query(q6, (err, results) => {
+            connection.query(q6, [account_id], (err, results) => {
                 if (err) { 
                     console.error(err) 
                     reject(err)
@@ -218,10 +219,10 @@ router.post('/', (req, res) => {
 
     //Query 7: Create a new sale entry for the account
     async function querySeven() {
-        const q7 = `INSERT INTO sale(account_id) VALUES(${account_id})`;
+        const q7 = `INSERT INTO sale(account_id) VALUES(?)`;
 
         return new Promise((resolve, reject) => {
-            connection.query(q7, (err, results) => {
+            connection.query(q7, [account_id], (err, results) => {
                 if (err) {
                     console.error(err)
                     reject(err)

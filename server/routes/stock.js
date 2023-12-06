@@ -11,9 +11,9 @@ const connection = mysql.createConnection({
 
 router.get('/:id', (req, res) => {
     const {id : product_id} = req.params;
-    const q = `SELECT * FROM stock WHERE product_id = ${product_id} ` +
-                `AND batch_no = (SELECT batch_no FROM (SELECT MAX(batch_no) AS batch_no FROM stock WHERE product_id = ${product_id} AND quantity > 0) as x)`;
-    connection.query(q, (err, results) => {
+    const q = `SELECT * FROM stock WHERE product_id = ? ` +
+                `AND batch_no = (SELECT batch_no FROM (SELECT MAX(batch_no) AS batch_no FROM stock WHERE product_id = ? AND quantity > 0) as x)`;
+    connection.query(q, [product_id, product_id], (err, results) => {
         if (err) {
             console.error(results)
         }
@@ -23,8 +23,8 @@ router.get('/:id', (req, res) => {
 
 router.get('/:id/all', (req, res) => {
     const {id: product_id} = req.params;
-    const q = `SELECT batch_no, price, quantity, DATE_FORMAT(date, '%M %d, %Y') AS date FROM stock WHERE product_id = ${product_id}`;
-    connection.query(q, (err, results) => {
+    const q = `SELECT batch_no, price, quantity, DATE_FORMAT(date, '%M %d, %Y') AS date FROM stock WHERE product_id = ?`;
+    connection.query(q, [product_id], (err, results) => {
         if (err) {
             console.error(err)
         }

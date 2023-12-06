@@ -18,8 +18,8 @@ let connection = mysql.createConnection({
 router.post('/', (req, res) => {
     const { username, password } = req.body;
 
-    let q = `SELECT account_id, username, password FROM account WHERE username = '${username}'`;
-    connection.query(q, function (err, results) {
+    let q = `SELECT account_id, username, password FROM account WHERE username = ?`;
+    connection.query(q, [username], function (err, results) {
         if (err) {
             console.error(err);
             res.status(500).json({ message: 'Internal server error' });

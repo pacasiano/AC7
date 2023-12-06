@@ -19,9 +19,9 @@ router.post('/', (req, res) => {
     const {supplier_name, payment_amount, product_name, price, quantity: stock_in_qty} = req.body; //all of these values must be required
 
     //Query 1: Insert a new row into inventory_in (hopefully all supplier names are unique, else we're fcked)
-    const q1 = `INSERT INTO inventory_in SET supplier_id = (SELECT supplier_id FROM supplier WHERE name = '${supplier_name}'), ` + 
-                `payment_amount = ${payment_amount}`;
-    connection.query(q1, (err, results) => {
+    const q1 = `INSERT INTO inventory_in SET supplier_id = (SELECT supplier_id FROM supplier WHERE name = ?), ` + 
+                `payment_amount = ?`;
+    connection.query(q1, [supplier_name, payment_amount], (err, results) => {
         if (err) {
             console.error(err)
         }

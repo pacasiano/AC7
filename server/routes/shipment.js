@@ -19,8 +19,8 @@ router.get('/:id', (req, res) => {
     INNER JOIN address USING (address_id) 
     INNER JOIN shipped_sale USING (sale_id)
     LEFT JOIN completed_sale USING (sale_id)
-    WHERE sale_id = ${sale_id}`;
-    connection.query(q, function (err, results) {
+    WHERE sale_id = ?`;
+    connection.query(q, [sale_id], function (err, results) {
         if (err) {
             console.log(err.message);
             res.status(500).json({ error: 'Internal Server Error' });
@@ -53,10 +53,10 @@ router.post('/:id', (req, res) => {
     const {id: sale_id} = req.params;
     const {tracknum, courier, payment, account_id} = req.body;
     //Insert into shipped_sale the details of shipment
-    const q1 = `INSERT INTO shipped_sale SET sale_id = ${sale_id}, address_id = (SELECT address_id FROM sale WHERE sale_id = ${sale_id}), ` +
-                `employee_id = (SELECT employee_id FROM employee WHERE account_id = ${account_id}), tracking_number = '${tracknum}', ` +
-                `courier = '${courier}', payment = ${payment}`;
-    connection.query(q1, (err, results) => {
+    const q1 = `INSERT INTO shipped_sale SET sale_id = ?, address_id = (SELECT address_id FROM sale WHERE sale_id = ?), ` +
+                `employee_id = (SELECT employee_id FROM employee WHERE account_id = ?), tracking_number = ?, ` +
+                `courier = ?, payment = ?`;
+    connection.query(q1, [sale_id, sale_id, account_id, tracknum, courier, payment], (err, results) => {
         if (err) {
             console.error(err)
         }
@@ -66,8 +66,8 @@ router.post('/:id', (req, res) => {
     })
 
     //Change sale_status to shipped
-    const q2 = `UPDATE sale SET sale_status = 'shipped' WHERE sale_id = ${sale_id}`
-    connection.query(q2, (err, results) => {
+    const q2 = `UPDATE sale SET sale_status = 'shipped' WHERE sale_id = ?`
+    connection.query(q2, [sale_id], (err, results) => {
         if (err) {
             console.error(err)
         }

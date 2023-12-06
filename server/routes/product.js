@@ -43,8 +43,8 @@ router.get('/:id', (req, res) => {
     const {id: product_id} = req.params;
     let returnResult = {};
     let finalReturnResult = {};
-    const q = `SELECT product.*, SUM(quantity) AS quantity FROM product INNER JOIN stock USING (product_id) WHERE product_id = ${product_id}`;
-    connection.query(q, (err, results) => {
+    const q = `SELECT product.*, SUM(quantity) AS quantity FROM product INNER JOIN stock USING (product_id) WHERE product_id = ?`;
+    connection.query(q, [product_id], (err, results) => {
         if (err) {
             console.error(err)
         }
@@ -55,10 +55,10 @@ router.get('/:id', (req, res) => {
 
     // Query 2: Get the price of the latest stock
     const q2 = `SELECT price FROM stock ` +
-                `WHERE product_id = ${product_id} ` +
+                `WHERE product_id = ? ` +
                 `ORDER BY batch_no DESC ` +
                 `LIMIT 1`;
-    connection.query(q2, (err, results) => {
+    connection.query(q2, [product_id], (err, results) => {
         if (err) console.error(err)
         else {
             finalReturnResult = {...results[0], ...returnResult}
@@ -72,9 +72,9 @@ router.post('/', (req, res) => {
     const {product_name, description, category, threshold} = req.body;
     console.log('Adding new product...')
     console.log(req.body)
-    const q1 = `INSERT INTO product SET name = '${product_name}', description = '${description}', ` +
-                `category = '${category}', threshold = ${threshold}`;
-    connection.query(q1, (err, results) => {
+    const q1 = `INSERT INTO product SET name = ?, description = ?, ` +
+                `category = ?, threshold = ?`;
+    connection.query(q1, [product_name, description, category, threshold], (err, results) => {
         if (err) {console.error(err)}
         else {
             res.redirect('/AC7')

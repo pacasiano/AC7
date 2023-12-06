@@ -25,8 +25,8 @@ router.get('/', (req, res) => {
 //Get an employee
 router.get('/:id', (req, res) => {
     const {id : account_id} = req.params;
-    const q = `SELECT first_name, last_name FROM employee WHERE account_id = ${account_id}`;
-    connection.query(q, (err, results) => {
+    const q = `SELECT first_name, last_name FROM employee WHERE account_id = ?`;
+    connection.query(q, [account_id], (err, results) => {
         if(err) {console.error(err)}
         else {
             res.json(results);
@@ -37,10 +37,11 @@ router.get('/:id', (req, res) => {
 //Create new employee
 router.post('/', (req, res) => {
     const {username, first_name, middle_name = '', last_name, position, contact_info} = req.body;
-    const q = `INSERT INTO employee SET account_id = (SELECT account_id FROM account WHERE username = '${username}'), ` +
-                `first_name = '${first_name}', middle_name = '${middle_name}', last_name = '${last_name}', ` +
-                `position = '${position}', contact_info = '${contact_info}'`
-    connection.query(q, (err, results) => {
+
+    const q = `INSERT INTO employee SET account_id = (SELECT account_id FROM account WHERE username = ?), ` +
+                `first_name = ?, middle_name = ?, last_name = ?, ` +
+                `position = ?, contact_info = ?`
+    connection.query(q, [username, first_name, middle_name, last_name, position, contact_info], (err, results) => {
         if (err) { 
             console.error(err)
             res.json({message: err.message})
