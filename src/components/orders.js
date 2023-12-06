@@ -6,7 +6,7 @@ import Check from "../imgs/check.png";
 import { myContext } from '../context/adminContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
-import { parse, format, subDays, isValid, isToday } from 'date-fns';
+import { parse, format, subDays, isValid, isToday, isWithinInterval, subWeeks } from 'date-fns';
 
 
 export default function Orders() {
@@ -71,6 +71,7 @@ export default function Orders() {
                   <DailySales orders={orders} />
                   <DailyRevenue orders={orders} />
                   <WeeklySales orders={orders} />
+                  <WeeklyRevenue orders={orders} />
                 </div>
                 <div className="flex flex-col gap-3">
                     <div className="flex flex-row justify-between bg-gray-200 w-full p-5">
@@ -443,4 +444,65 @@ function DailyRevenue({orders}) {
   );
 }
 
+function WeeklyRevenue({orders}) {
+    
+  const calculateWeeklyRevenue = (orders) => {
+    const formattedDates = orders.map((order, index) => {
+      if (order.sale_date && order.price) {
+        const parsedDate = parse(order.sale_date, "MMMM dd, yyyy '-' hh:mm:ss a", new Date());
+        const formattedDate = format(parsedDate, 'MMMM dd, yyyy');
+        
+        // Check if the date is within the last 7 days
+        const isWithin7Days = isWithinInterval(parsedDate, {
+          start: subWeeks(new Date(), 1),
+          end: new Date(),
+        });
+  
+        // Calculate revenue only for orders within the last 7 days
+        if (isWithin7Days) {
+          return {
+            formattedDate: `${formattedDate} - ${format(parsedDate, 'hh:mm:ss a')}`,
+            revenue: parseFloat(order.price),
+          };
+        } else {
+          return null;
+        }
+      } else {
+        console.warn(`Order at index ${index} is missing sale_date or price:`, order);
+        return null; // or handle the case when sale_date or price is missing
+      }
+    }).filter(Boolean); // Remove null values
+  
+    const totalWeeklyRevenue = formattedDates.reduce((total, order) => {
+      return total + order.revenue;
+    }, 0);
+  
+    return {
+      formattedDates,
+      totalWeeklyRevenue,
+    };
+  };
+  
+  // Example usage
+  const { formattedDates, totalWeeklyRevenue } = calculateWeeklyRevenue(orders);
 
+  return(
+  <div className="flex flex-col text-white w-72 gap-5 p-7 custom-gradient2 rounded-md">
+    
+    <div className="flex flex-row justify-between">
+      <span className="text-xl font-bold">Weekly Revenue</span>
+      <div className="text-3xl -mt-2 font-bold">
+        ₱
+      </div>
+    </div>
+
+    <div className="flex flex-row justify-between items-center w-full" >
+      
+      <div>
+        <span className="text-2xl">₱ {totalWeeklyRevenue}</span>
+      </div>
+    </div>
+
+  </div>
+  );
+}
