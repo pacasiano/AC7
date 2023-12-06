@@ -64,7 +64,7 @@ export default function Returns() {
             <div className="flex flex-col gap-5 ">
                 <div id="header" className="flex flex-row justify-between">
                     <span className="text-xl font-bold">Orders</span>
-                    <Select options={options} onChange={(selectedOption) => setSelectedReturn(selectedOption)} className="w-96 z-0" />
+                    <Select options={options} onChange={(selectedOption) => setSelectedReturn(selectedOption)} className="w-96" />
                 </div>
                 <div className="flex flex-col gap-3">
                     <div className="flex flex-row justify-between bg-gray-200 w-full p-5">

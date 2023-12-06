@@ -53,8 +53,11 @@ export default function Inventory() {
               <span className="text-md font-bold">Product List</span>
             </div>
             <div className="flex flex-row gap-2">
-              <button onClick={() => setPage("inventoryTransactions")}>
-                <span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">View Stock Transactions</span>
+              <button onClick={() => setPage("inventoryInTransactions")}>
+                <span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">View Stock in Transactions</span>
+              </button>
+              <button onClick={() => setPage("inventoryOutTransactions")}>
+                <span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">View Stock out Transactions</span>
               </button>
               <button onClick={() => setPage("inventoryIn")}>
                 <span className="text-md bg-gray-100 px-2 py-1 rounded-md font-bold">Stock-in</span>
