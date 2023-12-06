@@ -75,4 +75,28 @@ router.post('/', (req, res) => {
     res.redirect('/AC7/inventory-out/confirmation');
 })
 
+    // selects all from inventory_in
+    router.get('/out', (req, res) => {
+        let q = `SELECT * FROM inventory_out`;
+        connection.query(q, function (err, results) {
+            if (err) {
+                console.log(err.message);
+            }
+            // console.log(results);
+            res.json(results);
+        });
+    });
+
+    // selects all from where inventory_in_id = id
+    router.get('/out/:id', (req, res) => {
+        let q = `SELECT * FROM inventory_out_item WHERE inventory_out_ref_num = ?`;
+        connection.query(q, [req.params.id], function (err, results) {
+            if (err) {
+                console.log(err.message);
+            }
+            // console.log(results);
+            res.json(results);
+        });
+    });
+
 module.exports = router;

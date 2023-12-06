@@ -127,6 +127,30 @@ router.post('/', (req, res) => {
     }
 })
 
+    // selects all from inventory_in
+    router.get('/in', (req, res) => {
+        let q = `SELECT * FROM inventory_in`;
+        connection.query(q, function (err, results) {
+            if (err) {
+                console.log(err.message);
+            }
+            // console.log(results);
+            res.json(results);
+        });
+    });
+
+    // selects all from where inventory_in_id = id
+    router.get('/in/:id', (req, res) => {
+        let q = `SELECT * FROM inventory_in_item WHERE inventory_in_id = ?`;
+        connection.query(q, [req.params.id], function (err, results) {
+            if (err) {
+                console.log(err.message);
+            }
+            // console.log(results);
+            res.json(results);
+        });
+    });
+
 
 
 module.exports = router;

@@ -14,7 +14,8 @@ import Shipping from "../components/shipping";
 import InventoryIn from "../components/InventoryIn";
 import AddItem from "../components/addItem";
 import InventoryOut from "../components/inventoryOut";
-import InventoryTransactions from "../components/inventoryTransactions";
+import InventoryInTransactions from "../components/inventoryInTransactions";
+import InventoryOutTransactions from "../components/inventoryOutTransactions";
 import AddEmployee from "../components/addEmp";
 import ViewSuppliers from "../components/supplier";
 import AddSupplier from "../components/supplierAdd";
@@ -95,8 +96,10 @@ export default function Admin() {
                                     return <InventoryOut />;
                                 case "addItem":
                                     return <AddItem />;
-                                case "inventoryTransactions":
-                                    return <InventoryTransactions />;
+                                case "inventoryInTransactions":
+                                    return <InventoryInTransactions />;
+                                case "inventoryOutTransactions":
+                                    return <InventoryOutTransactions />;
                                 case "addEmployee":
                                     return <AddEmployee />;
                                 case "viewSuppliers":
