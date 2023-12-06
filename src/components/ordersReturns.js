@@ -57,7 +57,7 @@ export default function Returns() {
         <Refund isModalOpen={refundSucces} setIsModalOpen={setRefundSucces} />
         <ReturnRefund isModalOpen={returnRefundSucces} setIsModalOpen={setReturnRefundSucces} />
         <Reject isModalOpen={rejectSucces} setIsModalOpen={setRejectSucces} />
-        <RefundInput isModalOpen={refund} selectedSale={selectedSale} setIsModalOpen={setRefund} setRefundSucces={setRefundSucces}  setReloadData={setReloadData} reloadData={reloadData}/>
+        <RefundInput isModalOpen={refund} sale_id={selectedSale} setIsModalOpen={setRefund} setRefundSucces={setRefundSucces}  setReloadData={setReloadData} reloadData={reloadData}/>
         <RefundReturn isModalOpen={refturn} selectedSale={selectedSale} setIsModalOpen={setRefturn} setReturnRefundSucces={setReturnRefundSucces} setReloadData={setReloadData} reloadData={reloadData} />
         <RejectRefund isModalOpen={reject} selectedSale={selectedSale} setIsModalOpen={setReject} setRejectSucces={setRefundSucces} setReloadData={setReloadData} reloadData={reloadData}/>
         <div className="h-screen px-8 pt-8">
@@ -277,6 +277,9 @@ function Reject({isModalOpen, setIsModalOpen}) {
 
 function RefundInput({sale_id, isModalOpen, setIsModalOpen, setRefundSucces, setReloadData, reloadData}) {
 
+  
+  console.log('INSIDE ZREFUND INPUT')
+  console.log(sale_id)
   const [refundSet, setRefundSet] = useState({
     comment: '',
     amount: ''
@@ -288,14 +291,31 @@ function RefundInput({sale_id, isModalOpen, setIsModalOpen, setRefundSucces, set
     ?.split("=")[1];
 
   function handleChange(event) {
-    setRefundSet({...refundSet, [event.target.name]: event.target.value});
-    
-}
+    setRefundSet({...refundSet, [event.target.name]: event.target.value});  
+  }
   
   // Dito yung return form submit function
   function handleSubmit(e) {
     e.preventDefault();
-    console.log(refundSet)
+
+
+    const refundForm = document.getElementById('refundForm')
+    const formData = new FormData(refundForm)
+
+    let newFormData = {
+      ...formData,
+      action: 'refund',
+      account_id: accountId
+    }
+
+    fetch(`/api/return/${sale_id}`, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(newFormData)
+    })
+
 
     setRefundSucces(true)
     setIsModalOpen(false)
@@ -307,7 +327,7 @@ function RefundInput({sale_id, isModalOpen, setIsModalOpen, setRefundSucces, set
     <div className="fixed backdrop-blur-sm -translate-x-56 bg-black/20 drop-shadow-xl  z-50">
         <Modal isOpen={isModalOpen}>
           <div className="h-screen w-screen  flex justify-center items-center backdrop-blur-sm bg-white/30 ">
-            <form onSubmit={handleSubmit} id="reqForm" enctype="multipart/form-data" className="fixed bg-gray-100 -mt-20 rounded-xl w-[40rem]">
+            <form onSubmit={handleSubmit} id="refundForm" className="fixed bg-gray-100 -mt-20 rounded-xl w-[40rem]">
                 <div className="flex flex-col gap-5 text-center py-5 px-10">
                   <div className="text-2xl font-bold">
                     Refund Form
@@ -316,10 +336,10 @@ function RefundInput({sale_id, isModalOpen, setIsModalOpen, setRefundSucces, set
 
                     <div className="flex flex-col gap-2">
                       <div className="text-md text-left font-bold">
-                        Amount
+                        Refund Amount
                       </div>
                       <div>
-                        <input name="amount" onChange={handleChange} type="number" className="w-full border-2 border-black/60 rounded-md p-2" required/>
+                        <input name="refundAmount" onChange={handleChange} type="number" className="w-full border-2 border-black/60 rounded-md p-2" required/>
                       </div>
                     </div>
 
@@ -366,6 +386,23 @@ function RefundReturn({sale_id, isModalOpen, setIsModalOpen, setReturnRefundSucc
   function handleSubmit(e) {
     e.preventDefault();
 
+    const refundReturnForm = document.getElementById('refundReturnForm')
+    const formData = new FormData(refundReturnForm)
+
+    let newFormData = {
+      ...formData,
+      action: 'refundReturn',
+      account_id: accountId
+    }
+
+    fetch(`/api/return/${sale_id}`, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(newFormData)
+    })
+
     console.log(refundSet)
     setReturnRefundSucces(true)
     setIsModalOpen(false)
@@ -377,7 +414,7 @@ function RefundReturn({sale_id, isModalOpen, setIsModalOpen, setReturnRefundSucc
     <div className="fixed backdrop-blur-sm -translate-x-56 bg-black/20 drop-shadow-xl  z-50">
         <Modal isOpen={isModalOpen}>
           <div className="h-screen w-screen  flex justify-center items-center backdrop-blur-sm bg-white/30 ">
-            <form onSubmit={handleSubmit} id="reqForm" enctype="multipart/form-data" className="fixed bg-gray-100 -mt-20 rounded-xl w-[40rem]">
+            <form onSubmit={handleSubmit} id="refundReturnForm" className="fixed bg-gray-100 -mt-20 rounded-xl w-[40rem]">
                 <div className="flex flex-col gap-5 text-center py-5 px-10">
                   <div className="text-2xl font-bold">
                     Refund Return Form
@@ -389,7 +426,7 @@ function RefundReturn({sale_id, isModalOpen, setIsModalOpen, setReturnRefundSucc
                         Amount
                       </div>
                       <div>
-                        <input name="amount" onChange={handleChange} type="number" className="w-full border-2 border-black/60 rounded-md p-2" required/>
+                        <input name="refundAmount" onChange={handleChange} type="number" className="w-full border-2 border-black/60 rounded-md p-2" required/>
                       </div>
                     </div>
 
@@ -432,16 +469,22 @@ function RejectRefund({sale_id, isModalOpen, setIsModalOpen, setRejectSucces, se
   function handleSubmit(e) {
     e.preventDefault();
 
-    // fetch(`/api/return/${sale_id}`, {
-    //   method: 'PATCH',
-    //   headers: {
-    //     'Content-type': 'application/json'
-    //   },
-    //   body: JSON.stringify({
-    //     action: 'reject',
-    //     account_id: accountId
-    //   })
-    // })
+    const rejectForm = document.getElementById('rejectForm')
+    const formData = new FormData(rejectForm)
+
+    let newFormData = {
+      ...formData,
+      action: 'reject',
+      account_id: accountId
+    }
+
+    fetch(`/api/return/${sale_id}`, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(newFormData)
+    })
 
     console.log(comment)
     setRejectSucces(true)
@@ -454,7 +497,7 @@ function RejectRefund({sale_id, isModalOpen, setIsModalOpen, setRejectSucces, se
     <div className="fixed backdrop-blur-sm -translate-x-56 bg-black/20 drop-shadow-xl  z-50">
         <Modal isOpen={isModalOpen}>
           <div className="h-screen w-screen  flex justify-center items-center backdrop-blur-sm bg-white/30 ">
-            <form onSubmit={handleSubmit} id="reqForm" enctype="multipart/form-data" className="fixed bg-gray-100 -mt-20 rounded-xl w-[40rem]">
+            <form onSubmit={handleSubmit} id="rejectForm" enctype="multipart/form-data" className="fixed bg-gray-100 -mt-20 rounded-xl w-[40rem]">
                 <div className="flex flex-col gap-5 text-center py-5 px-10">
                   <div className="text-2xl font-bold">
                     Reject Form
