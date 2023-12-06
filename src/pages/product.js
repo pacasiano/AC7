@@ -31,7 +31,7 @@ function Product() {
   };
 
   function submitForm(e) {
-    // e.preventDefault();
+    e.preventDefault();
     fetch('/api/item', {
       method: 'POST',
       headers: {

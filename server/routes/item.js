@@ -21,7 +21,6 @@ router.post('/', (req, res) => {
     //instead of req.headers.cookie which returns a string, we can use the cookie parser 'req.cookies' to return an object
     const {account_id} = req.cookies;
     let {product_id, product_price, quantity: addedQuantity = 1} = req.body;
-    product_price = product_price.replace('₱', ''); //the value returned from client-side has a dollar sign, so we remove it
 
     //Query 1: Get the sale_id with the sale_status of 'cart'
     let q = `SELECT sale_id FROM sale WHERE account_id = '${account_id}' AND sale_status = 'cart'`;

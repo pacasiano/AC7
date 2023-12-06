@@ -41,13 +41,28 @@ router.get('/categories/all', (req, res) => {
 //Retrieve a particular product's data (To display in pages/product.js)
 router.get('/:id', (req, res) => {
     const {id: product_id} = req.params;
+    let returnResult = {};
+    let finalReturnResult = {};
     const q = `SELECT product.*, SUM(quantity) AS quantity FROM product INNER JOIN stock USING (product_id) WHERE product_id = ${product_id}`;
     connection.query(q, (err, results) => {
         if (err) {
             console.error(err)
         }
         else {
-            res.json(results[0])
+            returnResult = {...results[0]}
+        }
+    })
+
+    // Query 2: Get the price of the latest stock
+    const q2 = `SELECT price FROM stock ` +
+                `WHERE product_id = ${product_id} ` +
+                `ORDER BY batch_no DESC ` +
+                `LIMIT 1`;
+    connection.query(q2, (err, results) => {
+        if (err) console.error(err)
+        else {
+            finalReturnResult = {...results[0], ...returnResult}
+            res.json(finalReturnResult)
         }
     })
 })
