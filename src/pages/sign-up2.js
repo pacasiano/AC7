@@ -182,7 +182,7 @@ function Landing() {
                                         {/* Email */}
                                         <div>
                                             <label for="email" className="block mb-2 text-sm font-medium text-gray-900">Email</label>
-                                            <input onChange={handleAccountInformation} minLength={3} maxlength={25} type="text" name="email" id="email" placeholder="Email" className={`${(buttonError && !value.email) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} />
+                                            <input onChange={handleAccountInformation} minLength={3} type="text" name="email" id="email" placeholder="Email" className={`${(buttonError && !value.email) ? "border-red-500" : "border-gray-300"} bg-gray-50 border text-gray-900  rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full h-9 p-2.5`} />
                                         </div>
                                         {/* contact information */}
                                         <div>
