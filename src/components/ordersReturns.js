@@ -14,6 +14,10 @@ export default function Returns() {
     const [refundSucces, setRefundSucces] = useState(false);
     const [returnRefundSucces, setReturnRefundSucces] = useState(false);
     const [rejectSucces, setRejectSucces] = useState(false);
+    const [selectedSale, setSelectedSale] = useState("");
+    const [refund, setRefund] = useState(false)
+    const [refturn, setRefturn] = useState(false)
+    const [reject, setReject] = useState(false)
 
     useEffect(() => {
         fetch('/api/orders/return_request')
@@ -53,6 +57,9 @@ export default function Returns() {
         <Refund isModalOpen={refundSucces} setIsModalOpen={setRefundSucces} />
         <ReturnRefund isModalOpen={returnRefundSucces} setIsModalOpen={setReturnRefundSucces} />
         <Reject isModalOpen={rejectSucces} setIsModalOpen={setRejectSucces} />
+        <RefundInput isModalOpen={refund} selectedSale={selectedSale} setIsModalOpen={setRefund} setRefundSucces={setRefundSucces}  setReloadData={setReloadData} reloadData={reloadData}/>
+        <RefundReturn isModalOpen={refturn} selectedSale={selectedSale} setIsModalOpen={setRefturn} setReturnRefundSucces={setReturnRefundSucces} setReloadData={setReloadData} reloadData={reloadData} />
+        <RejectRefund isModalOpen={reject} selectedSale={selectedSale} setIsModalOpen={setReject} setRejectSucces={setRefundSucces} setReloadData={setReloadData} reloadData={reloadData}/>
         <div className="h-screen px-8 pt-8">
             <div className="flex flex-col gap-5 ">
                 <div id="header" className="flex flex-row justify-between">
@@ -86,7 +93,7 @@ export default function Returns() {
                                 </tr>
                             </thead>
                                 {filteredOrders.map((returns) => (
-                                <ReturnedRow key={returns.sale_id} returns={returns} setReloadData={setReloadData} reloadData={reloadData} setRefundSucces={setRefundSucces} setReturnRefundSucces={setReturnRefundSucces} setRejectSucces={setRejectSucces} />
+                                <ReturnedRow key={returns.sale_id} setRefturn={setRefturn} setRefund={setRefund} setReject={setReject} returns={returns} setSelectedSale={setSelectedSale} />
                                 ))}
                         </table>
                     </div>
@@ -97,7 +104,7 @@ export default function Returns() {
     );
 };
 
-function ReturnedRow({returns, setReloadData, reloadData, setRefundSucces, setReturnRefundSucces, setRejectSucces}) {
+function ReturnedRow({returns, setRefund, setRefturn, setReject, setSelectedSale}) {
 
     const [isExpanded, setIsExpanded] = useState(false);
 
@@ -115,36 +122,23 @@ function ReturnedRow({returns, setReloadData, reloadData, setRefundSucces, setRe
             });
     }, [returns.sale_id]);
 
-    //Get cookie
-    const accountId = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("account_id="))
-    ?.split("=")[1];
-
     function refund() {
-      setRefundSucces(true);
-      setReloadData(!reloadData);
+      setSelectedSale(returns.sale_id)
+      setRefund(true)
+      // setRefundSucces(true);
+      // setReloadData(!reloadData);
     }
 
     function returnrefund() {
-      setReturnRefundSucces(true);
-      setReloadData(!reloadData);
+      setSelectedSale(returns.sale_id)
+      setRefturn(true);
+      // setReloadData(!reloadData);
     }
 
     function reject() {
-
-      fetch(`/api/return/${returns.return_request_id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-type': 'application/json'
-        },
-        body: JSON.stringify({
-          action: 'reject',
-          account_id: accountId
-        })
-      })
-      setRejectSucces(true);
-      setReloadData(!reloadData);
+      setSelectedSale(returns.sale_id)
+      setReject(true);
+      
     }
 
     const imgPath = require(`../imgs/${returns.img}`)
@@ -158,7 +152,7 @@ function ReturnedRow({returns, setReloadData, reloadData, setRefundSucces, setRe
             <td className="text-sm font-semibold border p-2">{returns.full_name}</td>
             <td className="text-sm font-semibold border p-2">{returns.sale_date}</td>
             <td className="text-sm font-semibold border p-2">
-              <img src={imgPath} style={{ maxWidth: '200px' }}></img>  
+              <img src={imgPath} alt="" style={{ maxWidth: '200px' }}></img>  
             </td>
             <td className="text-sm font-semibold border p-2">{returns.comment}</td>
             <td className="text-sm font-semibold border p-2">&#x20B1;{returns.price}</td>
@@ -173,7 +167,7 @@ function ReturnedRow({returns, setReloadData, reloadData, setRefundSucces, setRe
           </tr>
           {isExpanded && (
             <tr className="bg-slate-100">
-              <td colSpan={7}>
+              <td colSpan={8}>
 
                 {/* ito yung mag ulit */}
                 <table className="w-full">
@@ -230,7 +224,7 @@ function Refund({isModalOpen, setIsModalOpen}) {
       <Modal isOpen={isModalOpen}>
         <div className="w-screen flex justify-center items-center -translate-x-52">
             <div className="bg-gray-50 p-3 rounded-xl w-1/3 shadow-md border">
-              <div className="text-green-500 text-md font-semibold text-center">Refund accepted!</div>
+              <div className="text-green-500 text-md font-semibold text-center">Refund Completed!</div>
             </div>
         </div>
       </Modal>
@@ -278,5 +272,213 @@ function Reject({isModalOpen, setIsModalOpen}) {
         </div>
       </Modal>
     </div>
+  );
+};
+
+function RefundInput({sale_id, isModalOpen, setIsModalOpen, setRefundSucces, setReloadData, reloadData}) {
+
+  const [refundSet, setRefundSet] = useState({
+    comment: '',
+    amount: ''
+  });
+
+  const accountId = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("account_id="))
+    ?.split("=")[1];
+
+  function handleChange(event) {
+    setRefundSet({...refundSet, [event.target.name]: event.target.value});
+    
+}
+  
+  // Dito yung return form submit function
+  function handleSubmit(e) {
+    e.preventDefault();
+    console.log(refundSet)
+
+    setRefundSucces(true)
+    setIsModalOpen(false)
+    setReloadData(!reloadData);
+
+  }
+
+  return (
+    <div className="fixed backdrop-blur-sm -translate-x-56 bg-black/20 drop-shadow-xl  z-50">
+        <Modal isOpen={isModalOpen}>
+          <div className="h-screen w-screen  flex justify-center items-center backdrop-blur-sm bg-white/30 ">
+            <form onSubmit={handleSubmit} id="reqForm" enctype="multipart/form-data" className="fixed bg-gray-100 -mt-20 rounded-xl w-[40rem]">
+                <div className="flex flex-col gap-5 text-center py-5 px-10">
+                  <div className="text-2xl font-bold">
+                    Refund Form
+                  </div>
+                  <div className="flex flex-col gap-5">
+
+                    <div className="flex flex-col gap-2">
+                      <div className="text-md text-left font-bold">
+                        Amount
+                      </div>
+                      <div>
+                        <input name="amount" onChange={handleChange} type="number" className="w-full border-2 border-black/60 rounded-md p-2" required/>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <div className="text-md text-left font-bold">
+                        Comments
+                      </div>
+                      <div>
+                        <textarea name="comment" type="text" onChange={handleChange} className="w-full h-44 border-2 border-black/60 rounded-md p-2 resize-none" required/>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-row gap-1">
+                    <button type="button" onClick={() =>  setIsModalOpen(false)} className="bg-black/80 hover:bg-black text-gray-50 p-2 rounded-md w-1/2 font-medium">Cancel</button>
+                    <button type="submit" className="bg-green-900/80 hover:bg-green-900 text-gray-50 p-2 rounded-md w-full font-medium">Submit</button>
+                    </div>
+                  </div>
+                </div>
+            </form>
+          </div>
+        </Modal>
+      </div>
+  );
+};
+
+
+function RefundReturn({sale_id, isModalOpen, setIsModalOpen, setReturnRefundSucces, setReloadData, reloadData}) {
+
+  const [refundSet, setRefundSet] = useState({
+    comment: '',
+    amount: ''
+  });
+
+  function handleChange(event) {
+    setRefundSet({...refundSet, [event.target.name]: event.target.value});
+  }
+
+  const accountId = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("account_id="))
+    ?.split("=")[1];
+  
+  // Dito yung return form submit function
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    console.log(refundSet)
+    setReturnRefundSucces(true)
+    setIsModalOpen(false)
+    setReloadData(!reloadData);
+
+  }
+
+  return (
+    <div className="fixed backdrop-blur-sm -translate-x-56 bg-black/20 drop-shadow-xl  z-50">
+        <Modal isOpen={isModalOpen}>
+          <div className="h-screen w-screen  flex justify-center items-center backdrop-blur-sm bg-white/30 ">
+            <form onSubmit={handleSubmit} id="reqForm" enctype="multipart/form-data" className="fixed bg-gray-100 -mt-20 rounded-xl w-[40rem]">
+                <div className="flex flex-col gap-5 text-center py-5 px-10">
+                  <div className="text-2xl font-bold">
+                    Refund Return Form
+                  </div>
+                  <div className="flex flex-col gap-5">
+
+                    <div className="flex flex-col gap-2">
+                      <div className="text-md text-left font-bold">
+                        Amount
+                      </div>
+                      <div>
+                        <input name="amount" onChange={handleChange} type="number" className="w-full border-2 border-black/60 rounded-md p-2" required/>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <div className="text-md text-left font-bold">
+                        Comments
+                      </div>
+                      <div>
+                        <textarea name="comment" type="text" onChange={handleChange} className="w-full h-44 border-2 border-black/60 rounded-md p-2 resize-none" required/>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-row gap-1">
+                    <button type="button" onClick={() =>  setIsModalOpen(false)} className="bg-black/80 hover:bg-black text-gray-50 p-2 rounded-md w-1/2 font-medium">Cancel</button>
+                    <button type="submit" className="bg-green-900/80 hover:bg-green-900 text-gray-50 p-2 rounded-md w-full font-medium">Submit</button>
+                    </div>
+                  </div>
+                </div>
+            </form>
+          </div>
+        </Modal>
+      </div>
+  );
+};
+
+function RejectRefund({sale_id, isModalOpen, setIsModalOpen, setRejectSucces, setReloadData, reloadData}) {
+
+  const [comment, setComment] = useState("")
+
+  function handleChange(event) {
+    setComment({...comment, [event.target.name]: event.target.value});
+  }
+
+  const accountId = document.cookie
+  .split("; ")
+  .find((row) => row.startsWith("account_id="))
+  ?.split("=")[1];
+  
+  // Dito yung return form submit function
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    // fetch(`/api/return/${sale_id}`, {
+    //   method: 'PATCH',
+    //   headers: {
+    //     'Content-type': 'application/json'
+    //   },
+    //   body: JSON.stringify({
+    //     action: 'reject',
+    //     account_id: accountId
+    //   })
+    // })
+
+    console.log(comment)
+    setRejectSucces(true)
+    setIsModalOpen(false)
+    setReloadData(!reloadData);
+
+  }
+
+  return (
+    <div className="fixed backdrop-blur-sm -translate-x-56 bg-black/20 drop-shadow-xl  z-50">
+        <Modal isOpen={isModalOpen}>
+          <div className="h-screen w-screen  flex justify-center items-center backdrop-blur-sm bg-white/30 ">
+            <form onSubmit={handleSubmit} id="reqForm" enctype="multipart/form-data" className="fixed bg-gray-100 -mt-20 rounded-xl w-[40rem]">
+                <div className="flex flex-col gap-5 text-center py-5 px-10">
+                  <div className="text-2xl font-bold">
+                    Reject Form
+                  </div>
+                  <div className="flex flex-col gap-5">
+
+                    <div className="flex flex-col gap-2">
+                      <div className="text-md text-left font-bold">
+                        Comments
+                      </div>
+                      <div>
+                        <textarea name="comment" type="text" onChange={handleChange} className="w-full h-44 border-2 border-black/60 rounded-md p-2 resize-none" required/>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-row gap-1">
+                    <button type="button" onClick={() =>  setIsModalOpen(false)} className="bg-black/80 hover:bg-black text-gray-50 p-2 rounded-md w-1/2 font-medium">Cancel</button>
+                    <button type="submit" className="bg-green-900/80 hover:bg-green-900 text-gray-50 p-2 rounded-md w-full font-medium">Submit</button>
+                    </div>
+                  </div>
+                </div>
+            </form>
+          </div>
+        </Modal>
+      </div>
   );
 };
