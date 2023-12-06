@@ -64,22 +64,10 @@ function Cart() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (items.length > 0) {
-      setLoading(false);
+    if(loading){
+      setLoading(false)
     }
-  }
-  , [items]);
-
-  const [reloadPrice, setReloadPrice] = useState(false);
-
-  useEffect(() => {
-      if (reloadPrice === false){
-      setReloadPrice(true);
-      setTimeout(() => {
-        setReloadPrice(false);
-      }, 1500);
-      }
-  }, [reloadData]); // dont change please
+  }, [items, loading]);
 
   
   return (
@@ -134,11 +122,7 @@ function Cart() {
               <div className="text-xs font-light">Total:</div>
             </div>
             <div className="flex justify-end text-xl font-semibold">
-              {reloadPrice ? (
-                <div className="animate-spin mr-5 rounded-full h-5 w-5 border-t-2 border-black border-t-black border-b-0 border-r-0 border-l-0"></div>
-              ) : (
-                <div className="h-5 w-5 mr-20">{"₱" + orderSubtotal.toFixed(2)}</div>
-              )}
+              <div className="">{"₱" + orderSubtotal.toFixed(2)}</div>
             </div>
               <button 
                 className={`transition-all w-full p-4 mt-7 text-xl ${emptyCart && 'animate-wiggle'} bg-black/80 hover:bg-black text-gray-50`} 
