@@ -78,4 +78,17 @@ router.post('/:id', (req, res) => {
     })
 })
 
+    // select * from shipped_sale;
+    router.get(`/shipped/items`, (req, res) => {
+        let q = `SELECT * FROM shipped_sale`;
+        connection.query(q, function (err, results) {
+            if (err) {
+                console.log(err.message);
+            }
+            // console.log(results);
+            res.json(results);
+        });
+    }
+    );
+
 module.exports = router;
