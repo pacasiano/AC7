@@ -1,13 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const mysql = require('mysql2');
 
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'whatamIdoing332',
-    database: 'ac7_database'
-})
+
+const connection = require('../database');
+
 
 router.post('/', (req, res) => {
     const {account_id, comments, product_name, quantity, batch_no} = req.body;

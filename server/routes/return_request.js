@@ -1,5 +1,4 @@
 const express = require('express');
-const mysql = require('mysql2');
 const router = express.Router();
 const path = require('path');
 const multer = require('multer')
@@ -17,12 +16,8 @@ const upload = multer({ storage: storage })
 
 router.use(express.json())
 
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'whatamIdoing332',
-    database: 'ac7_database'
-})
+const connection = require('../database');
+
 
 router.post('/:id', upload.single('img'), (req, res) => {
     const {id: sale_id} = req.params;

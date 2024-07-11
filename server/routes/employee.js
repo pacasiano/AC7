@@ -1,13 +1,9 @@
 const express = require('express')
-const mysql = require('mysql2')
+
 const router = express.Router();
 
-const connection = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "whatamIdoing332",
-    database: "ac7_database"
-})
+const connection = require('../database');
+
 
 router.use(express.json())
 

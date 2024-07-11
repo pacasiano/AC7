@@ -1,15 +1,11 @@
 const express = require('express')
-const mysql = require('mysql2')
+
 const router = express.Router();
 
 router.use(express.json());
 
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'whatamIdoing332',
-    database: 'ac7_database'
-});
+const connection = require('../database');
+
 
 //Changes the action of the returned_sale -- wait, we dont have a returned sale table yet, only return request
 router.post('/:id', (req, res) => {

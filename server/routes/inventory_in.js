@@ -1,14 +1,10 @@
 const express = require('express');
-const mysql = require('mysql2');
+
 const app = express();
 const router = express.Router();
 
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'whatamIdoing332',
-    database: 'ac7_database'
-});
+const connection = require('../database');
+
 
 router.post('/', (req, res) => {
     //need to insert into 2 tables: inventory_in && inventory_in_item

@@ -1,17 +1,11 @@
 const express = require('express');
-const mysql = require('mysql2');
 const router = express.Router();
 const cookieParser = require('cookie-parser')
 
 router.use(cookieParser())
 router.use(express.json())
 
-const connection = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "whatamIdoing332",
-    database: "ac7_database"    
-})
+const connection = require('../database');
 
 //Get all customers
 router.get('/', (req, res) => {

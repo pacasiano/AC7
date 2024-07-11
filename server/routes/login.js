@@ -7,13 +7,9 @@ const bcrypt = require('bcryptjs');
 app.use(cookieParser());
 router.use(express.json())
 
-const mysql = require('mysql2');
-let connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'whatamIdoing332', //enter your own password
-    database: 'ac7_database'
-});
+
+const connection = require('../database');
+
 
 router.post('/', (req, res) => {
     const { username, password } = req.body;

@@ -1,14 +1,9 @@
 const express = require('express');
 const app = express();
 const router = express.Router();
-const mysql = require('mysql2');
 
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'whatamIdoing332',
-    database: 'ac7_database'
-})
+const connection = require('../database');
+
 
 //Retrieve customer and account data for the user to display in 'Your Profile'
 router.get('/:id', (req, res) => {

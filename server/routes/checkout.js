@@ -2,17 +2,12 @@ const { faArrowCircleUp } = require('@fortawesome/free-solid-svg-icons');
 const express = require('express');
 const app = express();
 const router = express.Router();
-const mysql = require('mysql2');
 
 //app.use baited me so hard causing req.body to be empty. It took 6 fucking hrs to debug. All it took was to change app.use to router.use 🤦‍♂️
 router.use(express.json())
 
-let connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'whatamIdoing332', //enter your own password
-    database: 'ac7_database'
-});
+const connection = require('../database');
+
 
 router.post('/', (req, res) => {
     console.log('CHECK ME TF OUT')

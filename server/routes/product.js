@@ -1,14 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-const mysql = require('mysql2');
+const connection = require('../database');
 
-let connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'whatamIdoing332', //enter your own password
-    database: 'ac7_database'
-});
 
 //Retrieve every product's detail (To display in components/inventory.js)
 router.get('/', (req, res) => {

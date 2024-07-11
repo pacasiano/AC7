@@ -1,16 +1,11 @@
 const express = require('express');
 const app = express();
-const mysql = require('mysql2');
 const router = express.Router();
 
 router.use(express.json())
 
-let connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'whatamIdoing332', //enter your own password
-    database: 'ac7_database'
-});
+const connection = require('../database');
+
 
 router.get('/:id', (req, res) => {
     const { id: sale_id } = req.params;
