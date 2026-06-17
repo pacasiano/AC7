@@ -35,9 +35,9 @@ services:
     environment:
       NODE_ENV: production
       DB_HOST: mysql
-      DB_USER: ac7
+      DB_USERNAME: ac7
       DB_PASSWORD: ac7_password
-      DB_NAME: ac7_database
+      DB_DATABASE: ac7_database
 
     command: sh -c "npm install --no-audit --no-fund && node index.js"
 
@@ -64,6 +64,9 @@ services:
 
     environment:
       NODE_ENV: production
+      CHOKIDAR_USEPOLLING: true
+      HOST: 0.0.0.0
+      DANGEROUSLY_DISABLE_HOST_CHECK: true
 
     command: sh -c "npm install --no-audit --no-fund && npm start"
 
