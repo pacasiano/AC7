@@ -40,3 +40,51 @@ This project is licensed under the MIT License. See the LICENSE file for more de
 For any inquiries or support, please contact us at support@ac7beautywhite.com.
 
 Thank you for using AC7 Beauty White!
+
+## Docker — Run full application
+
+Prerequisites: Docker and Docker Compose installed.
+
+- From the repository root, build and start all services (MySQL, backend, frontend):
+
+```bash
+docker-compose up --build
+```
+
+- Run in background:
+
+```bash
+docker-compose up --build -d
+```
+
+- Stop and remove containers:
+
+```bash
+docker-compose down
+```
+
+Once running:
+- Frontend (React dev server): http://localhost:3000
+- Backend (Express API): http://localhost:8080
+- MySQL: 3306
+
+Notes:
+- The frontend uses the `proxy` setting to forward API requests to the backend on port 8080.
+- On first run the containers will install dependencies; the commands above mount the local code so changes are visible without rebuilding.
+
+### Run without Docker (local development)
+
+- Start backend:
+
+```bash
+cd server
+npm install
+node index.js
+```
+
+- Start frontend (from repo root):
+
+```bash
+npm install
+npm start
+```

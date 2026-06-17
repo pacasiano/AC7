@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   mysql:
     image: mysql:8.0
@@ -17,6 +19,45 @@ services:
       interval: 5s
       timeout: 5s
       retries: 20
+
+  backend:
+    image: node:18
+    container_name: ac7-backend
+    working_dir: /usr/src/app
+    volumes:
+      - ./server:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=mysql
+      - DB_USER=ac7
+      - DB_PASSWORD=ac7_password
+      - DB_NAME=ac7_database
+    command: sh -c "npm install --no-audit --no-fund || true; node index.js"
+    depends_on:
+      - mysql
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"require('http').get('http://localhost:8080', ()=>process.exit(0)).on('error', ()=>process.exit(1))\""]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  frontend:
+    image: node:18
+    container_name: ac7-frontend
+    working_dir: /usr/src/app
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    command: sh -c "npm install --no-audit --no-fund || true; npm start"
+    depends_on:
+      - backend
 
 volumes:
   mysql_data:
