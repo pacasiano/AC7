@@ -1,63 +1,86 @@
-version: '3.8'
+version: "3.8"
 
 services:
   mysql:
     image: mysql:8.0
     container_name: ac7-mysql
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root_password
       MYSQL_DATABASE: ac7_database
       MYSQL_USER: ac7
       MYSQL_PASSWORD: ac7_password
-    ports:
-      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./database.sql:/docker-entrypoint-initdb.d/001-database.sql:ro
+    networks:
+      - web
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$${MYSQL_ROOT_PASSWORD}"]
       interval: 5s
       timeout: 5s
       retries: 20
 
+
   backend:
     image: node:18
     container_name: ac7-backend
+    restart: always
     working_dir: /usr/src/app
+
     volumes:
       - ./server:/usr/src/app
       - /usr/src/app/node_modules
-    ports:
-      - "8080:8080"
+
     environment:
-      - NODE_ENV=development
-      - DB_HOST=mysql
-      - DB_USER=ac7
-      - DB_PASSWORD=ac7_password
-      - DB_NAME=ac7_database
-    command: sh -c "npm install --no-audit --no-fund || true; node index.js"
+      NODE_ENV: production
+      DB_HOST: mysql
+      DB_USER: ac7
+      DB_PASSWORD: ac7_password
+      DB_NAME: ac7_database
+
+    command: sh -c "npm install --no-audit --no-fund && node index.js"
+
     depends_on:
-      - mysql
-    healthcheck:
-      test: ["CMD-SHELL", "node -e \"require('http').get('http://localhost:8080', ()=>process.exit(0)).on('error', ()=>process.exit(1))\""]
-      interval: 5s
-      timeout: 5s
-      retries: 20
+      mysql:
+        condition: service_healthy
+
+    networks:
+      - web
+
+    expose:
+      - "8080"
+
 
   frontend:
     image: node:18
     container_name: ac7-frontend
+    restart: always
     working_dir: /usr/src/app
+
     volumes:
       - ./:/usr/src/app
       - /usr/src/app/node_modules
-    ports:
-      - "3000:3000"
+
     environment:
-      - CHOKIDAR_USEPOLLING=true
-    command: sh -c "npm install --no-audit --no-fund || true; npm start"
+      NODE_ENV: production
+
+    command: sh -c "npm install --no-audit --no-fund && npm start"
+
     depends_on:
       - backend
 
+    networks:
+      - web
+
+    expose:
+      - "3000"
+
+
 volumes:
   mysql_data:
+
+
+networks:
+  web:
+    external: true
